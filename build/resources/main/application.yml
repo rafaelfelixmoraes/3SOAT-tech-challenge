@@ -1,0 +1,28 @@
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    disable-swagger-default-url: true
+    path: /swagger-ui.html
+  packagesToScan: br.com.tech.challenge.api
+spring:
+  data:
+    redis:
+      port: 6379
+      host: localhost
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/limites
+    hikari:
+      username: limite
+      password: limite_passwd
+  jpa:
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+      show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+
