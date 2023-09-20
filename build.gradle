@@ -1,0 +1,66 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.1'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id "org.flywaydb.flyway" version "9.8.1"
+}
+
+group = 'br.com.tech.challenge'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.1.1'
+
+	// Spring Validation
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.8'
+	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+	//	Postgress
+	implementation 'org.postgresql:postgresql:42.2.27'
+	implementation 'org.flywaydb:flyway-core:9.8.1'
+
+	//	Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+
+
+	// Spring Doc - Open API
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.0'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+	implementation 'org.springframework.data:spring-data-redis'
+
+}
+
+flyway {
+	url = 'jdbc:postgresql://localhost:5432/limites'
+	user = 'limite'
+	password = 'limite_passwd'
+	cleanDisabled = false
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
