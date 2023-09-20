@@ -16,6 +16,8 @@
 /gradle
 /bin
 /.idea
+gradlew
+gradlew.bat
 
 # Package Files #
 *.jar
