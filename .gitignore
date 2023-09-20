@@ -16,9 +16,10 @@
 /gradle
 /bin
 /.idea
-gradlew
-gradlew.bat
+./gradlew
+./gradlew.bat
 
+**.bat
 # Package Files #
 *.jar
 *.war
