@@ -18,7 +18,7 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Caminho para o arquivo SQL de inicialização
+      - ./src/main/resources/db/migration:/docker-entrypoint-initdb.d  # Mapeie o diretório de migrações para dentro do contêiner
     ports:
       - "5432:5432"
     networks:

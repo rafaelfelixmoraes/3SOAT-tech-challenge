@@ -6,10 +6,10 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @SpringBootApplication
 @EnableRedisRepositories(basePackages = {"br.com.tech.challenge.redis"})
-public class TransactionBffApplication {
+public class TechChallengeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TransactionBffApplication.class, args);
+        SpringApplication.run(TechChallengeApplication.class, args);
     }
 
 }
