@@ -1,9 +1,0 @@
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-  packagesToScan: br.com.coffeandit.transactionbff.api
-spring:
-  data:
-    redis:
-      port: 6379
-      host: localhost
