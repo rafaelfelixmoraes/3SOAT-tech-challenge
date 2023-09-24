@@ -1,4 +1,4 @@
-package br.com.tech.challenge.dto;
+package br.com.tech.challenge.domain.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -21,7 +21,7 @@ spring:
       password: limite_passwd
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       generate-ddl: true
       show-sql: true
     properties:
