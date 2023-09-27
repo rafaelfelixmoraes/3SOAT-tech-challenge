@@ -24,7 +24,7 @@ spring:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       dialect: org.hibernate.dialect.PostgreSQL9Dialect
       use_jdbc_metadata_defaults: false

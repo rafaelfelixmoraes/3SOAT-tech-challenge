@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,10 +28,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class Categoria implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+@EqualsAndHashCode(of = "id")
+public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
