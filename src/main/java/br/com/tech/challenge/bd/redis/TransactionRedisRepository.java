@@ -1,4 +1,4 @@
-package br.com.tech.challenge.redis;
+package br.com.tech.challenge.bd.redis;
 
 import br.com.tech.challenge.domain.dto.TransactionDto;
 import org.springframework.data.repository.CrudRepository;
