@@ -3,21 +3,15 @@ package br.com.tech.challenge.api;
 
 import br.com.tech.challenge.domain.dto.RequestTransactionDto;
 import br.com.tech.challenge.domain.dto.TransactionDto;
-import br.com.tech.challenge.bd.repositorios.CategoriaRepository;
-import br.com.tech.challenge.domain.entidades.Categoria;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/transaction")
