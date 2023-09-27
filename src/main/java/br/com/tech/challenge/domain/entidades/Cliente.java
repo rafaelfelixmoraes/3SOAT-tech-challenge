@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 @Entity
 @Data
 @Table
