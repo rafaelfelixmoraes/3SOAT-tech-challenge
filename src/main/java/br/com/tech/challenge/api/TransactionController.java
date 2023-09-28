@@ -1,8 +1,8 @@
 package br.com.tech.challenge.api;
 
 
-import br.com.tech.challenge.dto.RequestTransactionDto;
-import br.com.tech.challenge.dto.TransactionDto;
+import br.com.tech.challenge.domain.dto.RequestTransactionDto;
+import br.com.tech.challenge.domain.dto.TransactionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -61,5 +61,4 @@ public class TransactionController {
     public Mono<TransactionDto> confirmarTransacao(@PathVariable("id") final String uuid) {
         return Mono.empty();
     }
-
 }

@@ -1,1 +1,1 @@
-CREATE DATABASE limites;
+CREATE DATABASE tech_challenge;

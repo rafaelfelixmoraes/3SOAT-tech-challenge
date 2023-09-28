@@ -1,6 +1,6 @@
-package br.com.tech.challenge.domain;
+package br.com.tech.challenge.servicos;
 
-import br.com.tech.challenge.redis.TransactionRedisRepository;
+import br.com.tech.challenge.bd.redis.TransactionRedisRepository;
 import org.springframework.stereotype.Service;
 
 @Service
