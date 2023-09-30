@@ -18,8 +18,8 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/tech_challenge
     hikari:
-      username: limite
-      password: limite_passwd
+      username: tech
+      password: tech_passwd
   jpa:
     show-sql: true
     generate-ddl: true
