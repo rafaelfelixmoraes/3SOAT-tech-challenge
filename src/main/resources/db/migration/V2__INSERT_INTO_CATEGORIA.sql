@@ -1,3 +1,3 @@
-INSERT INTO CATEGORIA VALUES (1,'Lanche');
-INSERT INTO CATEGORIA VALUES (2,'Bebida');
-INSERT INTO CATEGORIA VALUES (3,'Acompanhamento');
+INSERT INTO categoria VALUES (1,'Lanche');
+INSERT INTO categoria VALUES (2,'Bebida');
+INSERT INTO categoria VALUES (3,'Acompanhamento');

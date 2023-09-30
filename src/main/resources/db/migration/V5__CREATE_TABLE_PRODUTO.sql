@@ -5,3 +5,7 @@ CREATE TABLE produto (
     descricao VARCHAR(100),
     PRIMARY KEY (id)
 );
+
+CREATE SEQUENCE produto_seq START WITH 1 INCREMENT BY 50;
+
+ALTER TABLE IF EXISTS produto ADD CONSTRAINT FKopu9jggwnamfv0c8k2ri3kx0a FOREIGN KEY (categoria_id) REFERENCES categoria;
