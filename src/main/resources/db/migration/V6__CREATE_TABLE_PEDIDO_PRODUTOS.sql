@@ -1,6 +1,6 @@
 CREATE TABLE pedido_produtos (
-    pedido_id bigint NOT NULL,
-    produtos_id bigint NOT NULL,
+    pedido_id BIGINT NOT NULL,
+    produtos_id BIGINT NOT NULL,
     PRIMARY KEY (pedido_id, produtos_id)
 );
 
