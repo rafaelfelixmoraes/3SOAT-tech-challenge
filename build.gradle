@@ -59,9 +59,9 @@ dependencies {
 }
 
 flyway {
-	url = 'jdbc:postgresql://localhost:5432/limites'
-	user = 'limite'
-	password = 'limite_passwd'
+	url = 'jdbc:postgresql://localhost:5432/tech_challenge'
+	user = 'tech'
+	password = 'tech_passwd'
 	cleanDisabled = false
 }
 
