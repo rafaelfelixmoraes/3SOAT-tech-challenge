@@ -12,7 +12,4 @@ public class TransactionService {
         this.transactionRedisRepository = transactionRedisRepository;
     }
 
-    /// minuto 18 - aula 3
-
-
 }

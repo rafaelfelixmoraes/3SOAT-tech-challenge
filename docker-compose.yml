@@ -1,3 +1,4 @@
+
 version: '3.5'
 
 services:
@@ -13,12 +14,12 @@ services:
     container_name: postgres_container
     image: postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-limite}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-limite_passwd}
+      POSTGRES_USER: ${POSTGRES_USER:-tech}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tech_passwd}
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
-      - ./src/main/resources/db/migration:/docker-entrypoint-initdb.d  # Mapeie o diretório de migrações para dentro do contêiner
+      - ./src/main/resources/db/migration/init:/docker-entrypoint-initdb.d  # Mapeie o diretório de migrações para dentro do contêiner
     ports:
       - "5432:5432"
     networks:
