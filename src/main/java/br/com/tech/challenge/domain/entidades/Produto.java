@@ -45,4 +45,5 @@ public class Produto {
     @ManyToMany
     @Transient
     private Set<Pedido> pedidos;
+
 }

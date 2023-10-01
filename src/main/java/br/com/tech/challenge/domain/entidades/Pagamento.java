@@ -40,4 +40,5 @@ public class Pagamento {
 
     @Column
     private BigDecimal valorTotal;
+
 }
