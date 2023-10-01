@@ -33,7 +33,7 @@ class ProdutoControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    private static final String ROTA_PRODUTO = "/produto";
+    private static final String ROTA_PRODUTO = "/produtos";
 
     @DisplayName("Deve salvar um produto com sucesso")
     @Test

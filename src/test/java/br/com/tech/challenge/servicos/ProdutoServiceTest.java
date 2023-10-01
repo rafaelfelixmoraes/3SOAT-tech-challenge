@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class ProdutoServiceTest {
 
     @InjectMocks
-    private ProdutoService produtoSrvice;
+    private ProdutoService produtoService;
 
     @Mock
     private ProdutoRepository produtoRepository;
@@ -34,7 +34,7 @@ class ProdutoServiceTest {
     void criarProdutoTest() {
         when(produtoRepository.save(any())).thenReturn(produto());
 
-        Produto produto = produtoSrvice.salvar(mapper.map(produto(), ProdutoDTO.class));
+        Produto produto = produtoService.salvar(mapper.map(produto(), ProdutoDTO.class));
 
         assertEquals(produto().getId(), produto.getId());
         assertEquals(produto().getDescricao(), produto.getDescricao());
