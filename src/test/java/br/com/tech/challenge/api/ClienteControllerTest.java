@@ -1,8 +1,7 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.domain.entidades.Categoria;
-import br.com.tech.challenge.domain.entidades.Produto;
-import br.com.tech.challenge.servicos.ProdutoService;
+import br.com.tech.challenge.domain.entidades.Cliente;
+import br.com.tech.challenge.servicos.ClienteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,35 +13,33 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ProdutoControllerTest {
+public class ClienteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ProdutoService produtoService;
+    private ClienteService clienteService;
 
     @Autowired
     private ObjectMapper mapper;
 
-    private static final String ROTA_PRODUTOS = "/produtos";
+    private static final String ROTA_CLIENTES = "/clientes";
 
-    @DisplayName("Deve salvar um produto com sucesso")
+    @DisplayName("Deve salvar um cliente com sucesso")
     @Test
-    void saveProdutoSuccess() throws Exception {
+    void saveClienteSuccess() throws Exception {
 
-        Mockito.when(produtoService.salvar(Mockito.any())).thenReturn(produto());
+        Mockito.when(clienteService.salvar(Mockito.any())).thenReturn(cliente());
 
-        mockMvc.perform(post(ROTA_PRODUTOS)
-                        .content(mapper.writeValueAsString(produto()))
+        mockMvc.perform(post(ROTA_CLIENTES)
+                        .content(mapper.writeValueAsString(cliente()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -50,19 +47,12 @@ class ProdutoControllerTest {
 
     }
 
-    private Produto produto() {
-        return Produto.builder()
+    private Cliente cliente() {
+        return Cliente.builder()
                 .id(1L)
-                .descricao("Coca Cola")
-                .valorUnitario(BigDecimal.valueOf(5.00))
-                .categoria(categoria())
-                .build();
-    }
-
-    private Categoria categoria() {
-        return Categoria.builder()
-                .id(2L)
-                .descricao("Bebida")
+                .nome("Anthony Samuel Joaquim Teixeira")
+                .email("anthony.samuel.teixeira@said.adv.br")
+                .cpf("143.025.400-95")
                 .build();
     }
 
