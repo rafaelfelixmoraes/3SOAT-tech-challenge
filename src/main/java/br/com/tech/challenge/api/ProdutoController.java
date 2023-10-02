@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/produtos")
@@ -31,7 +33,7 @@ public class ProdutoController {
         }
     )
     @PostMapping
-    public ResponseEntity<ProdutoDTO> salvar(@RequestBody ProdutoDTO produtoDTO) {
+    public ResponseEntity<ProdutoDTO> salvar(@RequestBody @Valid ProdutoDTO produtoDTO) {
         return ResponseEntity.ok().body(mapper.map(produtoService.salvar(produtoDTO), ProdutoDTO.class));
     }
 

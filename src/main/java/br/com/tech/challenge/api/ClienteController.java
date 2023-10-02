@@ -5,6 +5,7 @@ import br.com.tech.challenge.servicos.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class ClienteController {
         }
     )
     @PostMapping
-    public ResponseEntity<ClienteDTO> salvar(@RequestBody ClienteDTO clienteDTO) {
+    public ResponseEntity<ClienteDTO> salvar(@RequestBody @Valid ClienteDTO clienteDTO) {
         return ResponseEntity.ok().body(mapper.map(clienteService.salvar(clienteDTO), ClienteDTO.class));
     }
 
