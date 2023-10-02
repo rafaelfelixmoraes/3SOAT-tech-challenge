@@ -29,7 +29,7 @@ public class ProdutoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produto criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Produto inválido."),
-            @ApiResponse(responseCode = "401", description = "Não autorizado.")
+            @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
         }
     )
     @PostMapping
