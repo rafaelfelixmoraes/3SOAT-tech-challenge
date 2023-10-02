@@ -31,8 +31,8 @@ public class ClienteController {
         }
     )
     @PostMapping
-    public ResponseEntity<ClienteDTO> salvar(@RequestBody @Valid ClienteDTO clienteDTO) {
-        return ResponseEntity.ok().body(mapper.map(clienteService.salvar(clienteDTO), ClienteDTO.class));
+    public ResponseEntity<ClienteDTO> save(@RequestBody @Valid ClienteDTO clienteDTO) {
+        return ResponseEntity.ok().body(mapper.map(clienteService.save(clienteDTO), ClienteDTO.class));
     }
 
 }

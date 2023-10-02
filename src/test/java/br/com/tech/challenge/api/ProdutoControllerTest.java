@@ -39,7 +39,7 @@ class ProdutoControllerTest {
     @Test
     void saveProdutoSuccess() throws Exception {
 
-        Mockito.when(produtoService.salvar(Mockito.any())).thenReturn(produto());
+        Mockito.when(produtoService.save(Mockito.any())).thenReturn(produto());
 
         mockMvc.perform(post(ROTA_PRODUTOS)
                         .content(mapper.writeValueAsString(produto()))

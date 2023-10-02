@@ -31,7 +31,7 @@ public class ClienteServiceTest {
     void createClienteSuccess() {
         when(clienteRepository.save(any())).thenReturn(cliente());
 
-        var cliente = clienteService.salvar(mapper.map(cliente(), ClienteDTO.class));
+        var cliente = clienteService.save(mapper.map(cliente(), ClienteDTO.class));
 
         var returnedCliente = cliente();
 

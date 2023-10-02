@@ -36,7 +36,7 @@ public class ClienteControllerTest {
     @Test
     void saveClienteSuccess() throws Exception {
 
-        Mockito.when(clienteService.salvar(Mockito.any())).thenReturn(cliente());
+        Mockito.when(clienteService.save(Mockito.any())).thenReturn(cliente());
 
         mockMvc.perform(post(ROTA_CLIENTES)
                         .content(mapper.writeValueAsString(cliente()))

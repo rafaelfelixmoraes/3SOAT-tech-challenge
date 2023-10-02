@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +32,8 @@ public class ProdutoController {
         }
     )
     @PostMapping
-    public ResponseEntity<ProdutoDTO> salvar(@RequestBody @Valid ProdutoDTO produtoDTO) {
-        return ResponseEntity.ok().body(mapper.map(produtoService.salvar(produtoDTO), ProdutoDTO.class));
+    public ResponseEntity<ProdutoDTO> save(@RequestBody @Valid ProdutoDTO produtoDTO) {
+        return ResponseEntity.ok().body(mapper.map(produtoService.save(produtoDTO), ProdutoDTO.class));
     }
 
 }

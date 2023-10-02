@@ -34,7 +34,7 @@ class ProdutoServiceTest {
     void createProdutoSuccess() {
         when(produtoRepository.save(any())).thenReturn(produto());
 
-        var produto = produtoService.salvar(mapper.map(produto(), ProdutoDTO.class));
+        var produto = produtoService.save(mapper.map(produto(), ProdutoDTO.class));
 
         var returnedProduto = produto();
 

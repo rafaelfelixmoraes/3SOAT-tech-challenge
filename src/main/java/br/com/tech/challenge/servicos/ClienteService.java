@@ -17,7 +17,7 @@ public class ClienteService {
     private final ModelMapper mapper;
 
     @Transactional
-    public Cliente salvar(ClienteDTO clienteDTO) {
+    public Cliente save(ClienteDTO clienteDTO) {
         return clienteRepository.save(mapper.map(clienteDTO, Cliente.class));
     }
 
