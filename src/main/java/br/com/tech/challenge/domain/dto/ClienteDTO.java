@@ -1,9 +1,12 @@
 package br.com.tech.challenge.domain.dto;
 
-import br.com.tech.challenge.domain.entidades.Pedido;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
 @Getter
@@ -20,7 +23,5 @@ public class ClienteDTO {
     private String cpf;
     @Email(message = "E-mail deve ser válido e no formato username@email.com")
     private String email;
-
-    private Pedido pedido;
 
 }
