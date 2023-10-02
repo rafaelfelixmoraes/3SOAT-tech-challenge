@@ -1,7 +1,13 @@
 package br.com.tech.challenge.domain.dto;
 
 import br.com.tech.challenge.domain.entidades.Pedido;
+import lombok.*;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ClienteDTO {
 
     private Long id;
