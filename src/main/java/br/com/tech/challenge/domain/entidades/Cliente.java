@@ -39,4 +39,5 @@ public class Cliente {
     @OneToOne(mappedBy = "cliente")
     @Transient
     private Pedido pedido;
+
 }

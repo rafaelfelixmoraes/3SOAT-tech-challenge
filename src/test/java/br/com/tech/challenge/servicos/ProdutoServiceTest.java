@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class ProdutoServiceTest {
 
     @InjectMocks
-    private ProdutoService produtoSrvice;
+    private ProdutoService produtoService;
 
     @Mock
     private ProdutoRepository produtoRepository;
@@ -31,19 +31,21 @@ class ProdutoServiceTest {
 
     @DisplayName("Deve criar um produto com sucesso")
     @Test
-    void criarProdutoTest() {
+    void createProdutoSuccess() {
         when(produtoRepository.save(any())).thenReturn(produto());
 
-        Produto produto = produtoSrvice.salvar(mapper.map(produto(), ProdutoDTO.class));
+        var produto = produtoService.save(mapper.map(produto(), ProdutoDTO.class));
 
-        assertEquals(produto().getId(), produto.getId());
-        assertEquals(produto().getDescricao(), produto.getDescricao());
-        assertEquals(produto().getValorUnitario(), produto.getValorUnitario());
-        assertEquals(produto().getCategoria(), produto.getCategoria());
-        assertEquals(produto().getId().getClass(), produto.getId().getClass());
-        assertEquals(produto().getDescricao().getClass(), produto.getDescricao().getClass());
-        assertEquals(produto().getValorUnitario().getClass(), produto.getValorUnitario().getClass());
-        assertEquals(produto().getCategoria().getClass(), produto.getCategoria().getClass());
+        var returnedProduto = produto();
+
+        assertEquals(returnedProduto.getId(), produto.getId());
+        assertEquals(returnedProduto.getDescricao(), produto.getDescricao());
+        assertEquals(returnedProduto.getValorUnitario(), produto.getValorUnitario());
+        assertEquals(returnedProduto.getCategoria(), produto.getCategoria());
+        assertEquals(returnedProduto.getId().getClass(), produto.getId().getClass());
+        assertEquals(returnedProduto.getDescricao().getClass(), produto.getDescricao().getClass());
+        assertEquals(returnedProduto.getValorUnitario().getClass(), produto.getValorUnitario().getClass());
+        assertEquals(returnedProduto.getCategoria().getClass(), produto.getCategoria().getClass());
     }
 
     private Produto produto() {
@@ -61,4 +63,5 @@ class ProdutoServiceTest {
                 .descricao("Bebida")
                 .build();
     }
+
 }

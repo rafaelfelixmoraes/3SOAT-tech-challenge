@@ -40,4 +40,5 @@ public class Categoria {
     @Transient
     @JsonIgnore
     private Set<Produto> produtos;
+
 }
