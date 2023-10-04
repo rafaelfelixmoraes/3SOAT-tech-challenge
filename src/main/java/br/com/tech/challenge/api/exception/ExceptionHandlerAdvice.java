@@ -7,11 +7,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResponseExceptionDTO> handleConstraintViolationException(MethodArgumentNotValidException exception) {
         var errors = exception.getBindingResult().getFieldErrors()
                 .stream().map(FieldError::getDefaultMessage).toList();
@@ -21,6 +23,18 @@ public class ExceptionHandlerAdvice {
                         .messages(errors)
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .build()
+        );
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ResponseEntity<ResponseExceptionDTO> handleObjectNotFoundException(ObjectNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        ResponseExceptionDTO.builder()
+                                .exceptionMessage(exception.getMessage())
+                                .messages(null)
+                                .statusCode(HttpStatus.NOT_FOUND.value())
+                                .build()
         );
     }
 
