@@ -40,8 +40,7 @@ public class ProdutoController {
             @ApiResponse(responseCode = "201", description = "Produto criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Produto inválido."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
-    }
-    )
+    })
     @PostMapping
     public ResponseEntity<ProdutoDTO> save(@RequestBody @Valid ProdutoDTO produtoDTO) {
         return ResponseEntity.status(CREATED).body(mapper.map(produtoService.save(produtoDTO), ProdutoDTO.class));
@@ -56,8 +55,7 @@ public class ProdutoController {
                     }),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
-    }
-    )
+    })
     @Parameters(value = {
             @Parameter(
                     name = "id",
