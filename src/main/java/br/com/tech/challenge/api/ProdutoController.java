@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/produtos")
@@ -35,27 +37,25 @@ public class ProdutoController {
 
     @Operation(description = "Endpoint para criar um Produto")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Produto criado com sucesso."),
+            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Produto inválido."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
-        }
-    )
+    })
     @PostMapping
     public ResponseEntity<ProdutoDTO> save(@RequestBody @Valid ProdutoDTO produtoDTO) {
-        return ResponseEntity.ok().body(mapper.map(produtoService.save(produtoDTO), ProdutoDTO.class));
+        return ResponseEntity.status(CREATED).body(mapper.map(produtoService.save(produtoDTO), ProdutoDTO.class));
     }
 
     @Operation(summary = "Altera um Produto", description = "Endpoint para alterar um Produto")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Produto alterado com sucesso.",
                     content = {
-                    @Content(mediaType = "application/json", schema =
-                    @Schema(implementation = ProdutoDTO.class))
-            }),
+                            @Content(mediaType = "application/json", schema =
+                            @Schema(implementation = ProdutoDTO.class))
+                    }),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
-        }
-    )
+    })
     @Parameters(value = {
             @Parameter(
                     name = "id",
@@ -66,12 +66,13 @@ public class ProdutoController {
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProdutoDTO> update(@PathVariable("id") final Long id,
                                              @RequestBody @Valid ProdutoUpdateDTO produtoUpdateDTO) {
-
         produtoUpdateDTO.setId(id);
         return ResponseEntity.accepted().body(
                 mapper.map(
                         produtoService.update(produtoUpdateDTO),
-                        ProdutoDTO.class));
+                        ProdutoDTO.class
+                )
+        );
     }
 
 }
