@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/clientes")
@@ -25,14 +27,14 @@ public class ClienteController {
 
     @Operation(description = "Endpoint para criar um Cliente")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente criado com sucesso."),
+            @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Cliente inválido."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
         }
     )
     @PostMapping
     public ResponseEntity<ClienteDTO> save(@RequestBody @Valid ClienteDTO clienteDTO) {
-        return ResponseEntity.ok().body(mapper.map(clienteService.save(clienteDTO), ClienteDTO.class));
+        return ResponseEntity.status(CREATED).body(mapper.map(clienteService.save(clienteDTO), ClienteDTO.class));
     }
 
 }
