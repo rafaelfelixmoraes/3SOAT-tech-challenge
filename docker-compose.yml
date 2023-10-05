@@ -5,12 +5,13 @@ services:
 
   redis:
     container_name: redis_container
-    hostname: redis_host
+    hostname: redis
     image: redis:latest
+    command: [ "redis-server", "--protected-mode", "no", "--bind", "0.0.0.0" ]
     volumes:
       - redis:/redis
     ports:
-      - 6379:6379
+      - "6379:6379"
     healthcheck:
       test: [ "CMD-SHELL", "redis-cli", "--raw", "incr", "ping" ]
       interval: 10s
@@ -59,6 +60,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    links:
+      - redis
     ports:
       - "8080:8080"
     depends_on:

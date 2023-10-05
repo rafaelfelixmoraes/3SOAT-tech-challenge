@@ -15,7 +15,7 @@ spring:
   data:
     redis:
       port: 6379
-      host: redis_host
+      host: redis
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://postgres_container:5432/tech_challenge
