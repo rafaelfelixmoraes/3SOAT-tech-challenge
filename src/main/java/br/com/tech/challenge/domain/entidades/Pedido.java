@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -44,7 +44,7 @@ public class Pedido {
     private Cliente cliente;
 
     @ManyToMany
-    private Set<Produto> produtos;
+    private List<Produto> produtos;
 
     @Column
     private BigDecimal valorTotal;
