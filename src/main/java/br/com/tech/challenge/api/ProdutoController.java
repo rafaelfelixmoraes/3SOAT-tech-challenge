@@ -48,7 +48,7 @@ public class ProdutoController {
 
     @Operation(summary = "Altera um Produto", description = "Endpoint para alterar um Produto")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Produto alterado com sucesso.",
+            @ApiResponse(responseCode = "200", description = "Produto alterado com sucesso.",
                     content = {
                             @Content(mediaType = "application/json", schema =
                             @Schema(implementation = ProdutoDTO.class))
@@ -67,7 +67,7 @@ public class ProdutoController {
     public ResponseEntity<ProdutoDTO> update(@PathVariable("id") final Long id,
                                              @RequestBody @Valid ProdutoUpdateDTO produtoUpdateDTO) {
         produtoUpdateDTO.setId(id);
-        return ResponseEntity.accepted().body(
+        return ResponseEntity.ok().body(
                 mapper.map(
                         produtoService.update(produtoUpdateDTO),
                         ProdutoDTO.class
