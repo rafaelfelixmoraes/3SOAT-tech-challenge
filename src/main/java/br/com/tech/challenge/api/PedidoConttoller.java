@@ -23,10 +23,13 @@ public class PedidoConttoller {
 
     private final ModelMapper mapper;
 
-    @Operation(description = "API para criar um Pedido")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Pedido criado com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Pedido não encontrado."),
-            @ApiResponse(responseCode = "401", description = "Não autorizado.")})
+    @Operation(description = "Endpoint para criar um Cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Pedido inválido."),
+            @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
+    }
+    )
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PedidoDTO> salvar(@RequestBody PedidoDTO pedidoDTO) {
         return ResponseEntity.ok().body(mapper.map(pedidoService.save(pedidoDTO), PedidoDTO.class));
