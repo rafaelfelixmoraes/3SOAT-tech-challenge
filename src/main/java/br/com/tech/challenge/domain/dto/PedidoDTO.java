@@ -4,11 +4,14 @@ import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pagamento;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
