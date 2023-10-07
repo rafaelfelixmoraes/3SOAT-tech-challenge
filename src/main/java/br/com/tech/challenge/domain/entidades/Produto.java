@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -44,6 +44,6 @@ public class Produto {
 
     @ManyToMany
     @Transient
-    private Set<Pedido> pedidos;
+    private List<Pedido> pedidos;
 
 }
