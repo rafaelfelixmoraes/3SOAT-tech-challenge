@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/produtos")
-@Tag(name = "Produtos", description = "Endpoint para controle de Produtos")
+@Tag(name = "Produtos", description = "Endpoints para controle de Produtos")
 public class ProdutoController {
 
     private final ProdutoService produtoService;

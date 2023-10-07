@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/clientes")
-@Tag(name = "Clientes", description = "Endpoint para controle de Clientes")
+@Tag(name = "Clientes", description = "Endpoints para controle de Clientes")
 public class ClienteController {
 
     private final ClienteService clienteService;
