@@ -2,16 +2,20 @@ package br.com.tech.challenge.utils;
 
 import lombok.experimental.UtilityClass;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 @UtilityClass
 public class PasswordUtils {
-    public static Integer generatePasswordByDate() {
-        return Integer.valueOf(LocalDateTime.now()
-                .format(DateTimeFormatter
-                        .ofPattern("dd/MM/yyyy HH:mm:ss"))
-                .replaceAll("[/:\\s]",""));
+
+    private static final Random RANDOM = new Random();
+
+    public static Integer generatePassword() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 6; i++)
+            sb.append(RANDOM.nextInt(10));
+
+        return Integer.parseInt(sb.toString());
     }
 
 }
