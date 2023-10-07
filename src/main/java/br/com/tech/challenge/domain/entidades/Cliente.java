@@ -1,18 +1,21 @@
 package br.com.tech.challenge.domain.entidades;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,8 +39,8 @@ public class Cliente {
     @Column
     private String email;
 
-    @OneToOne(mappedBy = "cliente")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="cliente")
     @Transient
-    private Pedido pedido;
+    private Set<Pedido> pedido;
 
 }

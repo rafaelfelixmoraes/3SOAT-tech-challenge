@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.EnumType;
@@ -21,7 +22,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -39,12 +40,12 @@ public class Pedido {
     @Column
     private Integer senhaRetirada;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "cliente_id",  nullable=false)
     private Cliente cliente;
 
     @ManyToMany
-    private Set<Produto> produtos;
+    private List<Produto> produtos;
 
     @Column
     private BigDecimal valorTotal;
