@@ -29,11 +29,12 @@ public class ClienteServiceTest {
     @DisplayName("Deve criar um produto com sucesso")
     @Test
     void createClienteSuccess() {
-        when(clienteRepository.save(any())).thenReturn(cliente());
 
-        var cliente = clienteService.save(mapper.map(cliente(), ClienteDTO.class));
+        var  returnedCliente = cliente();
 
-        var returnedCliente = cliente();
+        when(clienteRepository.save(any())).thenReturn(returnedCliente);
+
+        var cliente = clienteService.save(mapper.map(returnedCliente, ClienteDTO.class));
 
         assertEquals(returnedCliente.getId(), cliente.getId());
         assertEquals(returnedCliente.getNome(), cliente.getNome());

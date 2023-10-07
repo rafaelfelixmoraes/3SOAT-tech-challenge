@@ -38,11 +38,11 @@ class ProdutoServiceTest {
     @DisplayName("Deve criar um produto com sucesso")
     @Test
     void createProdutoSuccess() {
-        when(produtoRepository.save(any())).thenReturn(setProduto());
-
-        var produto = produtoService.save(mapper.map(setProduto(), ProdutoDTO.class));
-
         var returnedProduto = setProduto();
+
+        when(produtoRepository.save(any())).thenReturn(returnedProduto);
+
+        var produto = produtoService.save(mapper.map(returnedProduto, ProdutoDTO.class));
 
         assertEquals(returnedProduto.getId(), produto.getId());
         assertEquals(returnedProduto.getDescricao(), produto.getDescricao());
