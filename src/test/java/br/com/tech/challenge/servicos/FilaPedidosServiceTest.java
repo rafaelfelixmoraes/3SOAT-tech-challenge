@@ -10,12 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -41,6 +43,18 @@ class FilaPedidosServiceTest {
         assertEquals(listaPedidos.get(0).getSenhaRetirada(), listaPedidosReturned.get(0).getSenhaRetirada());
         assertEquals(listaPedidos.get(0).getNomeCliente(), listaPedidosReturned.get(0).getNomeCliente());
         assertEquals(listaPedidos.get(0).getStatusPedido(), listaPedidosReturned.get(0).getStatusPedido());
+    }
+
+    @DisplayName("Deve listar a fila de pedidos com sucesso")
+    @Test
+    void listFilaPedidosVazia(){
+
+        when(filaPedidosRepository.findAll()).thenReturn(new ArrayList<>());
+
+        var listaPedidosReturned = filaPedidosService.listaFilaPedidos();
+
+        assertNotNull(listaPedidosReturned);
+        assertTrue(listaPedidosReturned.isEmpty());
     }
 
     private List<FilaPedidos> setFilaPedidos() {
