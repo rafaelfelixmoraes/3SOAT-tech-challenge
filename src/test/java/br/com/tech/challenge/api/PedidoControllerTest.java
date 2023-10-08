@@ -2,15 +2,19 @@ package br.com.tech.challenge.api;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
-import br.com.tech.challenge.domain.entidades.Categoria;
-import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
+import br.com.tech.challenge.domain.entidades.Cliente;
+import br.com.tech.challenge.domain.entidades.FilaPedidos;
+import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.enums.StatusPedido;
+import br.com.tech.challenge.servicos.FilaPedidosService;
 import br.com.tech.challenge.servicos.PedidoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,12 +23,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -36,6 +45,9 @@ class PedidoControllerTest {
 
     @MockBean
     private PedidoService pedidoService;
+
+    @MockBean
+    private FilaPedidosService filaPedidosService;
 
     @Autowired
     private ObjectMapper mapper;
@@ -108,6 +120,42 @@ class PedidoControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @DisplayName("Deve listar a fila de pedidos com sucesso")
+    @Test
+    void listFilaPedidosSuccess() throws Exception {
+        Mockito.when(filaPedidosService.listaFilaPedidos()).thenReturn(setFilaPedidos());
+
+        mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
+    @Test
+    void listFilaPedidosVaziaSuccess() throws Exception {
+        Mockito.when(filaPedidosService.listaFilaPedidos()).thenReturn(new ArrayList<>());
+
+        mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    private List<FilaPedidos> setFilaPedidos() {
+        var filaPedidos = FilaPedidos.builder()
+                .senhaRetirada(RandomUtils.nextInt())
+                .nomeCliente("Teste Fila Pedidos")
+                .statusPedido(StatusPedido.FINALIZADO.getDescricao())
+                .build();
+
+        return Collections.singletonList(filaPedidos);
     }
 
 
