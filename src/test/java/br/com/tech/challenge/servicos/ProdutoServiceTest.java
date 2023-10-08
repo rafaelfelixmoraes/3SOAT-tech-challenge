@@ -39,10 +39,11 @@ class ProdutoServiceTest {
     @Test
     void createProdutoSuccess() {
         var returnedProduto = setProduto();
+        var returnedProdutoDTO = setProdutoDTO();
 
         when(produtoRepository.save(any())).thenReturn(returnedProduto);
 
-        var produto = produtoService.save(mapper.map(returnedProduto, ProdutoDTO.class));
+        var produto = produtoService.save(returnedProdutoDTO);
 
         assertEquals(returnedProduto.getId(), produto.getId());
         assertEquals(returnedProduto.getDescricao(), produto.getDescricao());
@@ -92,6 +93,15 @@ class ProdutoServiceTest {
 
     private Produto setProduto() {
         return Produto.builder()
+                .id(1L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
+    }
+
+    private ProdutoDTO setProdutoDTO() {
+        return ProdutoDTO.builder()
                 .id(1L)
                 .descricao("Coca Cola")
                 .valorUnitario(BigDecimal.valueOf(5.00))
