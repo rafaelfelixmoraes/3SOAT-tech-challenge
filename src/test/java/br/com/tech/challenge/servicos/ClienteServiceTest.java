@@ -31,10 +31,11 @@ public class ClienteServiceTest {
     void createClienteSuccess() {
 
         var  returnedCliente = cliente();
+        var returnedClienteDTO = clienteDTO();
 
         when(clienteRepository.save(any())).thenReturn(returnedCliente);
 
-        var cliente = clienteService.save(mapper.map(returnedCliente, ClienteDTO.class));
+        var cliente = clienteService.save(returnedClienteDTO);
 
         assertEquals(returnedCliente.getId(), cliente.getId());
         assertEquals(returnedCliente.getNome(), cliente.getNome());
@@ -44,6 +45,15 @@ public class ClienteServiceTest {
 
     private Cliente cliente() {
         return Cliente.builder()
+                .id(1L)
+                .nome("Anthony Samuel Joaquim Teixeira")
+                .email("anthony.samuel.teixeira@said.adv.br")
+                .cpf("143.025.400-95")
+                .build();
+    }
+
+    private ClienteDTO clienteDTO() {
+        return ClienteDTO.builder()
                 .id(1L)
                 .nome("Anthony Samuel Joaquim Teixeira")
                 .email("anthony.samuel.teixeira@said.adv.br")
