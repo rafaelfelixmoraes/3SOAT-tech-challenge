@@ -50,7 +50,7 @@ class ProdutoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
     }
 
@@ -73,7 +73,7 @@ class ProdutoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 
     @DisplayName("Deve retornar excessão ao tentar alterar um produto inexistente")

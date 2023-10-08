@@ -29,11 +29,13 @@ public class ClienteServiceTest {
     @DisplayName("Deve criar um produto com sucesso")
     @Test
     void createClienteSuccess() {
-        when(clienteRepository.save(any())).thenReturn(cliente());
 
-        var cliente = clienteService.save(mapper.map(cliente(), ClienteDTO.class));
+        var  returnedCliente = cliente();
+        var returnedClienteDTO = clienteDTO();
 
-        var returnedCliente = cliente();
+        when(clienteRepository.save(any())).thenReturn(returnedCliente);
+
+        var cliente = clienteService.save(returnedClienteDTO);
 
         assertEquals(returnedCliente.getId(), cliente.getId());
         assertEquals(returnedCliente.getNome(), cliente.getNome());
@@ -43,6 +45,15 @@ public class ClienteServiceTest {
 
     private Cliente cliente() {
         return Cliente.builder()
+                .id(1L)
+                .nome("Anthony Samuel Joaquim Teixeira")
+                .email("anthony.samuel.teixeira@said.adv.br")
+                .cpf("143.025.400-95")
+                .build();
+    }
+
+    private ClienteDTO clienteDTO() {
+        return ClienteDTO.builder()
                 .id(1L)
                 .nome("Anthony Samuel Joaquim Teixeira")
                 .email("anthony.samuel.teixeira@said.adv.br")
