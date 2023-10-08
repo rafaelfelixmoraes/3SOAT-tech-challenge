@@ -37,7 +37,6 @@ public class ClienteController {
     })
     @PostMapping
     public ResponseEntity<ClienteDTO> save(@RequestBody @Valid ClienteDTO clienteDTO) {
-        this.isClienteAlreadyExists(clienteDTO.getCpf());
         return ResponseEntity.status(CREATED).body(mapper.map(clienteService.save(clienteDTO), ClienteDTO.class));
     }
 
@@ -58,16 +57,9 @@ public class ClienteController {
             throw new InvalidCpfException("CPF inválido: " + formattedCpf);
         }
 
-        this.isClienteAlreadyExists(formattedCpf);
-
         return ResponseEntity.status(CREATED).body(mapper.map(clienteService.saveClientWithCpf(formattedCpf), ClienteCpfDTO.class));
     }
 
-    private void isClienteAlreadyExists(String cpf) {
-        Cliente clienteAlreadyExists = clienteService.findByCpf(cpf);
-        if (clienteAlreadyExists != null) {
-            throw new ClienteAlreadyExistsException("Cliente já cadastrado");
-        }
-    }
+
 
 }

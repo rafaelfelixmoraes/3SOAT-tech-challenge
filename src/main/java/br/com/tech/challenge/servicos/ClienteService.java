@@ -1,5 +1,6 @@
 package br.com.tech.challenge.servicos;
 
+import br.com.tech.challenge.api.exception.ClienteAlreadyExistsException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.domain.dto.ClienteCpfDTO;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
@@ -19,18 +20,29 @@ public class ClienteService {
 
     @Transactional
     public Cliente save(ClienteDTO clienteDTO) {
+
+        isClienteAlreadyExists(clienteDTO.getCpf());
         return clienteRepository.save(mapper.map(clienteDTO, Cliente.class));
+    }
+
+    public Cliente saveClientWithCpf(String cpf) {
+
+        isClienteAlreadyExists(cpf);
+        Cliente cliente = new Cliente();
+        cliente.setCpf(cpf);
+
+        return clienteRepository.save(cliente);
     }
 
     public Cliente findByCpf(String cpf) {
         return clienteRepository.findByCpf(cpf);
     }
 
-    public Cliente saveClientWithCpf(String cpf) {
-        Cliente cliente = new Cliente();
-        cliente.setCpf(cpf);
-
-        return clienteRepository.save(cliente);
+    private void isClienteAlreadyExists(String cpf) {
+        Cliente clienteAlreadyExists = this.findByCpf(cpf);
+        if (clienteAlreadyExists != null) {
+            throw new ClienteAlreadyExistsException("Cliente já cadastrado");
+        }
     }
 
 }
