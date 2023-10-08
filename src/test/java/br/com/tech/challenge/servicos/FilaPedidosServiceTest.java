@@ -45,7 +45,7 @@ class FilaPedidosServiceTest {
         assertEquals(listaPedidos.get(0).getStatusPedido(), listaPedidosReturned.get(0).getStatusPedido());
     }
 
-    @DisplayName("Deve listar a fila de pedidos com sucesso")
+    @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
     void listFilaPedidosVazia(){
 
