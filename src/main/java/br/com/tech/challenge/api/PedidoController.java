@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pedidos")
@@ -32,7 +34,7 @@ public class PedidoController {
     )
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PedidoDTO> salvar(@RequestBody PedidoDTO pedidoDTO) {
-        return ResponseEntity.ok().body(mapper.map(pedidoService.save(pedidoDTO), PedidoDTO.class));
+        return ResponseEntity.status(CREATED).body(mapper.map(pedidoService.save(pedidoDTO), PedidoDTO.class));
     }
 
 }
