@@ -56,6 +56,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 	implementation 'org.springframework.data:spring-data-redis'
 
+	// H2
+	testImplementation 'com.h2database:h2:2.2.224'
+
 }
 
 flyway {
