@@ -53,13 +53,6 @@ class ProdutoControllerTest {
     void updateProdutoSuccess() throws Exception {
         var produtoUpdateDTO = setProdutoUpdateDTO();
 
-        var produtoEntity = Produto.builder()
-                .id(produtoUpdateDTO.getId())
-                .descricao(produtoUpdateDTO.getDescricao())
-                .categoria(produtoUpdateDTO.getCategoria())
-                .valorUnitario(produtoUpdateDTO.getValorUnitario())
-                .build();
-
         mockMvc.perform(patch(ROTA_PRODUTOS + "/1")
                         .content(mapper.writeValueAsString(produtoUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
