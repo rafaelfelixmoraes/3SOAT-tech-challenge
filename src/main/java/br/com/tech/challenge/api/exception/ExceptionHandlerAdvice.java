@@ -38,4 +38,25 @@ public class ExceptionHandlerAdvice {
         );
     }
 
+
+    @ExceptionHandler(ClienteAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ResponseExceptionDTO> handleClientAlreadyExistsException(ClienteAlreadyExistsException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ResponseExceptionDTO.builder()
+                        .exceptionMessage(exception.getMessage())
+                        .messages(null)
+                        .statusCode(HttpStatus.CONFLICT.value())
+                        .build());
+    }
+
+    @ExceptionHandler(InvalidCpfException.class)
+    public ResponseEntity<ResponseExceptionDTO> handleInvalidCpfException(InvalidCpfException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ResponseExceptionDTO.builder()
+                        .exceptionMessage(exception.getMessage())
+                        .messages(null)
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .build());
+    }
 }
