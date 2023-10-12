@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.tech.challenge.api.exception.ClienteAlreadyExistsException;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +51,7 @@ public class ClienteServiceTest {
         assertEquals(1L, clienteRetornado.getId());
     }
 
-    @DisplayName("Deve retornar Execption ao tentar criar um cliente que ja possui cadastro")
+    @DisplayName("Deve retornar Exeception ao tentar criar um cliente que ja possui cadastro")
     @Test
     public void testSaveClienteWithExistingCpf() {
         ClienteDTO clienteDTO = new ClienteDTO();
@@ -58,7 +60,7 @@ public class ClienteServiceTest {
         Cliente clienteExistente = new Cliente();
         clienteExistente.setId(2L);
 
-        when(clienteRepository.findByCpf("927.965.620-18")).thenReturn(clienteExistente);
+        when(clienteRepository.findByCpf("927.965.620-18")).thenReturn(Optional.of(clienteExistente));
 
         assertThrows(ClienteAlreadyExistsException.class, () -> {
             clienteService.save(clienteDTO);
@@ -82,7 +84,7 @@ public class ClienteServiceTest {
         assertEquals(3L, clienteRetornado.getId());
     }
 
-    @DisplayName("Deve retornar Execption ao tentar criar um cliente que ja possui cadastro")
+    @DisplayName("Deve retornar Exeception ao tentar criar um cliente que ja possui cadastro")
     @Test
     public void testSaveClientWithCpfWithExistingCpf() {
         String cpf = "634.964.890-06";
@@ -90,7 +92,7 @@ public class ClienteServiceTest {
         Cliente clienteExistente = new Cliente();
         clienteExistente.setId(4L);
 
-        when(clienteRepository.findByCpf("634.964.890-06")).thenReturn(clienteExistente);
+        when(clienteRepository.findByCpf("634.964.890-06")).thenReturn(Optional.of(clienteExistente));
 
         assertThrows(ClienteAlreadyExistsException.class, () -> {
             clienteService.saveClientWithCpf(cpf);

@@ -1,6 +1,5 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.api.exception.InvalidCpfException;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.servicos.ClienteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,7 +62,7 @@ class ClienteControllerTest {
                 .thenReturn(new Cliente());
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/clientes/{cpf}", cpf)
+                        .post("/clientes/{cpf}", cpf)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
@@ -75,7 +74,7 @@ class ClienteControllerTest {
         String cpf = "123.456.789-0000";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                        .patch("/clientes/{cpf}", cpf)
+                        .post("/clientes/{cpf}", cpf)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 

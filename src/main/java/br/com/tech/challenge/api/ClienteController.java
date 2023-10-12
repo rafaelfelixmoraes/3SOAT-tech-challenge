@@ -1,10 +1,8 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.api.exception.ClienteAlreadyExistsException;
 import br.com.tech.challenge.api.exception.InvalidCpfException;
 import br.com.tech.challenge.domain.dto.ClienteCpfDTO;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
-import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.servicos.ClienteService;
 import br.com.tech.challenge.utils.CpfUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +48,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "409", description = "Cliente já cadastrado."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     })
-    @PatchMapping("/{cpf}")
+    @PostMapping("/{cpf}")
     public ResponseEntity<ClienteCpfDTO> saveCpf(@PathVariable String cpf) {
 
         String formattedCpf = CpfUtils.formatCpf(cpf);

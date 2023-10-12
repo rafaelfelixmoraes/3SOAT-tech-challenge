@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
@@ -34,13 +36,13 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public Cliente findByCpf(String cpf) {
+    public Optional<Cliente> findByCpf(String cpf) {
         return clienteRepository.findByCpf(cpf);
     }
 
     private void isClienteAlreadyExists(String cpf) {
-        Cliente clienteAlreadyExists = this.findByCpf(cpf);
-        if (clienteAlreadyExists != null) {
+        Optional<Cliente> clienteAlreadyExists = this.findByCpf(cpf);
+        if (clienteAlreadyExists.isPresent()) {
             throw new ClienteAlreadyExistsException("Cliente já cadastrado");
         }
     }
