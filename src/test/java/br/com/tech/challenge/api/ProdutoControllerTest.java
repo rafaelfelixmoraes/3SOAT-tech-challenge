@@ -1,20 +1,17 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.domain.dto.ProdutoUpdateDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Produto;
-import br.com.tech.challenge.servicos.ProdutoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -27,13 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class ProdutoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private ProdutoService produtoService;
 
     @Autowired
     private ObjectMapper mapper;
@@ -43,7 +38,6 @@ class ProdutoControllerTest {
     @DisplayName("Deve salvar um produto com sucesso")
     @Test
     void saveProdutoSuccess() throws Exception {
-        Mockito.when(produtoService.save(Mockito.any())).thenReturn(setProduto());
 
         mockMvc.perform(post(ROTA_PRODUTOS)
                         .content(mapper.writeValueAsString(setProduto()))
@@ -59,15 +53,6 @@ class ProdutoControllerTest {
     void updateProdutoSuccess() throws Exception {
         var produtoUpdateDTO = setProdutoUpdateDTO();
 
-        var produtoEntity = Produto.builder()
-                .id(produtoUpdateDTO.getId())
-                .descricao(produtoUpdateDTO.getDescricao())
-                .categoria(produtoUpdateDTO.getCategoria())
-                .valorUnitario(produtoUpdateDTO.getValorUnitario())
-                .build();
-
-        Mockito.when(produtoService.update(Mockito.any())).thenReturn(produtoEntity);
-
         mockMvc.perform(patch(ROTA_PRODUTOS + "/1")
                         .content(mapper.writeValueAsString(produtoUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +64,6 @@ class ProdutoControllerTest {
     @DisplayName("Deve retornar excessão ao tentar alterar um produto inexistente")
     @Test
     void produtoUpdateNotFounded() throws Exception {
-        Mockito.when(produtoService.update(Mockito.any())).thenThrow(ObjectNotFoundException.class);
 
         mockMvc.perform(patch(ROTA_PRODUTOS + "/10")
                         .content(mapper.writeValueAsString(setProdutoUpdateDTO()))
