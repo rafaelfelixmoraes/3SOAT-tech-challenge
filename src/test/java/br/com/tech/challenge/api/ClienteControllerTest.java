@@ -10,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +35,7 @@ class ClienteControllerTest {
     @Test
     void saveClienteSuccess() throws Exception {
         mockMvc.perform(post(ROTA_CLIENTES)
-                        .content(mapper.writeValueAsString(cliente()))
+                        .content(mapper.writeValueAsString(setCliente()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -48,7 +46,7 @@ class ClienteControllerTest {
     @DisplayName("Deve salvar um cliente com sucesso apenas com cpf")
     @Test
     public void saveClienteWithValidCpf() throws Exception {
-        String cpf = "66774316069";
+        final String cpf = "66774316069";
 
         mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -57,18 +55,15 @@ class ClienteControllerTest {
 
     @Test
     public void saveClienteWithInvalidCpf() throws Exception {
-        String cpf = "123.456.789-0000";
+        final String cpf = "123.456.789-0000";
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/clientes/{cpf}", cpf)
+        mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-
     }
 
-    private Cliente cliente() {
+    private Cliente setCliente() {
         return Cliente.builder()
                 .id(1L)
                 .nome("Anthony Samuel Joaquim Teixeira")
