@@ -30,13 +30,12 @@ class ClienteControllerTest {
     private ObjectMapper mapper;
 
     private static final String ROTA_CLIENTES = "/clientes";
-    private static final String ROTA_CLIENTES_CPF = "/clientes/14302540095";
+    private static final String ROTA_CLIENTES_CPF = "/clientes/{cpf}";
 
 
     @DisplayName("Deve salvar um cliente com sucesso")
     @Test
     void saveClienteSuccess() throws Exception {
-
         mockMvc.perform(post(ROTA_CLIENTES)
                         .content(mapper.writeValueAsString(cliente()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -48,23 +47,16 @@ class ClienteControllerTest {
 
     @DisplayName("Deve salvar um cliente com sucesso apenas com cpf")
     @Test
-    public void testSaveCpfWithValidCpf() throws Exception {
-        String formattedCpf = "667.743.160-69";
+    public void saveClienteWithValidCpf() throws Exception {
         String cpf = "66774316069";
 
-        Mockito.when(clienteService.saveClientWithCpf(formattedCpf))
-                .thenReturn(new Cliente());
-
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/clientes/{cpf}", cpf)
+        mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-
-        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
+                .andExpect(status().isCreated());
     }
 
     @Test
-    public void testSaveCpfWithInvalidCpf() throws Exception {
+    public void saveClienteWithInvalidCpf() throws Exception {
         String cpf = "123.456.789-0000";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
