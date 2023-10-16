@@ -37,23 +37,21 @@ class ProdutoControllerTest {
 
     @DisplayName("Deve salvar um produto com sucesso")
     @Test
-    void saveProdutoSuccess() throws Exception {
-
+    void shouldSaveProdutoSuccess() throws Exception {
         mockMvc.perform(post(ROTA_PRODUTOS)
                         .content(mapper.writeValueAsString(setProduto()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
-
     }
 
-    @DisplayName("Deve Alterar um produto com sucesso")
+    @DisplayName("Deve alterar um produto com sucesso")
     @Test
-    void updateProdutoSuccess() throws Exception {
+    void shouldUpdateProdutoSuccess() throws Exception {
         var produtoUpdateDTO = setProdutoUpdateDTO();
 
-        mockMvc.perform(patch(ROTA_PRODUTOS + "/1")
+        mockMvc.perform(patch(ROTA_PRODUTOS + "/10")
                         .content(mapper.writeValueAsString(produtoUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -61,11 +59,10 @@ class ProdutoControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("Deve retornar excessão ao tentar alterar um produto inexistente")
+    @DisplayName("Deve retornar exceção ao tentar alterar um produto inexistente")
     @Test
-    void produtoUpdateNotFounded() throws Exception {
-
-        mockMvc.perform(patch(ROTA_PRODUTOS + "/10")
+    void shouldThrowExceptionWhenProdutoDoesntExist() throws Exception {
+        mockMvc.perform(patch(ROTA_PRODUTOS + "/100")
                         .content(mapper.writeValueAsString(setProdutoUpdateDTO()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -92,7 +89,7 @@ class ProdutoControllerTest {
 
     private ProdutoUpdateDTO setProdutoUpdateDTO() {
         return ProdutoUpdateDTO.builder()
-                .id(1L)
+                .id(10L)
                 .descricao("Produto Alterado Teste")
                 .categoria(setCategoria())
                 .valorUnitario(new BigDecimal("10.50"))

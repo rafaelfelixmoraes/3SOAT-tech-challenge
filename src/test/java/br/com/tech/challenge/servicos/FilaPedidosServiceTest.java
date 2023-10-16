@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class FilaPedidosServiceTest {
 
     @InjectMocks
@@ -31,7 +29,7 @@ class FilaPedidosServiceTest {
 
     @DisplayName("Deve listar a fila de pedidos com sucesso")
     @Test
-    void listFilaPedidos(){
+    void shouldListFilaPedidosSuccess() {
         var listaPedidos = setFilaPedidos();
 
         when(filaPedidosRepository.findAll()).thenReturn(listaPedidos);
@@ -47,7 +45,7 @@ class FilaPedidosServiceTest {
 
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
-    void listFilaPedidosVazia(){
+    void shouldListEmptyFilaPedidos() {
 
         when(filaPedidosRepository.findAll()).thenReturn(new ArrayList<>());
 
@@ -66,4 +64,5 @@ class FilaPedidosServiceTest {
 
         return Collections.singletonList(filaPedidos);
     }
+
 }

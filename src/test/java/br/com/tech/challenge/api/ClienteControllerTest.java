@@ -33,7 +33,7 @@ class ClienteControllerTest {
 
     @DisplayName("Deve salvar um cliente com sucesso")
     @Test
-    void saveClienteSuccess() throws Exception {
+    void shouldSaveClienteSuccess() throws Exception {
         mockMvc.perform(post(ROTA_CLIENTES)
                         .content(mapper.writeValueAsString(setCliente()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -45,7 +45,7 @@ class ClienteControllerTest {
 
     @DisplayName("Deve salvar um cliente com sucesso apenas com cpf")
     @Test
-    public void saveClienteWithValidCpf() throws Exception {
+    public void shouldSaveClienteWithValidCpf() throws Exception {
         final String cpf = "66774316069";
 
         mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
@@ -53,8 +53,9 @@ class ClienteControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @DisplayName("Não deve salvar um cliente com cpf inválido")
     @Test
-    public void saveClienteWithInvalidCpf() throws Exception {
+    public void shouldNotSaveClienteWithInvalidCpf() throws Exception {
         final String cpf = "123.456.789-0000";
 
         mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
