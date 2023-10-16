@@ -6,32 +6,30 @@ import br.com.tech.challenge.domain.enums.StatusPedido;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class FilaPedidosServiceTest {
 
-    @InjectMocks
-    private FilaPedidosService filaPedidosService;
+    private final FilaPedidosService filaPedidosService;
 
     @Mock
     private FilaPedidosRepository filaPedidosRepository;
 
+    FilaPedidosServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        filaPedidosService = new FilaPedidosService(filaPedidosRepository);
+    }
+
     @DisplayName("Deve listar a fila de pedidos com sucesso")
     @Test
-    void listFilaPedidos(){
+    void shouldListFilaPedidosSuccess() {
         var listaPedidos = setFilaPedidos();
 
         when(filaPedidosRepository.findAll()).thenReturn(listaPedidos);
@@ -47,9 +45,8 @@ class FilaPedidosServiceTest {
 
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
-    void listFilaPedidosVazia(){
-
-        when(filaPedidosRepository.findAll()).thenReturn(new ArrayList<>());
+    void shouldListEmptyFilaPedidos() {
+        when(filaPedidosRepository.findAll()).thenReturn(Collections.emptyList());
 
         var listaPedidosReturned = filaPedidosService.listaFilaPedidos();
 
@@ -66,4 +63,5 @@ class FilaPedidosServiceTest {
 
         return Collections.singletonList(filaPedidos);
     }
+
 }

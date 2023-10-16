@@ -3,19 +3,15 @@ package br.com.tech.challenge.api;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Cliente;
-import br.com.tech.challenge.domain.entidades.FilaPedidos;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
-import br.com.tech.challenge.servicos.FilaPedidosService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,9 +35,6 @@ class PedidoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private FilaPedidosService filaPedidosService;
-
     @Autowired
     private ObjectMapper mapper;
 
@@ -49,20 +42,18 @@ class PedidoControllerTest {
 
     @DisplayName("Deve salvar um pedido com sucesso")
     @Test
-    void savePedidoSuccessTest() throws Exception {
-
+    void shouldSavePedidoSuccess() throws Exception {
         mockMvc.perform(post(ROTA_PEDIDOS)
                         .content(mapper.writeValueAsString(setPedido()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
-
     }
 
-    @DisplayName("Deve Lançar uma exceção ao salvar um pedido com Cliente não informado.")
+    @DisplayName("Deve lançar uma exceção ao salvar um pedido com Cliente não informado.")
     @Test
-    void savePedidoClientNotInformedTest() throws Exception {
+    void shouldThrowExceptionWhenClientNotInformed() throws Exception {
         var pedidoDTO = setPedidoDTO();
         pedidoDTO.setCliente(null);
         mockMvc.perform(post(ROTA_PEDIDOS)
@@ -73,11 +64,11 @@ class PedidoControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @DisplayName("Deve Lançar uma exceção ao salvar um pedido com Cliente inexistente.")
+    @DisplayName("Deve lançar uma exceção ao salvar um pedido com Cliente inexistente.")
     @Test
-    void savePedidoClientNonxistentTest() throws Exception {
+    void shouldThrowExceptionWhenClientNonExistent() throws Exception {
         var pedidoDTO = setPedidoDTO();
-        pedidoDTO.setCliente(Cliente.builder().id(10L).build());
+        pedidoDTO.setCliente(Cliente.builder().id(100L).build());
         mockMvc.perform(post(ROTA_PEDIDOS)
                         .content(mapper.writeValueAsString(pedidoDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,21 +77,22 @@ class PedidoControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @DisplayName("Deve Lançar uma exceção ao salvar um pedido com produto inexistente")
+    @DisplayName("Deve lançar uma exceção ao salvar um pedido com produto inexistente")
     @Test
-    void savePedidoProdutoInexistenteTest() throws Exception {
-
+    void shouldThrowExceptionWhenProdutoNonExistent() throws Exception {
+        var pedidoDTO = setPedidoDTO();
+        pedidoDTO.setProdutos(List.of(Produto.builder().id(100L).build()));
         mockMvc.perform(post(ROTA_PEDIDOS)
-                        .content(mapper.writeValueAsString(setPedidoDTO()))
+                        .content(mapper.writeValueAsString(pedidoDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
-    @DisplayName("Deve Lançar uma exceção ao salvar um pedido com lista de produtos vazia")
+    @DisplayName("Deve lançar uma exceção ao salvar um pedido com lista de produtos vazia")
     @Test
-    void savePedidoProdutoEmptyListTest() throws Exception {
+    void shouldThrowExceptionWhenProdutoEmptyList() throws Exception {
         var pedidoDTO = setPedidoDTO();
         pedidoDTO.setProdutos(Collections.emptyList());
         mockMvc.perform(post(ROTA_PEDIDOS)
@@ -113,8 +105,7 @@ class PedidoControllerTest {
 
     @DisplayName("Deve listar a fila de pedidos com sucesso")
     @Test
-    void listFilaPedidosSuccess() throws Exception {
-
+    void shouldListFilaPedidosSuccess() throws Exception {
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -124,8 +115,7 @@ class PedidoControllerTest {
 
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
-    void listFilaPedidosVaziaSuccess() throws Exception {
-
+    void shouldListFilaPedidosEmptySuccess() throws Exception {
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -133,17 +123,6 @@ class PedidoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
-
-    private List<FilaPedidos> setFilaPedidos() {
-        var filaPedidos = FilaPedidos.builder()
-                .senhaRetirada(RandomUtils.nextInt())
-                .nomeCliente("Teste Fila Pedidos")
-                .statusPedido(StatusPedido.FINALIZADO.getDescricao())
-                .build();
-
-        return Collections.singletonList(filaPedidos);
-    }
-
 
     private Pedido setPedido() {
         return Pedido.builder()
@@ -169,7 +148,7 @@ class PedidoControllerTest {
 
     private Produto setProduto() {
         return Produto.builder()
-                .id(1L)
+                .id(10L)
                 .descricao("Coca Cola")
                 .valorUnitario(BigDecimal.valueOf(5.00))
                 .categoria(setCategoria())
@@ -185,10 +164,10 @@ class PedidoControllerTest {
 
     private Cliente setCliente() {
         return Cliente.builder()
-                .id(1L)
+                .id(10L)
                 .nome("Ana Maria")
                 .email("ana.maria@gmail.com")
-                .cpf("143.025.400-95")
+                .cpf("603.072.360-05")
                 .build();
     }
 

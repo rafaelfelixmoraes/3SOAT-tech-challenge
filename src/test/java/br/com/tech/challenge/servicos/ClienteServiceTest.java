@@ -1,30 +1,23 @@
 package br.com.tech.challenge.servicos;
 
+import br.com.tech.challenge.api.exception.ClienteAlreadyExistsException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import br.com.tech.challenge.api.exception.ClienteAlreadyExistsException;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+class ClienteServiceTest {
 
-
-@SpringBootTest
-public class ClienteServiceTest {
-
-    @InjectMocks
     private ClienteService clienteService;
 
     @Mock
@@ -33,11 +26,16 @@ public class ClienteServiceTest {
     @Mock
     private ModelMapper mapper;
 
+    ClienteServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        clienteService = new ClienteService(clienteRepository, mapper);
+    }
+
     @DisplayName("Deve criar um cliente com sucesso")
     @Test
-    void createClienteSuccess() {
+    void shouldCreateClienteSuccess() {
 
-        Cliente clienteSalvo = this.cliente();
+        Cliente clienteSalvo = this.setCliente();
 
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setCpf(clienteSalvo.getCpf());
@@ -48,12 +46,12 @@ public class ClienteServiceTest {
         Cliente clienteRetornado = clienteService.save(clienteDTO);
 
         assertNotNull(clienteRetornado);
-        assertEquals(1L, clienteRetornado.getId());
+        assertEquals(10L, clienteRetornado.getId());
     }
 
-    @DisplayName("Deve retornar Exeception ao tentar criar um cliente que ja possui cadastro")
+    @DisplayName("Deve retornar exceção ao tentar criar um cliente que já possui cadastro")
     @Test
-    public void testSaveClienteWithExistingCpf() {
+    public void shouldThrowExceptionWhenUsingSaveMethod() {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setCpf("927.965.620-18");
 
@@ -70,7 +68,7 @@ public class ClienteServiceTest {
 
     @DisplayName("Deve criar um cliente com sucesso somente com cpf")
     @Test
-    public void testSaveClientWithCpf() {
+    public void shouldSaveClientWithCpfOnly() {
         String cpf = "037.952.160-10";
 
         Cliente clienteSalvo = new Cliente();
@@ -84,10 +82,10 @@ public class ClienteServiceTest {
         assertEquals(3L, clienteRetornado.getId());
     }
 
-    @DisplayName("Deve retornar Exeception ao tentar criar um cliente que ja possui cadastro")
+    @DisplayName("Deve retornar exceção ao tentar criar um cliente que já possui cadastro")
     @Test
-    public void testSaveClientWithCpfWithExistingCpf() {
-        String cpf = "634.964.890-06";
+    public void shouldThrowExceptionWhenUsingSaveClientWithCpfMethod() {
+        final String cpf = "634.964.890-06";
 
         Cliente clienteExistente = new Cliente();
         clienteExistente.setId(4L);
@@ -99,13 +97,12 @@ public class ClienteServiceTest {
         });
     }
 
-
-    private Cliente cliente() {
+    private Cliente setCliente() {
         return Cliente.builder()
-                .id(1L)
-                .nome("Anthony Samuel Joaquim Teixeira")
-                .email("anthony.samuel.teixeira@said.adv.br")
-                .cpf("143.025.400-95")
+                .id(10L)
+                .nome("Ana Maria")
+                .email("ana.maria@gmail.com")
+                .cpf("603.072.360-05")
                 .build();
     }
 
