@@ -12,8 +12,8 @@ import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
@@ -26,8 +26,7 @@ import static org.mockito.Mockito.when;
 
 class PedidoServiceTest {
 
-    @InjectMocks
-    private PedidoService pedidoService;
+    private final PedidoService pedidoService;
 
     @Mock
     private PedidoRepository pedidoRepository;
@@ -40,6 +39,11 @@ class PedidoServiceTest {
 
     @Mock
     private ModelMapper mapper;
+
+    PedidoServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        pedidoService = new PedidoService(pedidoRepository, produtoRepository, clienteRepository, mapper);
+    }
 
     @DisplayName("Deve criar um pedido com sucesso")
     @Test

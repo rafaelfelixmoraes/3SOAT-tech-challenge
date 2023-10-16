@@ -8,8 +8,9 @@ import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Produto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -22,12 +23,18 @@ import static org.mockito.Mockito.when;
 
 class ProdutoServiceTest {
 
-    @InjectMocks
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
 
     @Mock
     private ProdutoRepository produtoRepository;
 
+    @Mock
+    ModelMapper mapper;
+
+    ProdutoServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        produtoService = new ProdutoService(produtoRepository, mapper);
+    }
 
     @DisplayName("Deve criar um produto com sucesso")
     @Test

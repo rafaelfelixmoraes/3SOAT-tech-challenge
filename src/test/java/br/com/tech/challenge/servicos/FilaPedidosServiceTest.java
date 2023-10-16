@@ -6,26 +6,26 @@ import br.com.tech.challenge.domain.enums.StatusPedido;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class FilaPedidosServiceTest {
 
-    @InjectMocks
-    private FilaPedidosService filaPedidosService;
+    private final FilaPedidosService filaPedidosService;
 
     @Mock
     private FilaPedidosRepository filaPedidosRepository;
+
+    FilaPedidosServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        filaPedidosService = new FilaPedidosService(filaPedidosRepository);
+    }
 
     @DisplayName("Deve listar a fila de pedidos com sucesso")
     @Test
@@ -46,8 +46,7 @@ class FilaPedidosServiceTest {
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
     void shouldListEmptyFilaPedidos() {
-
-        when(filaPedidosRepository.findAll()).thenReturn(new ArrayList<>());
+        when(filaPedidosRepository.findAll()).thenReturn(Collections.emptyList());
 
         var listaPedidosReturned = filaPedidosService.listaFilaPedidos();
 
