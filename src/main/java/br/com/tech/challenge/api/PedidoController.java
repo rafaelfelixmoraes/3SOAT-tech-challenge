@@ -38,7 +38,7 @@ public class PedidoController {
 
     private final ModelMapper mapper;
 
-    @Operation(description = "Endpoint para criar um Cliente")
+    @Operation(description = "Endpoint para criar um Pedido")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Pedido inválido."),
