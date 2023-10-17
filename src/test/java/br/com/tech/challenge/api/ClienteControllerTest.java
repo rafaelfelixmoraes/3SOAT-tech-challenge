@@ -10,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,15 +28,14 @@ class ClienteControllerTest {
     private ObjectMapper mapper;
 
     private static final String ROTA_CLIENTES = "/clientes";
-    private static final String ROTA_CLIENTES_CPF = "/clientes/14302540095";
+    private static final String ROTA_CLIENTES_CPF = "/clientes/{cpf}";
 
 
     @DisplayName("Deve salvar um cliente com sucesso")
     @Test
-    void saveClienteSuccess() throws Exception {
-
+    void shouldSaveClienteSuccess() throws Exception {
         mockMvc.perform(post(ROTA_CLIENTES)
-                        .content(mapper.writeValueAsString(cliente()))
+                        .content(mapper.writeValueAsString(setCliente()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -48,35 +45,26 @@ class ClienteControllerTest {
 
     @DisplayName("Deve salvar um cliente com sucesso apenas com cpf")
     @Test
-    public void testSaveCpfWithValidCpf() throws Exception {
-        String formattedCpf = "667.743.160-69";
-        String cpf = "66774316069";
+    public void shouldSaveClienteWithValidCpf() throws Exception {
+        final String cpf = "66774316069";
 
-        Mockito.when(clienteService.saveClientWithCpf(formattedCpf))
-                .thenReturn(new Cliente());
-
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/clientes/{cpf}", cpf)
+        mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-
-        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
+                .andExpect(status().isCreated());
     }
 
+    @DisplayName("Não deve salvar um cliente com cpf inválido")
     @Test
-    public void testSaveCpfWithInvalidCpf() throws Exception {
-        String cpf = "123.456.789-0000";
+    public void shouldNotSaveClienteWithInvalidCpf() throws Exception {
+        final String cpf = "123.456.789-0000";
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                        .post("/clientes/{cpf}", cpf)
+        mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-
     }
 
-    private Cliente cliente() {
+    private Cliente setCliente() {
         return Cliente.builder()
                 .id(1L)
                 .nome("Anthony Samuel Joaquim Teixeira")
