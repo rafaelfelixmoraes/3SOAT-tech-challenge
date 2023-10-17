@@ -8,10 +8,9 @@ import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Produto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -22,22 +21,24 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class ProdutoServiceTest {
 
-    @InjectMocks
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
 
     @Mock
     private ProdutoRepository produtoRepository;
 
     @Mock
-    private ModelMapper mapper;
+    ModelMapper mapper;
 
+    ProdutoServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        produtoService = new ProdutoService(produtoRepository, mapper);
+    }
 
     @DisplayName("Deve criar um produto com sucesso")
     @Test
-    void createProdutoSuccess() {
+    void shouldCreateProdutoSuccess() {
         var returnedProduto = setProduto();
         var returnedProdutoDTO = setProdutoDTO();
 
@@ -55,9 +56,9 @@ class ProdutoServiceTest {
         assertEquals(returnedProduto.getCategoria().getClass(), produto.getCategoria().getClass());
     }
 
-    @DisplayName("Deve Alterar um produto com sucesso")
+    @DisplayName("Deve alterar um produto com sucesso")
     @Test
-    void updateProdutoSuccess(){
+    void shouldUpdateProdutoSuccess(){
         var produtoUpdateDTO = setProdutoUpdateDTO();
 
         var produtoEntity = Produto.builder()
@@ -82,9 +83,9 @@ class ProdutoServiceTest {
         assertEquals(produtoEntity.getCategoria().getClass(), produtoUpdated.getCategoria().getClass());
     }
 
-    @DisplayName("Deve retornar excessão ao tentar alterar um produto inexistente")
+    @DisplayName("Deve retornar exceção ao tentar alterar um produto inexistente")
     @Test
-    void produtoUpdateNotFounded(){
+    void shouldThrowWhenProdutoNotFound(){
         when(produtoRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrowsExactly(ObjectNotFoundException.class, () ->

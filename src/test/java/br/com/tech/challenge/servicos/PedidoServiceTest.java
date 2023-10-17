@@ -12,10 +12,9 @@ import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,11 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class PedidoServiceTest {
 
-    @InjectMocks
-    private PedidoService pedidoService;
+    private final PedidoService pedidoService;
 
     @Mock
     private PedidoRepository pedidoRepository;
@@ -43,9 +40,14 @@ class PedidoServiceTest {
     @Mock
     private ModelMapper mapper;
 
+    PedidoServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        pedidoService = new PedidoService(pedidoRepository, produtoRepository, clienteRepository, mapper);
+    }
+
     @DisplayName("Deve criar um pedido com sucesso")
     @Test
-    void createPedidoSuccessTest() {
+    void shouldCreatePedidoSuccess() {
 
         var returnedPedido = setPedido();
         var returnedPedidoDTO = setPedidoDTO();
@@ -68,12 +70,11 @@ class PedidoServiceTest {
         assertEquals(returnedPedido.getValorTotal().getClass(), pedido.getValorTotal().getClass());
         assertEquals(returnedPedido.getStatusPedido().getClass(), pedido.getStatusPedido().getClass());
         assertEquals(returnedPedido.getSenhaRetirada().getClass(), pedido.getSenhaRetirada().getClass());
-
     }
 
     @DisplayName("Deve lançar exceção ao criar um pedido com cliente não informado")
     @Test
-    void validateNullClientTest() {
+    void shouldValidateNullClient() {
         try {
             var returnedPedidoDTO = setPedidoDTO();
             returnedPedidoDTO.setCliente(null);
@@ -86,7 +87,7 @@ class PedidoServiceTest {
 
     @DisplayName("Deve lançar exceção ao criar um pedido com cliente não encontrado")
     @Test
-    void validateExistingClientTest() {
+    void shouldValidateExistingClient() {
         var returnedPedidoDTO = setPedidoDTO();
         try {
             when(clienteRepository.existsById(any())).thenReturn(Boolean.FALSE);
@@ -99,7 +100,7 @@ class PedidoServiceTest {
 
 @DisplayName("Deve lançar exceção ao criar um pedido com lista de produtos vazia")
 @Test
-void validateEmptyListProductsOrderTest() {
+void shouldValidateEmptyListProductsOrder() {
         try {
             var returnedPedidoDTO = setPedidoDTO();
             when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
@@ -113,7 +114,7 @@ void validateEmptyListProductsOrderTest() {
 
     @DisplayName("Deve lançar exceção ao criar um pedido com produto não encontrado")
     @Test
-    void validateProductExistingTest() {
+    void shouldValidateProductExisting() {
         var returnedPedidoDTO = setPedidoDTO();
         try {
             when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
@@ -172,4 +173,5 @@ void validateEmptyListProductsOrderTest() {
                 .cpf("143.025.400-95")
                 .build();
     }
+
 }
