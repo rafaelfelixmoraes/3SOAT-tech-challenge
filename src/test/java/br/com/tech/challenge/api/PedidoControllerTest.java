@@ -4,6 +4,7 @@ import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
+import br.com.tech.challenge.domain.entidades.FilaPedidos;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -111,24 +115,31 @@ class PedidoControllerTest {
     @DisplayName("Deve listar a fila de pedidos com sucesso")
     @Test
     void shouldListFilaPedidosSuccess() throws Exception {
-        mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
+        var listaPedidos = new PageImpl<>(Collections.singletonList(setFilaPedidos()));
 
-    @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
-    @Test
-    void shouldListFilaPedidosEmptySuccess() throws Exception {
-        when(filaPedidosService.listaFilaPedidos()).thenReturn(Collections.emptyList());
+        when(filaPedidosService.listaFilaPedidos(anyInt(), anyInt())).thenReturn(listaPedidos);
 
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
+    @Test
+    void shouldListFilaPedidosEmptySuccess() throws Exception {
+        when(filaPedidosService.listaFilaPedidos(anyInt(), anyInt())).thenReturn(Page.empty());
+
+        mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     private PedidoDTO setPedidoDTO() {
@@ -164,6 +175,14 @@ class PedidoControllerTest {
                 .descricao("Coca Cola")
                 .valorUnitario(BigDecimal.valueOf(5.00))
                 .categoria(setCategoria())
+                .build();
+    }
+
+    private FilaPedidos setFilaPedidos() {
+        return FilaPedidos.builder()
+                .senhaRetirada(123)
+                .nomeCliente("Cliente Teste")
+                .statusPedido(StatusPedido.RECEBIDO.getDescricao())
                 .build();
     }
 
