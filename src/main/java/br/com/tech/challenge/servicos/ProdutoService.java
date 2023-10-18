@@ -6,6 +6,7 @@ import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoUpdateDTO;
 import br.com.tech.challenge.domain.entidades.Produto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +47,7 @@ public class ProdutoService {
     ) {
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("descricao"));
 
-        if (descricao != null && !descricao.isEmpty()) {
+        if (StringUtils.isBlank(descricao)) {
             return produtoRepository.findByDescricaoContainingIgnoreCase(descricao, pageable);
         } else {
             return produtoRepository.findAll(pageable);

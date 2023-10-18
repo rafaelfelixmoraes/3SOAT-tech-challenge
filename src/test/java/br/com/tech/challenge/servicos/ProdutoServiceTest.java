@@ -15,9 +15,11 @@ import org.modelmapper.ModelMapper;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 class ProdutoServiceTest {
 
@@ -105,7 +107,7 @@ class ProdutoServiceTest {
     void shouldThrowWhenDeleteProdutoNotFound(){
         var produto = setProduto();
 
-        when(produtoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(produto));
+        when(produtoRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrowsExactly(ObjectNotFoundException.class, () ->
                 produtoService.delete(produto.getId()), "Nenhum registro encontrado para o id informado");
