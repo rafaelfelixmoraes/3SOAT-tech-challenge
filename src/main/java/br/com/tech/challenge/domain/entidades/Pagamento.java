@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table
+@Generated
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
