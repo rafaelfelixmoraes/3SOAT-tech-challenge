@@ -42,8 +42,7 @@ public class PedidoController {
             @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Pedido inválido."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
-    }
-    )
+    })
     @PostMapping
     public ResponseEntity<PedidoDTO> save(@RequestBody PedidoDTO pedidoDTO) {
         return ResponseEntity.status(CREATED).body(mapper.map(pedidoService.save(pedidoDTO), PedidoDTO.class));

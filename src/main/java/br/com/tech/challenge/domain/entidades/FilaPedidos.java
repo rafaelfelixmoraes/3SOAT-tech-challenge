@@ -27,10 +27,10 @@ public class FilaPedidos {
     @Column(name = "senha")
     private Integer senhaRetirada;
 
-    @Column(name = "nomecliente")
-    private String nomeCliente;
+    @Column(name = "id_cliente")
+    private Integer idCliente;
 
-    @Column(name = "statuspedido")
+    @Column(name = "status_pedido")
     private String statusPedido;
 
 }
