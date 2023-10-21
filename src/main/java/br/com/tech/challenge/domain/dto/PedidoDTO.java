@@ -1,8 +1,6 @@
 package br.com.tech.challenge.domain.dto;
 
-import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pagamento;
-import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,6 +11,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -42,5 +41,9 @@ public class PedidoDTO {
     @Schema(description = "Pagamento do pedido")
     @JsonIgnore
     private Pagamento pagamento;
+
+    @Schema(description = "Data e hora do pedido")
+    @JsonIgnore
+    private LocalDateTime dataHora;
 
 }

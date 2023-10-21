@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,6 +42,7 @@ public class PedidoService {
         pedidoDTO.setStatusPedido(StatusPedido.RECEBIDO);
         pedidoDTO.setValorTotal(calculateTotalValueProducts(produtoList));
         pedidoDTO.setSenhaRetirada(PasswordUtils.generatePassword());
+        pedidoDTO.setDataHora(LocalDateTime.now());
         return pedidoRepository.save(mapper.map(pedidoDTO, Pedido.class));
     }
 

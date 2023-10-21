@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +76,7 @@ class PedidoServiceTest {
         assertEquals(returnedPedido.getValorTotal().getClass(), pedido.getValorTotal().getClass());
         assertEquals(returnedPedido.getStatusPedido().getClass(), pedido.getStatusPedido().getClass());
         assertEquals(returnedPedido.getSenhaRetirada().getClass(), pedido.getSenhaRetirada().getClass());
+        assertEquals(returnedPedido.getDataHora(), pedido.getDataHora());
     }
 
     @DisplayName("Deve lançar exceção ao criar um pedido com cliente não informado")
@@ -141,6 +143,7 @@ void shouldValidateEmptyListProductsOrder() {
                 .produtos(List.of(setProduto()))
                 .valorTotal(BigDecimal.valueOf(5.00))
                 .statusPedido(StatusPedido.RECEBIDO)
+                .dataHora(LocalDateTime.now())
                 .build();
     }
 

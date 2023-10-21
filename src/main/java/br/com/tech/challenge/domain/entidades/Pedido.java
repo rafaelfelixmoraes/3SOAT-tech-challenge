@@ -22,6 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -52,11 +53,14 @@ public class Pedido {
     private BigDecimal valorTotal;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="statusPedido")
+    @Column(name = "status_pedido")
     private StatusPedido statusPedido;
 
     @OneToOne(mappedBy = "pedido")
     @Transient
     private Pagamento pagamento;
+
+    @Column(name = "data_hora")
+    private LocalDateTime dataHora;
 
 }
