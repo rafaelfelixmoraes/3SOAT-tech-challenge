@@ -117,7 +117,7 @@ class PedidoControllerTest {
     void shouldListFilaPedidosSuccess() throws Exception {
         var listaPedidos = new PageImpl<>(Collections.singletonList(setFilaPedidos()));
 
-        when(filaPedidosService.listaFilaPedidos(anyInt(), anyInt())).thenReturn(listaPedidos);
+        when(filaPedidosService.listFilaPedidos(anyInt(), anyInt())).thenReturn(listaPedidos);
 
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ class PedidoControllerTest {
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
     void shouldListFilaPedidosEmptySuccess() throws Exception {
-        when(filaPedidosService.listaFilaPedidos(anyInt(), anyInt())).thenReturn(Page.empty());
+        when(filaPedidosService.listFilaPedidos(anyInt(), anyInt())).thenReturn(Page.empty());
 
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
                         .contentType(MediaType.APPLICATION_JSON)

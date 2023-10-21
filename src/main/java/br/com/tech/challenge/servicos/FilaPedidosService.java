@@ -14,9 +14,10 @@ public class FilaPedidosService {
 
     private final FilaPedidosRepository filaPedidosRepository;
 
-    public Page<FilaPedidos> listaFilaPedidos(final Integer pagina, final Integer tamanho){
+    public Page<FilaPedidos> listFilaPedidos(final Integer pagina, final Integer tamanho){
         final var pageable = PageRequest.of(pagina, tamanho, Sort.by("senhaRetirada"));
 
         return filaPedidosRepository.findAll(pageable);
     }
+
 }

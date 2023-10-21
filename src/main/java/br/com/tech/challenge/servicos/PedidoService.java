@@ -4,7 +4,6 @@ import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
-import br.com.tech.challenge.domain.dto.FilaPedidosDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.entidades.Pedido;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +36,8 @@ public class PedidoService {
     public Pedido save(PedidoDTO pedidoDTO) {
         final var produtoList = mapProductListDtoToEnityList(pedidoDTO.getProdutos());
         validateExistingClient(pedidoDTO);
-        validListProductsOrder(pedidoDTO);
-        validProductExisting(produtoList);
+        validateListProductsOrder(pedidoDTO);
+        validateProductExisting(produtoList);
         pedidoDTO.setStatusPedido(StatusPedido.RECEBIDO);
         pedidoDTO.setValorTotal(calculateTotalValueProducts(produtoList));
         pedidoDTO.setSenhaRetirada(PasswordUtils.generatePassword());
@@ -45,18 +45,20 @@ public class PedidoService {
     }
 
     private void validateExistingClient(PedidoDTO pedidoDTO) {
-        if (pedidoDTO.getCliente() == null)
+        if (Objects.isNull(pedidoDTO.getCliente())) {
             throw new ObjectNotFoundException("Cliente não informado.");
-        else if (!clienteRepository.existsById(pedidoDTO.getCliente().getId()))
-            throw new ObjectNotFoundException("Cliente não encontrado " + pedidoDTO.getCliente().getId());
+        } else if (!clienteRepository.existsById(pedidoDTO.getCliente().getId())) {
+            throw new ObjectNotFoundException("Cliente não encontrado: " + pedidoDTO.getCliente().getId());
+        }
     }
 
-    private void validListProductsOrder(PedidoDTO pedidoDTO) {
-        if (pedidoDTO.getProdutos() == null || pedidoDTO.getProdutos().isEmpty())
+    private void validateListProductsOrder(PedidoDTO pedidoDTO) {
+        if (Objects.isNull(pedidoDTO.getProdutos()) || pedidoDTO.getProdutos().isEmpty()) {
             throw new ObjectNotFoundException("Lista de produtos vazia");
+        }
     }
 
-    private void validProductExisting(List<Produto> produtos) {
+    private void validateProductExisting(List<Produto> produtos) {
         produtos.forEach(produto -> produtoRepository.findById(produto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado " + produto.getId())));
     }

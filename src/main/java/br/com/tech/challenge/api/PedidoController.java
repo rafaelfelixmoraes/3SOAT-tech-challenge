@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +44,7 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     }
     )
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<PedidoDTO> save(@RequestBody PedidoDTO pedidoDTO) {
         return ResponseEntity.status(CREATED).body(mapper.map(pedidoService.save(pedidoDTO), PedidoDTO.class));
     }
@@ -59,14 +58,13 @@ public class PedidoController {
                     }),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     })
-    @GetMapping(value = "/fila", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<FilaPedidosDTO>> filaPedidosList(
+    @GetMapping(value = "/fila")
+    public ResponseEntity<Page<FilaPedidosDTO>> listFilaPedidos(
             @RequestParam(name = "pagina", defaultValue = "0") int pagina,
             @RequestParam(name = "tamanho", defaultValue = "10") int tamanho) {
-        return ResponseEntity.ok()
-                .body(filaPedidosService.listaFilaPedidos(pagina, tamanho)
-                        .map(pedido -> mapper.map(pedido, FilaPedidosDTO.class))
-                );
+        return ResponseEntity.ok().body(filaPedidosService.listFilaPedidos(pagina, tamanho)
+                .map(pedido -> mapper.map(pedido, FilaPedidosDTO.class))
+        );
     }
 
 }
