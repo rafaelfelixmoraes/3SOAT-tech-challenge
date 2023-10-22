@@ -1,12 +1,14 @@
 package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
+import br.com.tech.challenge.api.exception.StatusPedidoInvalidoException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
+import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pedido;
@@ -20,11 +22,14 @@ import org.modelmapper.ModelMapper;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -133,7 +138,40 @@ void shouldValidateEmptyListProductsOrder() {
         }
     }
 
-    private Pedido setPedido() {
+    @Test
+    void shouldThrowStatusPedidoInvalidoExceptionWhenCancelPedido() {
+        // Arrange
+        Long pedidoId = 1L;
+        StatusPedidoDTO novoStatusDTO = new StatusPedidoDTO(StatusPedido.CANCELADO);
+
+        Pedido pedido = new Pedido(); // Crie um pedido fictício
+        Optional<Pedido> pedidoOptional = Optional.of(pedido);
+
+        when(pedidoRepository.findById(pedidoId)).thenReturn(pedidoOptional);
+
+        // Act & Assert
+        assertThrows(StatusPedidoInvalidoException.class, () -> pedidoService.updateStatus(pedidoId, novoStatusDTO));
+    }
+
+
+    @DisplayName("Deve listar pedidos com sucesso")
+    @Test
+    void shouldListPedidosSuccessfully() {
+        List<Pedido> pedidosMock = setPedidoList();
+        when(pedidoRepository.findAll()).thenReturn(pedidosMock);
+
+        List<PedidoDTO> result = pedidoService.list();
+
+        List<PedidoDTO> expected = pedidosMock.stream()
+                .map(pedido -> mapper.map(pedido, PedidoDTO.class))
+                .toList();
+
+        assertEquals(expected, result);
+
+    }
+
+
+        private Pedido setPedido() {
         return Pedido.builder()
                 .id(1L)
                 .senhaRetirada(123456)
@@ -196,6 +234,16 @@ void shouldValidateEmptyListProductsOrder() {
                 .email("anthony.samuel.teixeira@said.adv.br")
                 .cpf("143.025.400-95")
                 .build();
+    }
+
+    private List<Pedido> setPedidoList() {
+        List<Pedido> pedidos = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            Pedido pedido = new Pedido();
+            pedido.setId((long) i);
+            pedidos.add(pedido);
+        }
+        return pedidos;
     }
 
 }

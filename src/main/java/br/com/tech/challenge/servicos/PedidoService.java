@@ -1,11 +1,13 @@
 package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
+import br.com.tech.challenge.api.exception.StatusPedidoInvalidoException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
+import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +73,32 @@ public class PedidoService {
                 new TypeToken<List<Produto>>() {}.getType()
         );
     }
+
+    @Transactional(readOnly = true)
+    public List<PedidoDTO> list() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+
+
+        return pedidos.stream()
+                .map(pedido -> mapper.map(pedido, PedidoDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public PedidoDTO updateStatus(Long pedidoId, StatusPedidoDTO novoStatus) {
+
+        if(novoStatus.getStatusPedido().equals(StatusPedido.CANCELADO)){
+            throw new StatusPedidoInvalidoException();
+        }
+
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado: " + pedidoId));
+
+        pedido.setStatusPedido(novoStatus.getStatusPedido());
+
+        return mapper.map(pedidoRepository.save(pedido), PedidoDTO.class);
+    }
+
 
 }

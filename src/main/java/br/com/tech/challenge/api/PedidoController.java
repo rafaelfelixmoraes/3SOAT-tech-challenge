@@ -21,13 +21,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -83,7 +80,7 @@ public class PedidoController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PedidoDTO>> listarPedidos() {
 
-        return ResponseEntity.ok(pedidoService.listarPedidos().stream()
+        return ResponseEntity.ok(pedidoService.list().stream()
                 .map(pedido -> mapper.map(pedido, PedidoDTO.class))
                 .toList());
     }
@@ -95,11 +92,11 @@ public class PedidoController {
     }
     )
     @PutMapping("/{pedidoId}/status")
-    public ResponseEntity<PedidoDTO> atualizarStatusPedido(@PathVariable Long pedidoId, @RequestBody StatusPedidoDTO statusPedidoDTO) {
+    public ResponseEntity<PedidoDTO> updateStatus(@PathVariable Long pedidoId, @RequestBody StatusPedidoDTO statusPedidoDTO) {
 
         Utils.validarStatusPedido(statusPedidoDTO.getStatusPedido()); // Validação
 
-        return ResponseEntity.ok(mapper.map(pedidoService.atualizarStatusPedido(pedidoId, statusPedidoDTO), PedidoDTO.class));
+        return ResponseEntity.ok(mapper.map(pedidoService.updateStatus(pedidoId, statusPedidoDTO), PedidoDTO.class));
     }
 
 }
