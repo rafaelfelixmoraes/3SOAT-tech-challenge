@@ -3,9 +3,10 @@ package br.com.tech.challenge.servicos;
 import br.com.tech.challenge.bd.repositorios.FilaPedidosRepository;
 import br.com.tech.challenge.domain.entidades.FilaPedidos;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,7 +14,9 @@ public class FilaPedidosService {
 
     private final FilaPedidosRepository filaPedidosRepository;
 
-    public List<FilaPedidos> listaFilaPedidos(){
-        return filaPedidosRepository.findAll();
+    public Page<FilaPedidos> listaFilaPedidos(final Integer pagina, final Integer tamanho){
+        final var pageable = PageRequest.of(pagina, tamanho, Sort.by("senhaRetirada"));
+
+        return filaPedidosRepository.findAll(pageable);
     }
 }

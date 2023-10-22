@@ -16,12 +16,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import java.util.Set;
 
 @Entity
 @Data
 @Table
+@Generated
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor

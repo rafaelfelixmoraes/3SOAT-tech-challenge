@@ -1,11 +1,10 @@
 package br.com.tech.challenge.domain.dto;
 
-import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pagamento;
-import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,10 +29,10 @@ public class PedidoDTO {
     private Integer senhaRetirada;
 
     @Schema(description = "Cliente que realizou o pedido")
-    private Cliente cliente;
+    private ClienteDTO cliente;
 
     @Schema(description = "Lista de produtos do pedido")
-    private List<Produto> produtos;
+    private List<ProdutoDTO> produtos;
 
     @Schema(description = "Valor total do pedido")
     private BigDecimal valorTotal;
@@ -42,6 +41,7 @@ public class PedidoDTO {
     private StatusPedido statusPedido;
 
     @Schema(description = "Pagamento do pedido")
+    @JsonIgnore
     private Pagamento pagamento;
 
 }

@@ -13,11 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.hamcrest.Matchers.hasSize;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,23 +42,21 @@ class ProdutoControllerTest {
 
     @DisplayName("Deve salvar um produto com sucesso")
     @Test
-    void saveProdutoSuccess() throws Exception {
-
+    void shouldSaveProdutoSuccess() throws Exception {
         mockMvc.perform(post(ROTA_PRODUTOS)
                         .content(mapper.writeValueAsString(setProduto()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
-
     }
 
-    @DisplayName("Deve Alterar um produto com sucesso")
+    @DisplayName("Deve alterar um produto com sucesso")
     @Test
-    void updateProdutoSuccess() throws Exception {
+    void shouldUpdateProdutoSuccess() throws Exception {
         var produtoUpdateDTO = setProdutoUpdateDTO();
 
-        mockMvc.perform(patch(ROTA_PRODUTOS + "/1")
+        mockMvc.perform(patch(ROTA_PRODUTOS + "/10")
                         .content(mapper.writeValueAsString(produtoUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -61,17 +64,39 @@ class ProdutoControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("Deve retornar excessão ao tentar alterar um produto inexistente")
+    @DisplayName("Deve retornar exceção ao tentar alterar um produto inexistente")
     @Test
-    void produtoUpdateNotFounded() throws Exception {
-
-        mockMvc.perform(patch(ROTA_PRODUTOS + "/10")
+    void shouldThrowExceptionWhenProdutoDoesntExist() throws Exception {
+        mockMvc.perform(patch(ROTA_PRODUTOS + "/100")
                         .content(mapper.writeValueAsString(setProdutoUpdateDTO()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.statusCode").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @DisplayName("Deve listar os produtos com sucesso")
+    @Test
+    void shouldListProdutoSuccess() throws Exception {
+        mockMvc.perform(get(ROTA_PRODUTOS)
+                        .content(mapper.writeValueAsString(setListProdutos()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @DisplayName("Deve deletar um produto com sucesso")
+    @Test
+    void shouldDeleteProdutoSuccess() throws Exception {
+        mockMvc.perform(delete(ROTA_PRODUTOS + "/15")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 
     private Produto setProduto() {
@@ -92,11 +117,20 @@ class ProdutoControllerTest {
 
     private ProdutoUpdateDTO setProdutoUpdateDTO() {
         return ProdutoUpdateDTO.builder()
-                .id(1L)
+                .id(10L)
                 .descricao("Produto Alterado Teste")
                 .categoria(setCategoria())
                 .valorUnitario(new BigDecimal("10.50"))
                 .build();
+    }
+    private List<Produto> setListProdutos() {
+        var produto = Produto.builder()
+                .id(1L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
+        return Collections.singletonList(produto);
     }
 
 }

@@ -4,7 +4,9 @@ import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
+import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
+import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pedido;
@@ -12,12 +14,13 @@ import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class PedidoServiceTest {
 
-    @InjectMocks
-    private PedidoService pedidoService;
+    private final PedidoService pedidoService;
 
     @Mock
     private PedidoRepository pedidoRepository;
@@ -43,9 +44,14 @@ class PedidoServiceTest {
     @Mock
     private ModelMapper mapper;
 
+    PedidoServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        pedidoService = new PedidoService(pedidoRepository, produtoRepository, clienteRepository, mapper);
+    }
+
     @DisplayName("Deve criar um pedido com sucesso")
     @Test
-    void createPedidoSuccessTest() {
+    void shouldCreatePedidoSuccess() {
 
         var returnedPedido = setPedido();
         var returnedPedidoDTO = setPedidoDTO();
@@ -53,6 +59,7 @@ class PedidoServiceTest {
         when(pedidoRepository.save(any())).thenReturn(returnedPedido);
         when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
         when(produtoRepository.findById(any())).thenReturn(Optional.of(setProduto()));
+        when(mapper.map(any(), any(Type.class))).thenReturn(Collections.singletonList(setProduto()));
 
         var pedido = pedidoService.save(returnedPedidoDTO);
 
@@ -68,12 +75,11 @@ class PedidoServiceTest {
         assertEquals(returnedPedido.getValorTotal().getClass(), pedido.getValorTotal().getClass());
         assertEquals(returnedPedido.getStatusPedido().getClass(), pedido.getStatusPedido().getClass());
         assertEquals(returnedPedido.getSenhaRetirada().getClass(), pedido.getSenhaRetirada().getClass());
-
     }
 
     @DisplayName("Deve lançar exceção ao criar um pedido com cliente não informado")
     @Test
-    void validateNullClientTest() {
+    void shouldValidateNullClient() {
         try {
             var returnedPedidoDTO = setPedidoDTO();
             returnedPedidoDTO.setCliente(null);
@@ -86,7 +92,7 @@ class PedidoServiceTest {
 
     @DisplayName("Deve lançar exceção ao criar um pedido com cliente não encontrado")
     @Test
-    void validateExistingClientTest() {
+    void shouldValidateExistingClient() {
         var returnedPedidoDTO = setPedidoDTO();
         try {
             when(clienteRepository.existsById(any())).thenReturn(Boolean.FALSE);
@@ -99,7 +105,7 @@ class PedidoServiceTest {
 
 @DisplayName("Deve lançar exceção ao criar um pedido com lista de produtos vazia")
 @Test
-void validateEmptyListProductsOrderTest() {
+void shouldValidateEmptyListProductsOrder() {
         try {
             var returnedPedidoDTO = setPedidoDTO();
             when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
@@ -113,11 +119,12 @@ void validateEmptyListProductsOrderTest() {
 
     @DisplayName("Deve lançar exceção ao criar um pedido com produto não encontrado")
     @Test
-    void validateProductExistingTest() {
+    void shouldValidateProductExisting() {
         var returnedPedidoDTO = setPedidoDTO();
         try {
             when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
             when(produtoRepository.findById(any())).thenReturn(Optional.empty());
+            when(mapper.map(any(), any(Type.class))).thenReturn(Collections.singletonList(setProduto()));
             pedidoService.save(returnedPedidoDTO);
         } catch (Exception e) {
             assertEquals(ObjectNotFoundException.class, e.getClass());
@@ -141,8 +148,8 @@ void validateEmptyListProductsOrderTest() {
         return PedidoDTO.builder()
                 .id(1L)
                 .senhaRetirada(123456)
-                .cliente(setCliente())
-                .produtos(List.of(setProduto()))
+                .cliente(setClienteDTO())
+                .produtos(List.of(setProdutoDTO()))
                 .valorTotal(BigDecimal.valueOf(5.00))
                 .statusPedido(StatusPedido.RECEBIDO)
                 .build();
@@ -172,4 +179,23 @@ void validateEmptyListProductsOrderTest() {
                 .cpf("143.025.400-95")
                 .build();
     }
+
+    private ProdutoDTO setProdutoDTO() {
+        return ProdutoDTO.builder()
+                .id(1L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
+    }
+
+    private ClienteDTO setClienteDTO() {
+        return ClienteDTO.builder()
+                .id(1L)
+                .nome("Anthony Samuel Joaquim Teixeira")
+                .email("anthony.samuel.teixeira@said.adv.br")
+                .cpf("143.025.400-95")
+                .build();
+    }
+
 }

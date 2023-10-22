@@ -6,9 +6,16 @@ import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoUpdateDTO;
 import br.com.tech.challenge.domain.entidades.Produto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +38,28 @@ public class ProdutoService {
         mapper.map(produtoUpdateDTO, produto);
 
         return produtoRepository.save(produto);
+    }
+
+    public Page<Produto> list(
+            String descricao,
+            int pagina,
+            int tamanho
+    ) {
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("descricao"));
+
+        if (StringUtils.isBlank(descricao)) {
+            return produtoRepository.findByDescricaoContainingIgnoreCase(descricao, pageable);
+        } else {
+            return produtoRepository.findAll(pageable);
+        }
+    }
+    @Transactional
+    public void delete(Long id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new ObjectNotFoundException("Nenhum registro encontrado para o ID informado");
+        }
+
+        produtoRepository.deleteById(id);
     }
 
 }

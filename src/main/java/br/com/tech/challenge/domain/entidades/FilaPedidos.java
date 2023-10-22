@@ -8,12 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Data;
+import lombok.Generated;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Subselect;
 
 @Data
 @Entity
 @Immutable
+@Generated
 @Builder(toBuilder = true)
 @Table(name = "View_FilaPedidos")
 @AllArgsConstructor

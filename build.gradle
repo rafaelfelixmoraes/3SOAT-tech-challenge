@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.1.1'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id "org.flywaydb.flyway" version "9.8.1"
+	id 'jacoco'
 }
 
 group = 'br.com.tech.challenge'
@@ -70,4 +71,39 @@ flyway {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+test {
+	finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+}
+
+jacoco {
+	toolVersion = "0.8.9"
+	reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'CLASS'
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.7
+			}
+			excludes = [
+					'br.com.tech.challenge.domain.dto.*',
+					'br.com.tech.challenge.domain.entidades.*',
+					'br.com.tech.challenge.domain.enums.*',
+					'br.com.tech.challenge.config.*',
+					'br.com.tech.challenge.api.exception.*',
+					'br.com.tech.challenge.bd.repositorios.*',
+					'br.com.tech.challenge.TechChallengeApplication'
+			]
+		}
+	}
 }

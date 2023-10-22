@@ -6,55 +6,58 @@ import br.com.tech.challenge.domain.enums.StatusPedido;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class FilaPedidosServiceTest {
 
-    @InjectMocks
-    private FilaPedidosService filaPedidosService;
+    private final FilaPedidosService filaPedidosService;
 
     @Mock
     private FilaPedidosRepository filaPedidosRepository;
 
+    FilaPedidosServiceTest() {
+        MockitoAnnotations.openMocks(this);
+        filaPedidosService = new FilaPedidosService(filaPedidosRepository);
+    }
+
     @DisplayName("Deve listar a fila de pedidos com sucesso")
     @Test
-    void listFilaPedidos(){
-        var listaPedidos = setFilaPedidos();
+    void shouldListFilaPedidosSuccess() {
+        var listaPedidos = new PageImpl<>(setFilaPedidos());
 
-        when(filaPedidosRepository.findAll()).thenReturn(listaPedidos);
+        when(filaPedidosRepository.findAll(any(PageRequest.class))).thenReturn(listaPedidos);
 
-        var listaPedidosReturned = filaPedidosService.listaFilaPedidos();
+        var listaPedidosReturned = filaPedidosService.listaFilaPedidos(0, 10);
 
         assertNotNull(listaPedidosReturned);
         assertFalse(listaPedidosReturned.isEmpty());
-        assertEquals(listaPedidos.get(0).getSenhaRetirada(), listaPedidosReturned.get(0).getSenhaRetirada());
-        assertEquals(listaPedidos.get(0).getNomeCliente(), listaPedidosReturned.get(0).getNomeCliente());
-        assertEquals(listaPedidos.get(0).getStatusPedido(), listaPedidosReturned.get(0).getStatusPedido());
+        assertEquals(1L, listaPedidosReturned.getTotalElements());
     }
 
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
-    void listFilaPedidosVazia(){
+    void shouldListEmptyFilaPedidos() {
+        when(filaPedidosRepository.findAll(any(PageRequest.class))).thenReturn(Page.empty());
 
-        when(filaPedidosRepository.findAll()).thenReturn(new ArrayList<>());
-
-        var listaPedidosReturned = filaPedidosService.listaFilaPedidos();
+        var listaPedidosReturned = filaPedidosService.listaFilaPedidos(0, 10);
 
         assertNotNull(listaPedidosReturned);
         assertTrue(listaPedidosReturned.isEmpty());
+        assertEquals(0L, listaPedidosReturned.getTotalElements());
     }
 
     private List<FilaPedidos> setFilaPedidos() {
@@ -66,4 +69,5 @@ class FilaPedidosServiceTest {
 
         return Collections.singletonList(filaPedidos);
     }
+
 }

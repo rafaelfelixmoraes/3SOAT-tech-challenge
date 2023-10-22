@@ -18,12 +18,16 @@ import jakarta.validation.Valid;
 import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -47,7 +51,7 @@ public class PedidoController {
     }
     )
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PedidoDTO> salvar(@RequestBody PedidoDTO pedidoDTO) {
+    public ResponseEntity<PedidoDTO> save(@RequestBody PedidoDTO pedidoDTO) {
         return ResponseEntity.status(CREATED).body(mapper.map(pedidoService.save(pedidoDTO), PedidoDTO.class));
     }
 
@@ -61,12 +65,12 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     })
     @GetMapping(value = "/fila", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FilaPedidosDTO>> listaFilaPedidos() {
+    public ResponseEntity<Page<FilaPedidosDTO>> filaPedidosList(
+            @RequestParam(name = "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name = "tamanho", defaultValue = "10") int tamanho) {
         return ResponseEntity.ok()
-                .body(mapper.map(
-                        filaPedidosService.listaFilaPedidos(),
-                        new TypeToken<List<FilaPedidosDTO>>() {
-                        }.getType())
+                .body(filaPedidosService.listaFilaPedidos(pagina, tamanho)
+                        .map(pedido -> mapper.map(pedido, FilaPedidosDTO.class))
                 );
     }
 

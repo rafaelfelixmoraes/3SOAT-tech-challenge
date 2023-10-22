@@ -5,13 +5,14 @@ import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
-import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
+import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.utils.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +33,12 @@ public class PedidoService {
 
     @Transactional
     public Pedido save(PedidoDTO pedidoDTO) {
+        final var produtoList = mapProductListDtoToEnityList(pedidoDTO.getProdutos());
         validateExistingClient(pedidoDTO);
         validListProductsOrder(pedidoDTO);
-        validProductExisting(pedidoDTO.getProdutos());
+        validProductExisting(produtoList);
         pedidoDTO.setStatusPedido(StatusPedido.RECEBIDO);
-        pedidoDTO.setValorTotal(calculateTotalValueProducts(pedidoDTO.getProdutos()));
+        pedidoDTO.setValorTotal(calculateTotalValueProducts(produtoList));
         pedidoDTO.setSenhaRetirada(PasswordUtils.generatePassword());
         return pedidoRepository.save(mapper.map(pedidoDTO, Pedido.class));
     }
@@ -62,16 +64,11 @@ public class PedidoService {
         return produtos.stream().map(Produto::getValorUnitario).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public List<Pedido> listarPedidos() {
-        return pedidoRepository.findAll();
-    }
-
-    @Transactional
-    public Pedido atualizarStatusPedido(Long pedidoID, StatusPedidoDTO statusPedidoDTO) {
-        Pedido pedido = pedidoRepository.findById(pedidoID)
-                .orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado"));
-        pedido.setStatusPedido(StatusPedido.valueOf(String.valueOf(statusPedidoDTO.getStatusPedido())));
-       return pedidoRepository.save(pedido);
+    private List<Produto> mapProductListDtoToEnityList(final List<ProdutoDTO> produtoDTOList){
+        return mapper.map(
+                produtoDTOList,
+                new TypeToken<List<Produto>>() {}.getType()
+        );
     }
 
 }
