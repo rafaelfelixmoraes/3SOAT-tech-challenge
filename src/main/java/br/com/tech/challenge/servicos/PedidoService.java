@@ -5,6 +5,7 @@ import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
+import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
@@ -59,6 +60,18 @@ public class PedidoService {
 
     private BigDecimal calculateTotalValueProducts(List<Produto> produtos) {
         return produtos.stream().map(Produto::getValorUnitario).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public List<Pedido> listarPedidos() {
+        return pedidoRepository.findAll();
+    }
+
+    @Transactional
+    public Pedido atualizarStatusPedido(Long pedidoID, StatusPedidoDTO statusPedidoDTO) {
+        Pedido pedido = pedidoRepository.findById(pedidoID)
+                .orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado"));
+        pedido.setStatusPedido(StatusPedido.valueOf(String.valueOf(statusPedidoDTO.getStatusPedido())));
+       return pedidoRepository.save(pedido);
     }
 
 }

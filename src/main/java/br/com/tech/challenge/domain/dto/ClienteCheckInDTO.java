@@ -11,13 +11,16 @@ import org.hibernate.validator.constraints.br.CPF;
 @NoArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClienteCpfDTO {
+public class ClienteCheckInDTO {
 
 
     private Long id;
 
     @CPF(message = "CPF deve ser válido e no formato ###.###.###-##")
     private String cpf;
+
+    private String nome;
+
 
 
 }

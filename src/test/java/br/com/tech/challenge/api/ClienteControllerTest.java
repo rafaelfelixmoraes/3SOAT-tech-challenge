@@ -1,9 +1,11 @@
 package br.com.tech.challenge.api;
 
 import br.com.tech.challenge.domain.entidades.Cliente;
+import br.com.tech.challenge.servicos.ClienteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,8 @@ class ClienteControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    private ClienteService clienteService;
 
     private static final String ROTA_CLIENTES = "/clientes";
     private static final String ROTA_CLIENTES_CPF = "/clientes/14302540095";

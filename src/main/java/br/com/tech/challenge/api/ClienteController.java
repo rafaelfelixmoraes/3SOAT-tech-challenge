@@ -1,6 +1,6 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.api.exception.InvalidCpfException;
+import br.com.tech.challenge.domain.dto.ClienteCheckInDTO;
 import br.com.tech.challenge.domain.dto.ClienteCpfDTO;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.servicos.ClienteService;
@@ -51,15 +51,24 @@ public class ClienteController {
     @PostMapping("/{cpf}")
     public ResponseEntity<ClienteCpfDTO> saveCpf(@PathVariable String cpf) {
 
-        String formattedCpf = CpfUtils.formatCpf(cpf);
+        String formattedCPF = CpfUtils.formatCpf(cpf);
+        CpfUtils.isCpfValid(formattedCPF);
 
-        if (!CpfUtils.isCpfValid(formattedCpf)) {
-            throw new InvalidCpfException("CPF inválido: " + formattedCpf);
-        }
-
-        return ResponseEntity.status(CREATED).body(mapper.map(clienteService.saveClientWithCpf(formattedCpf), ClienteCpfDTO.class));
+        return ResponseEntity.status(CREATED).body(mapper.map(clienteService.saveClientWithCpf(formattedCPF), ClienteCpfDTO.class));
     }
+    @Operation(description = "Endpoint para identificar cliente via cpf")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cliente identificado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Cliente não encontrado."),
+            @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
+    })
+    @GetMapping("/check-in/{cpf}")
+    public ResponseEntity<ClienteCheckInDTO> checkInCliente(@PathVariable String cpf) {
 
+        String formattedCPF = CpfUtils.formatCpf(cpf);
+        CpfUtils.isCpfValid(formattedCPF);
 
+        return ResponseEntity.ok(clienteService.checkInCliente(CpfUtils.formatCpf(formattedCPF)));
+    }
 
 }

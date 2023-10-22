@@ -1,8 +1,9 @@
 package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ClienteAlreadyExistsException;
+import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
-import br.com.tech.challenge.domain.dto.ClienteCpfDTO;
+import br.com.tech.challenge.domain.dto.ClienteCheckInDTO;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,20 @@ public class ClienteService {
 
     public Optional<Cliente> findByCpf(String cpf) {
         return clienteRepository.findByCpf(cpf);
+    }
+
+
+    @Transactional
+    public ClienteCheckInDTO checkInCliente(String cpf) {
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
+
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+
+            return mapper.map(cliente, ClienteCheckInDTO.class);
+        } else {
+            throw new ObjectNotFoundException("Cliente não encontrado");
+        }
     }
 
     private void isClienteAlreadyExists(String cpf) {

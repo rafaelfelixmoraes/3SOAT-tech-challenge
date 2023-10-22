@@ -2,8 +2,11 @@ package br.com.tech.challenge.api;
 
 import br.com.tech.challenge.domain.dto.FilaPedidosDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
+import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
+import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import br.com.tech.challenge.servicos.PedidoService;
+import br.com.tech.challenge.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,16 +14,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class PedidoController {
 
     private final ModelMapper mapper;
 
-    @Operation(description = "Endpoint para criar um Cliente")
+    @Operation(description = "Endpoint para criar um Pedido")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Pedido inválido."),
@@ -64,8 +65,37 @@ public class PedidoController {
         return ResponseEntity.ok()
                 .body(mapper.map(
                         filaPedidosService.listaFilaPedidos(),
-                        new TypeToken<List<FilaPedidosDTO>>() {}.getType())
+                        new TypeToken<List<FilaPedidosDTO>>() {
+                        }.getType())
                 );
+    }
+
+    @Operation(description = "Endpoint para listar Pedidos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pedidos retornados sucesso."),
+            @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
+    }
+    )
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PedidoDTO>> listarPedidos() {
+
+        return ResponseEntity.ok(pedidoService.listarPedidos().stream()
+                .map(pedido -> mapper.map(pedido, PedidoDTO.class))
+                .toList());
+    }
+
+    @Operation(description = "Endpoint para atualizar status de um pedido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Pedido atualizado com sucesso."),
+            @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
+    }
+    )
+    @PutMapping("/{pedidoId}/status")
+    public ResponseEntity<PedidoDTO> atualizarStatusPedido(@PathVariable Long pedidoId, @RequestBody StatusPedidoDTO statusPedidoDTO) {
+
+        Utils.validarStatusPedido(statusPedidoDTO.getStatusPedido()); // Validação
+
+        return ResponseEntity.ok(mapper.map(pedidoService.atualizarStatusPedido(pedidoId, statusPedidoDTO), PedidoDTO.class));
     }
 
 }
