@@ -4,7 +4,9 @@ import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
+import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
+import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pedido;
@@ -16,7 +18,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +59,7 @@ class PedidoServiceTest {
         when(pedidoRepository.save(any())).thenReturn(returnedPedido);
         when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
         when(produtoRepository.findById(any())).thenReturn(Optional.of(setProduto()));
+        when(mapper.map(any(), any(Type.class))).thenReturn(Collections.singletonList(setProduto()));
 
         var pedido = pedidoService.save(returnedPedidoDTO);
 
@@ -119,6 +124,7 @@ void shouldValidateEmptyListProductsOrder() {
         try {
             when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
             when(produtoRepository.findById(any())).thenReturn(Optional.empty());
+            when(mapper.map(any(), any(Type.class))).thenReturn(Collections.singletonList(setProduto()));
             pedidoService.save(returnedPedidoDTO);
         } catch (Exception e) {
             assertEquals(ObjectNotFoundException.class, e.getClass());
@@ -142,8 +148,8 @@ void shouldValidateEmptyListProductsOrder() {
         return PedidoDTO.builder()
                 .id(1L)
                 .senhaRetirada(123456)
-                .cliente(setCliente())
-                .produtos(List.of(setProduto()))
+                .cliente(setClienteDTO())
+                .produtos(List.of(setProdutoDTO()))
                 .valorTotal(BigDecimal.valueOf(5.00))
                 .statusPedido(StatusPedido.RECEBIDO)
                 .build();
@@ -167,6 +173,24 @@ void shouldValidateEmptyListProductsOrder() {
 
     private Cliente setCliente() {
         return Cliente.builder()
+                .id(1L)
+                .nome("Anthony Samuel Joaquim Teixeira")
+                .email("anthony.samuel.teixeira@said.adv.br")
+                .cpf("143.025.400-95")
+                .build();
+    }
+
+    private ProdutoDTO setProdutoDTO() {
+        return ProdutoDTO.builder()
+                .id(1L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
+    }
+
+    private ClienteDTO setClienteDTO() {
+        return ClienteDTO.builder()
                 .id(1L)
                 .nome("Anthony Samuel Joaquim Teixeira")
                 .email("anthony.samuel.teixeira@said.adv.br")

@@ -83,13 +83,34 @@ class ProdutoServiceTest {
         assertEquals(produtoEntity.getCategoria().getClass(), produtoUpdated.getCategoria().getClass());
     }
 
+    @DisplayName("Deve deletar um produto com sucesso")
+    @Test
+    void shouldDeleteProdutoSuccess() {
+        var produto = setProduto();
+
+        when(produtoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(produto));
+
+        produtoRepository.deleteById(anyLong());
+    }
+
     @DisplayName("Deve retornar exceção ao tentar alterar um produto inexistente")
     @Test
-    void shouldThrowWhenProdutoNotFound(){
+    void shouldThrowWhenUpdateProdutoNotFound(){
         when(produtoRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrowsExactly(ObjectNotFoundException.class, () ->
                 produtoService.update(setProdutoUpdateDTO()), "Nenhum registro encontrado para o id informado");
+    }
+
+    @DisplayName("Deve retornar exceção ao tentar deletar um produto inexistente")
+    @Test
+    void shouldThrowWhenDeleteProdutoNotFound(){
+        var produto = setProduto();
+
+        when(produtoRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(ObjectNotFoundException.class, () ->
+                produtoService.delete(produto.getId()), "Nenhum registro encontrado para o id informado");
     }
 
     private Produto setProduto() {

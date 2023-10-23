@@ -13,11 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.hamcrest.Matchers.hasSize;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,6 +76,29 @@ class ProdutoControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(HttpStatus.NOT_FOUND.value()));
     }
 
+    @DisplayName("Deve listar os produtos com sucesso")
+    @Test
+    void shouldListProdutoSuccess() throws Exception {
+        mockMvc.perform(get(ROTA_PRODUTOS)
+                        .content(mapper.writeValueAsString(setListProdutos()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @DisplayName("Deve deletar um produto com sucesso")
+    @Test
+    void shouldDeleteProdutoSuccess() throws Exception {
+        mockMvc.perform(delete(ROTA_PRODUTOS + "/15")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
     private Produto setProduto() {
         return Produto.builder()
                 .id(1L)
@@ -94,6 +122,15 @@ class ProdutoControllerTest {
                 .categoria(setCategoria())
                 .valorUnitario(new BigDecimal("10.50"))
                 .build();
+    }
+    private List<Produto> setListProdutos() {
+        var produto = Produto.builder()
+                .id(1L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
+        return Collections.singletonList(produto);
     }
 
 }

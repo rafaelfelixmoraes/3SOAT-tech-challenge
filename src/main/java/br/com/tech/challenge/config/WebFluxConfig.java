@@ -1,8 +1,10 @@
 package br.com.tech.challenge.config;
 
+import lombok.Generated;
 import org.springframework.web.reactive.config.ResourceHandlerRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
+@Generated
 public class WebFluxConfig implements WebFluxConfigurer {
 
     @Override
