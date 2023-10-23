@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -88,8 +89,22 @@ class ProdutoServiceTest {
     @DisplayName("Deve listar produtos com sucesso")
     @Test
     void shouldListProdutoSuccess() {
+        var listProdutos = setListProdutos();
 
-        produtoRepository.findAll();
+        when(produtoRepository.findAll()).thenReturn(listProdutos);
+
+        var produtos = produtoRepository.findAll();
+
+        for (int i = 0; i < listProdutos.size(); i++) {
+            assertEquals(listProdutos.get(i).getId(), produtos.get(i).getId());
+            assertEquals(listProdutos.get(i).getDescricao(), produtos.get(i).getDescricao());
+            assertEquals(listProdutos.get(i).getValorUnitario(), produtos.get(i).getValorUnitario());
+            assertEquals(listProdutos.get(i).getCategoria(), produtos.get(i).getCategoria());
+            assertEquals(listProdutos.get(i).getId().getClass(), produtos.get(i).getId().getClass());
+            assertEquals(listProdutos.get(i).getDescricao().getClass(), produtos.get(i).getDescricao().getClass());
+            assertEquals(listProdutos.get(i).getValorUnitario().getClass(), produtos.get(i).getValorUnitario().getClass());
+            assertEquals(listProdutos.get(i).getCategoria().getClass(), produtos.get(i).getCategoria().getClass());
+        }
     }
 
     @DisplayName("Deve listar produtos vazios com sucesso")
@@ -97,6 +112,9 @@ class ProdutoServiceTest {
     void shouldListEmptyProdutoSuccess() {
         when(produtoRepository.findAll()).thenReturn(Collections.emptyList());
 
+        var produtos = produtoRepository.findAll();
+
+        assertTrue(produtos.isEmpty());
     }
 
     @DisplayName("Deve deletar um produto com sucesso")
