@@ -52,11 +52,7 @@ public class PedidoController {
 
     @Operation(summary = "Lista a fila de pedidos", description = "Endpoint para listagem da fila de pedidos")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fila de pedidos retornada com sucesso.",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = FilaPedidosDTO.class)))
-                    }),
+            @ApiResponse(responseCode = "200", description = "Fila de pedidos retornada com sucesso."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     })
     @GetMapping(value = "/fila", produces = MediaType.APPLICATION_JSON_VALUE)
