@@ -13,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,6 +85,20 @@ class ProdutoServiceTest {
         assertEquals(produtoEntity.getCategoria().getClass(), produtoUpdated.getCategoria().getClass());
     }
 
+    @DisplayName("Deve listar produtos com sucesso")
+    @Test
+    void shouldListProdutoSuccess() {
+
+        produtoRepository.findAll();
+    }
+
+    @DisplayName("Deve listar produtos vazios com sucesso")
+    @Test
+    void shouldListEmptyProdutoSuccess() {
+        when(produtoRepository.findAll()).thenReturn(Collections.emptyList());
+
+    }
+
     @DisplayName("Deve deletar um produto com sucesso")
     @Test
     void shouldDeleteProdutoSuccess() {
@@ -145,6 +161,16 @@ class ProdutoServiceTest {
                 .categoria(setCategoria())
                 .valorUnitario(new BigDecimal("10.50"))
                 .build();
+    }
+
+    private List<Produto> setListProdutos() {
+        var produto = Produto.builder()
+                .id(1L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
+        return Collections.singletonList(produto);
     }
 
 }
