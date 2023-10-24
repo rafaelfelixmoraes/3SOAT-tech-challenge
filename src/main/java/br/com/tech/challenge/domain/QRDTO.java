@@ -1,4 +1,4 @@
-package br.com.tech.challenge.domain.dto;
+package br.com.tech.challenge.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -14,18 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MercadoPagoRequestDTO {
+public class QRDTO {
 
-    private String name;
+    private String image;
 
-    private Boolean fixedAmount;
+    private String templateDocument;
 
-    private Long storeId;
-
-    private String externalStoreId;
-
-    private String externalId;
-
-    private Integer category;
+    private String templateImage;
 
 }
