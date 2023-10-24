@@ -1,6 +1,9 @@
 package br.com.tech.challenge.domain.entidades;
 
+import br.com.tech.challenge.domain.enums.StatusPagamento;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Id;
@@ -37,12 +40,20 @@ public class Pagamento {
     @JoinColumn(name = "pedido_id", referencedColumnName = "id")
     private Pedido pedido;
 
-    @Column
+    @Column(name = "data_hora_pagamento")
     private LocalDateTime dataHoraPagamento;
 
-    @Column
+    @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
-    private
+    @Column(name = "id_mercado_pago_qr")
+    private Long idMercadoPagoQR;
+
+    @Column(name = "url_qr_code")
+    private String urlQRCode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_pagamento")
+    private StatusPagamento statusPagamento;
 
 }

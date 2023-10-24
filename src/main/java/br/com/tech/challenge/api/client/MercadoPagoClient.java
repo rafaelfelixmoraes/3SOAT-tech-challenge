@@ -19,13 +19,13 @@ public class MercadoPagoClient {
     }
 
     public void createCaixa(MercadoPagoRequestDTO dto) {
-        Mono<ResponseEntity<Person>> result = client.post()
-                .uri("/pos")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", ACCESS_TOKEN)
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToEntity(Void.class);
+//        Mono<ResponseEntity<Person>> result = client.post()
+//                .uri("/pos")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("Authorization", ACCESS_TOKEN)
+//                .bodyValue(dto)
+//                .retrieve()
+//                .bodyToEntity(Void.class);
     }
 
     // TODO: criar um método para obter um caixa (QR Code)
