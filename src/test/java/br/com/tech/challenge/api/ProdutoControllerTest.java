@@ -89,6 +89,19 @@ class ProdutoControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(1)));
     }
 
+    @DisplayName("Deve listar os produtos vazios com sucesso")
+    @Test
+    void shouldListEmptyProdutoSuccess() throws Exception {
+        mockMvc.perform(get(ROTA_PRODUTOS)
+                        .content(mapper.writeValueAsString(Collections.emptyList()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(0)));
+    }
+
     @DisplayName("Deve deletar um produto com sucesso")
     @Test
     void shouldDeleteProdutoSuccess() throws Exception {

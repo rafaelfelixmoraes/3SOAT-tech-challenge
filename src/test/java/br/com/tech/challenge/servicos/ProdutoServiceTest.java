@@ -13,10 +13,13 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -83,6 +86,37 @@ class ProdutoServiceTest {
         assertEquals(produtoEntity.getCategoria().getClass(), produtoUpdated.getCategoria().getClass());
     }
 
+    @DisplayName("Deve listar produtos com sucesso")
+    @Test
+    void shouldListProdutoSuccess() {
+        var listProdutos = setListProdutos();
+
+        when(produtoRepository.findAll()).thenReturn(listProdutos);
+
+        var produtos = produtoRepository.findAll();
+
+        for (int i = 0; i < listProdutos.size(); i++) {
+            assertEquals(listProdutos.get(i).getId(), produtos.get(i).getId());
+            assertEquals(listProdutos.get(i).getDescricao(), produtos.get(i).getDescricao());
+            assertEquals(listProdutos.get(i).getValorUnitario(), produtos.get(i).getValorUnitario());
+            assertEquals(listProdutos.get(i).getCategoria(), produtos.get(i).getCategoria());
+            assertEquals(listProdutos.get(i).getId().getClass(), produtos.get(i).getId().getClass());
+            assertEquals(listProdutos.get(i).getDescricao().getClass(), produtos.get(i).getDescricao().getClass());
+            assertEquals(listProdutos.get(i).getValorUnitario().getClass(), produtos.get(i).getValorUnitario().getClass());
+            assertEquals(listProdutos.get(i).getCategoria().getClass(), produtos.get(i).getCategoria().getClass());
+        }
+    }
+
+    @DisplayName("Deve listar produtos vazios com sucesso")
+    @Test
+    void shouldListEmptyProdutoSuccess() {
+        when(produtoRepository.findAll()).thenReturn(Collections.emptyList());
+
+        var produtos = produtoRepository.findAll();
+
+        assertTrue(produtos.isEmpty());
+    }
+
     @DisplayName("Deve deletar um produto com sucesso")
     @Test
     void shouldDeleteProdutoSuccess() {
@@ -145,6 +179,16 @@ class ProdutoServiceTest {
                 .categoria(setCategoria())
                 .valorUnitario(new BigDecimal("10.50"))
                 .build();
+    }
+
+    private List<Produto> setListProdutos() {
+        var produto = Produto.builder()
+                .id(1L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
+        return Collections.singletonList(produto);
     }
 
 }
