@@ -48,6 +48,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 
+	// Spring Retry
+	implementation 'org.springframework.retry:spring-retry:2.0.3'
+
 	// Spring Doc - Open API
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.0'
 
