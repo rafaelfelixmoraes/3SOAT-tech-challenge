@@ -47,7 +47,7 @@ public class ProdutoService {
     ) {
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("descricao"));
 
-        if (StringUtils.isBlank(descricao)) {
+        if (!StringUtils.isBlank(descricao)) {
             return produtoRepository.findByDescricaoContainingIgnoreCase(descricao, pageable);
         } else {
             return produtoRepository.findAll(pageable);
