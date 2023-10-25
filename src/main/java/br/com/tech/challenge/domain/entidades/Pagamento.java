@@ -46,11 +46,8 @@ public class Pagamento {
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
-    @Column(name = "id_mercado_pago_qr")
-    private Long idMercadoPagoQR;
-
-    @Column(name = "url_qr_code")
-    private String urlQRCode;
+    @Column(name = "qr_data")
+    private String qrData;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_pagamento")

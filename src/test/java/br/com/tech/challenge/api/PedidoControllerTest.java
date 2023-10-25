@@ -181,7 +181,7 @@ class PedidoControllerTest {
     private FilaPedidos setFilaPedidos() {
         return FilaPedidos.builder()
                 .senhaRetirada(123)
-                .nomeCliente("Cliente Teste")
+                .idCliente(1)
                 .statusPedido(StatusPedido.RECEBIDO.getDescricao())
                 .build();
     }
