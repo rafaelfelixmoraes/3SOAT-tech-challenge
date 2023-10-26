@@ -12,6 +12,8 @@ import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.utils.PasswordUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -75,13 +77,11 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public List<PedidoDTO> list() {
-        List<Pedido> pedidos = pedidoRepository.findAll();
+    public Page<PedidoDTO> list(Pageable pageable) {
 
+        Page<Pedido> pedidos = pedidoRepository.findAll(pageable);
 
-        return pedidos.stream()
-                .map(pedido -> mapper.map(pedido, PedidoDTO.class))
-                .collect(Collectors.toList());
+        return pedidos.map(pedido -> mapper.map(pedido, PedidoDTO.class));
     }
 
 
