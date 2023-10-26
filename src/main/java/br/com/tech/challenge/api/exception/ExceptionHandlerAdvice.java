@@ -40,6 +40,17 @@ public class ExceptionHandlerAdvice {
         );
     }
 
+    @ExceptionHandler(MercadoPagoAPIException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ResponseEntity<ResponseExceptionDTO> handleMercadoPagoAPIException(ObjectNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ResponseExceptionDTO.builder()
+                        .exceptionMessage(exception.getMessage())
+                        .messages(null)
+                        .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .build()
+        );
+    }
 
     @ExceptionHandler(ClienteAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

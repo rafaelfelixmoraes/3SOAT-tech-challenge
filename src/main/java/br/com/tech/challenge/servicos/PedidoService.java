@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,10 @@ public class PedidoService {
 
     private final ModelMapper mapper;
 
+    public Optional<Pedido> findById(Long id) {
+        return pedidoRepository.findById(id);
+    }
+
     @Transactional
     public Pedido save(PedidoDTO pedidoDTO) {
         final var produtoList = mapProductListDtoToEnityList(pedidoDTO.getProdutos());
@@ -49,6 +54,11 @@ public class PedidoService {
         var totalValue = calculateTotalValueProducts(produtoList);
         pagamentoService.save(pedido, totalValue);
         return pedido;
+    }
+
+    @Transactional
+    public Pedido save(Pedido pedido) {
+        return pedidoRepository.save(pedido);
     }
 
     private void validateExistingClient(PedidoDTO pedidoDTO) {

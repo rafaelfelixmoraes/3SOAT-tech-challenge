@@ -7,6 +7,6 @@ public interface QRClient {
 
     MercadoPagoResponseDTO generateQRCode(MercadoPagoRequestDTO dto);
 
-    boolean payQRCode(MercadoPagoRequestDTO dto);
+    void payQRCode(MercadoPagoRequestDTO dto);
 
 }

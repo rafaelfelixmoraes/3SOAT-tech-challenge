@@ -20,13 +20,11 @@ public class ItemDTO {
 
         private String category;
 
-        private String title;
-
         private String description;
 
         private BigDecimal unitPrice;
 
-        private Integer quantity;
+        private Long quantity;
 
         private BigDecimal totalAmount;
 
