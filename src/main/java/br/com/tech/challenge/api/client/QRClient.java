@@ -1,7 +1,7 @@
 package br.com.tech.challenge.api.client;
 
-import br.com.tech.challenge.domain.dto.MercadoPagoRequestDTO;
-import br.com.tech.challenge.domain.dto.MercadoPagoResponseDTO;
+import br.com.tech.challenge.domain.dto.external.MercadoPagoRequestDTO;
+import br.com.tech.challenge.domain.dto.external.MercadoPagoResponseDTO;
 
 public interface QRClient {
 

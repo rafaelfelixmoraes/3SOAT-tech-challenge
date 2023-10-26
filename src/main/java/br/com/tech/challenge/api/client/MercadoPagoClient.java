@@ -2,8 +2,8 @@ package br.com.tech.challenge.api.client;
 
 import br.com.tech.challenge.api.client.factory.ClientHttpFactory;
 import br.com.tech.challenge.api.client.factory.RetryTemplateFactory;
-import br.com.tech.challenge.domain.dto.MercadoPagoRequestDTO;
-import br.com.tech.challenge.domain.dto.MercadoPagoResponseDTO;
+import br.com.tech.challenge.domain.dto.external.MercadoPagoRequestDTO;
+import br.com.tech.challenge.domain.dto.external.MercadoPagoResponseDTO;
 import br.com.tech.challenge.domain.enums.MercadoPagoAPI;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
