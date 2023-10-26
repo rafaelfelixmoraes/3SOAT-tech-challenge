@@ -8,5 +8,5 @@ import org.springframework.data.domain.Page;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
-    Page<Produto> findByDescricaoContainingIgnoreCase (String descricao, Pageable pageable);
+    Page<Produto> findByCategoriaId(Long categoriaId, Pageable pageable);
 }
