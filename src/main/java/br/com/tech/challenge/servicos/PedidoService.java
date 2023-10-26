@@ -31,6 +31,8 @@ public class PedidoService {
 
     private final ClienteRepository clienteRepository;
 
+    private final PagamentoService pagamentoService;
+
     private final ModelMapper mapper;
 
     @Transactional
@@ -43,7 +45,10 @@ public class PedidoService {
         pedidoDTO.setValorTotal(calculateTotalValueProducts(produtoList));
         pedidoDTO.setSenhaRetirada(PasswordUtils.generatePassword());
         pedidoDTO.setDataHora(LocalDateTime.now());
-        return pedidoRepository.save(mapper.map(pedidoDTO, Pedido.class));
+        var pedido = pedidoRepository.save(mapper.map(pedidoDTO, Pedido.class));
+        var totalValue = calculateTotalValueProducts(produtoList);
+        pagamentoService.save(pedido, totalValue);
+        return pedido;
     }
 
     private void validateExistingClient(PedidoDTO pedidoDTO) {
