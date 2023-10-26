@@ -1,9 +1,7 @@
 package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
-import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
-import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.entidades.Pedido;
@@ -28,9 +26,9 @@ public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
 
-    private final ProdutoRepository produtoRepository;
+    private final ProdutoService produtoService;
 
-    private final ClienteRepository clienteRepository;
+    private final ClienteService clienteService;
 
     private final PagamentoService pagamentoService;
 
@@ -42,7 +40,7 @@ public class PedidoService {
 
     @Transactional
     public Pedido save(PedidoDTO pedidoDTO) {
-        final var produtoList = mapProductListDtoToEnityList(pedidoDTO.getProdutos());
+        final var produtoList = mapProductListDtoToEntityList(pedidoDTO.getProdutos());
         validateExistingClient(pedidoDTO);
         validateListProductsOrder(pedidoDTO);
         validateProductExisting(produtoList);
@@ -64,7 +62,7 @@ public class PedidoService {
     private void validateExistingClient(PedidoDTO pedidoDTO) {
         if (Objects.isNull(pedidoDTO.getCliente())) {
             throw new ObjectNotFoundException("Cliente não informado.");
-        } else if (!clienteRepository.existsById(pedidoDTO.getCliente().getId())) {
+        } else if (!clienteService.existsById(pedidoDTO.getCliente().getId())) {
             throw new ObjectNotFoundException("Cliente não encontrado: " + pedidoDTO.getCliente().getId());
         }
     }
@@ -76,7 +74,7 @@ public class PedidoService {
     }
 
     private void validateProductExisting(List<Produto> produtos) {
-        produtos.forEach(produto -> produtoRepository.findById(produto.getId())
+        produtos.forEach(produto -> produtoService.findById(produto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado " + produto.getId())));
     }
 
@@ -84,7 +82,7 @@ public class PedidoService {
         return produtos.stream().map(Produto::getValorUnitario).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private List<Produto> mapProductListDtoToEnityList(final List<ProdutoDTO> produtoDTOList){
+    private List<Produto> mapProductListDtoToEntityList(final List<ProdutoDTO> produtoDTOList){
         return mapper.map(
                 produtoDTOList,
                 new TypeToken<List<Produto>>() {}.getType()

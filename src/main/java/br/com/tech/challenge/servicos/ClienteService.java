@@ -39,6 +39,10 @@ public class ClienteService {
         return clienteRepository.findByCpf(cpf);
     }
 
+    public boolean existsById(Long id) {
+        return clienteRepository.existsById(id);
+    }
+
     private void validateIfClientExistsByCpf(String cpf) {
         Optional<Cliente> clienteAlreadyExists = this.findByCpf(cpf);
         if (clienteAlreadyExists.isPresent()) {

@@ -1,9 +1,7 @@
 package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
-import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
-import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
@@ -37,17 +35,20 @@ class PedidoServiceTest {
     private PedidoRepository pedidoRepository;
 
     @Mock
-    private ProdutoRepository produtoRepository;
+    private ProdutoService produtoService;
 
     @Mock
-    private ClienteRepository clienteRepository;
+    private ClienteService clienteService;
+
+    @Mock
+    private PagamentoService pagamentoService;
 
     @Mock
     private ModelMapper mapper;
 
     PedidoServiceTest() {
         MockitoAnnotations.openMocks(this);
-        pedidoService = new PedidoService(pedidoRepository, produtoRepository, clienteRepository, mapper);
+        pedidoService = new PedidoService(pedidoRepository, produtoService, clienteService, pagamentoService, mapper);
     }
 
     @DisplayName("Deve criar um pedido com sucesso")
@@ -58,8 +59,8 @@ class PedidoServiceTest {
         var returnedPedidoDTO = setPedidoDTO();
 
         when(pedidoRepository.save(any())).thenReturn(returnedPedido);
-        when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
-        when(produtoRepository.findById(any())).thenReturn(Optional.of(setProduto()));
+        when(clienteService.existsById(any())).thenReturn(Boolean.TRUE);
+        when(produtoService.findById(any())).thenReturn(Optional.of(setProduto()));
         when(mapper.map(any(), any(Type.class))).thenReturn(Collections.singletonList(setProduto()));
 
         var pedido = pedidoService.save(returnedPedidoDTO);
@@ -97,7 +98,7 @@ class PedidoServiceTest {
     void shouldValidateExistingClient() {
         var returnedPedidoDTO = setPedidoDTO();
         try {
-            when(clienteRepository.existsById(any())).thenReturn(Boolean.FALSE);
+            when(clienteService.existsById(any())).thenReturn(Boolean.FALSE);
             pedidoService.save(returnedPedidoDTO);
         } catch (Exception e) {
             assertEquals(ObjectNotFoundException.class, e.getClass());
@@ -110,7 +111,7 @@ class PedidoServiceTest {
 void shouldValidateEmptyListProductsOrder() {
         try {
             var returnedPedidoDTO = setPedidoDTO();
-            when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
+            when(clienteService.existsById(any())).thenReturn(Boolean.TRUE);
             returnedPedidoDTO.setProdutos(List.of());
             pedidoService.save(returnedPedidoDTO);
         } catch (Exception e) {
@@ -124,8 +125,8 @@ void shouldValidateEmptyListProductsOrder() {
     void shouldValidateProductExisting() {
         var returnedPedidoDTO = setPedidoDTO();
         try {
-            when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
-            when(produtoRepository.findById(any())).thenReturn(Optional.empty());
+            when(clienteService.existsById(any())).thenReturn(Boolean.TRUE);
+            when(produtoService.findById(any())).thenReturn(Optional.empty());
             when(mapper.map(any(), any(Type.class))).thenReturn(Collections.singletonList(setProduto()));
             pedidoService.save(returnedPedidoDTO);
         } catch (Exception e) {
