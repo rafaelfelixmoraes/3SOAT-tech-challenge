@@ -3,6 +3,7 @@ package br.com.tech.challenge.servicos;
 import br.com.tech.challenge.api.client.MercadoPagoClient;
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.bd.repositorios.PagamentoRepository;
+import br.com.tech.challenge.bd.repositorios.PedidoRepository;
 import br.com.tech.challenge.domain.dto.external.CashOutDTO;
 import br.com.tech.challenge.domain.dto.external.ItemDTO;
 import br.com.tech.challenge.domain.dto.external.MercadoPagoRequestDTO;
@@ -30,7 +31,7 @@ public class PagamentoService {
 
     private final MercadoPagoClient mercadoPagoClient;
 
-    private final PedidoService pedidoService;
+    private final PedidoRepository pedidoRepository;
 
     private final ProdutoService produtoService;
 
@@ -65,7 +66,7 @@ public class PagamentoService {
         mercadoPagoClient.payQRCode(requestDTO);
 
         pedido.setStatusPedido(StatusPedido.EM_PREPARACAO);
-        pedidoService.save(pedido);
+        pedidoRepository.save(pedido);
     }
 
     private MercadoPagoRequestDTO buildMercadoPagoRequestDTO(Pedido pedido) {
@@ -99,7 +100,7 @@ public class PagamentoService {
     }
 
     private Pedido getPedido(Long idPedido) {
-        return pedidoService.findById(idPedido).orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado."));
+        return pedidoRepository.findById(idPedido).orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado."));
     }
 
 }

@@ -6,6 +6,7 @@ import br.com.tech.challenge.api.exception.MercadoPagoAPIException;
 import br.com.tech.challenge.domain.dto.external.MercadoPagoRequestDTO;
 import br.com.tech.challenge.domain.dto.external.MercadoPagoResponseDTO;
 import br.com.tech.challenge.domain.enums.MercadoPagoAPI;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,13 +17,14 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@RequiredArgsConstructor
 public class MercadoPagoClient implements QRClient {
-
-    private final RetryTemplate retryTemplate = RetryTemplateFactory.retryTemplate();
-    private final RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.clientHttpRequestFactory());
 
     @Override
     public MercadoPagoResponseDTO generateQRCode(MercadoPagoRequestDTO dto) {
+        RetryTemplate retryTemplate = RetryTemplateFactory.retryTemplate();
+        RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.clientHttpRequestFactory());
+
         try {
             ResponseEntity<MercadoPagoResponseDTO> responseEntity = retryTemplate
                     .execute(retryContext -> restTemplate.postForEntity(
@@ -38,6 +40,9 @@ public class MercadoPagoClient implements QRClient {
 
     @Override
     public void payQRCode(MercadoPagoRequestDTO dto) {
+        RetryTemplate retryTemplate = RetryTemplateFactory.retryTemplate();
+        RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.clientHttpRequestFactory());
+
         try {
             retryTemplate.execute(retryContext -> restTemplate.exchange(
                     MercadoPagoAPI.MERCADO_PAGO_URL.text().concat(MercadoPagoAPI.getQRCodeUrl()),

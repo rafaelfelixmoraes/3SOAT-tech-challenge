@@ -51,7 +51,7 @@ class ClienteServiceTest {
 
     @DisplayName("Deve retornar exceção ao tentar criar um cliente que já possui cadastro")
     @Test
-    public void shouldThrowExceptionWhenUsingSaveMethod() {
+    void shouldThrowExceptionWhenUsingSaveMethod() {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setCpf("927.965.620-18");
 
@@ -68,7 +68,7 @@ class ClienteServiceTest {
 
     @DisplayName("Deve criar um cliente com sucesso somente com cpf")
     @Test
-    public void shouldSaveClientWithCpfOnly() {
+    void shouldSaveClientWithCpfOnly() {
         String cpf = "037.952.160-10";
 
         Cliente clienteSalvo = new Cliente();
@@ -84,7 +84,7 @@ class ClienteServiceTest {
 
     @DisplayName("Deve retornar exceção ao tentar criar um cliente que já possui cadastro")
     @Test
-    public void shouldThrowExceptionWhenUsingSaveClientWithCpfMethod() {
+    void shouldThrowExceptionWhenUsingSaveClientWithCpfMethod() {
         final String cpf = "634.964.890-06";
 
         Cliente clienteExistente = new Cliente();
