@@ -8,5 +8,5 @@ import org.springframework.data.domain.Page;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
-    Page<Produto> findByCategoriaId(Long categoriaId, Pageable pageable);
+    Page<Produto> findByIdOrCategoriaId(Long id, Long categoriaId, Pageable pageable);
 }
