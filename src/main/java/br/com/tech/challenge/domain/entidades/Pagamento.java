@@ -1,17 +1,7 @@
 package br.com.tech.challenge.domain.entidades;
 
 import br.com.tech.challenge.domain.enums.StatusPagamento;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Column;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -33,7 +23,8 @@ import java.time.LocalDateTime;
 public class Pagamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pagamento_sequence")
+    @SequenceGenerator(name = "pagamento_sequence", sequenceName = "pagamento_seq", initialValue = 1, allocationSize = 1)
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
