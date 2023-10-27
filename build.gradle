@@ -62,6 +62,9 @@ dependencies {
 	// H2
 	testImplementation 'com.h2database:h2:2.2.224'
 
+	// HttpClient
+	implementation 'org.apache.httpcomponents.client5:httpclient5'
+
 }
 
 flyway {

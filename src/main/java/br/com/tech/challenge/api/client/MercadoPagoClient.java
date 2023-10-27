@@ -23,7 +23,7 @@ public class MercadoPagoClient implements QRClient {
     @Override
     public MercadoPagoResponseDTO generateQRCode(MercadoPagoRequestDTO dto) {
         RetryTemplate retryTemplate = RetryTemplateFactory.retryTemplate();
-        RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.clientHttpRequestFactory());
+        RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.bufferingClientHttpRequestFactory());
 
         try {
             ResponseEntity<MercadoPagoResponseDTO> responseEntity = retryTemplate
@@ -41,7 +41,7 @@ public class MercadoPagoClient implements QRClient {
     @Override
     public void payQRCode(MercadoPagoRequestDTO dto) {
         RetryTemplate retryTemplate = RetryTemplateFactory.retryTemplate();
-        RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.clientHttpRequestFactory());
+        RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.bufferingClientHttpRequestFactory());
 
         try {
             retryTemplate.execute(retryContext -> restTemplate.exchange(

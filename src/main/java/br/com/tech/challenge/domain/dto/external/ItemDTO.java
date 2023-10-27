@@ -26,6 +26,4 @@ public class ItemDTO {
 
         private Long quantity;
 
-        private BigDecimal totalAmount;
-
 }

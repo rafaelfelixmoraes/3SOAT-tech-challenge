@@ -46,6 +46,10 @@ public class PagamentoService {
         return pagamentoRepository.save(pagamento);
     }
 
+    public Pagamento findPagamentoByPedidoId(Long idPedido) {
+        return pagamentoRepository.findPagamentoByPedidoId(idPedido).orElseThrow(() -> new ObjectNotFoundException("Pagamento não encontrado."));
+    }
+
     @Transactional
     public MercadoPagoResponseDTO generateQRCode(Long idPedido) {
         var pedido = getPedido(idPedido);
@@ -70,7 +74,7 @@ public class PagamentoService {
     }
 
     private MercadoPagoRequestDTO buildMercadoPagoRequestDTO(Pedido pedido) {
-        var pagamento = pedido.getPagamento();
+        var pagamento = findPagamentoByPedidoId(pedido.getId());
         var produtos = pedido.getProdutos();
 
         List<ItemDTO> items = new ArrayList<>();
@@ -80,7 +84,6 @@ public class PagamentoService {
                     .description(produto.getDescricao())
                     .unitPrice(produto.getValorUnitario())
                     .quantity(produtoService.count(produto.getId(), produtos))
-                    .totalAmount(pagamento.getValorTotal())
                     .build()
             );
         });
