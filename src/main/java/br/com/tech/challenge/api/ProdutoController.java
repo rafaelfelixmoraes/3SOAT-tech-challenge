@@ -84,11 +84,12 @@ public class ProdutoController {
     @Operation(summary = "Lista os Produtos", description = "Endpoint para listar os produtos")
     @GetMapping
     public ResponseEntity<Page<ProdutoDTO>> list(
-            @RequestParam(name = "descricao", required = false) String descricao,
+            @RequestParam(name = "id", required = false) Long id,
+            @RequestParam(name = "categoria", required = false) Long categoria,
             @RequestParam(name = "pagina", defaultValue = "0") int pagina,
             @RequestParam(name = "tamanho", defaultValue = "10") int tamanho
     ) {
-        Page<ProdutoDTO> produtos = produtoService.list(descricao, pagina, tamanho)
+        Page<ProdutoDTO> produtos = produtoService.list(id, categoria, pagina, tamanho)
                 .map(produto -> mapper.map(produto, ProdutoDTO.class));
         return ResponseEntity.ok().body(produtos);
     }
