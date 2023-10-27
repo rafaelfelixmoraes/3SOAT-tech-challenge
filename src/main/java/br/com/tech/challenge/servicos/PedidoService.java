@@ -54,11 +54,6 @@ public class PedidoService {
         return pedido;
     }
 
-    @Transactional
-    public Pedido save(Pedido pedido) {
-        return pedidoRepository.save(pedido);
-    }
-
     private void validateExistingClient(PedidoDTO pedidoDTO) {
         if (Objects.isNull(pedidoDTO.getCliente())) {
             throw new ObjectNotFoundException("Cliente não informado.");
