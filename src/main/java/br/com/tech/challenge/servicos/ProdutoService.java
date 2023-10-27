@@ -6,7 +6,7 @@ import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoUpdateDTO;
 import br.com.tech.challenge.domain.entidades.Produto;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -40,18 +38,14 @@ public class ProdutoService {
         return produtoRepository.save(produto);
     }
 
-    public Page<Produto> list(
-            String descricao,
-            int pagina,
-            int tamanho
-    ) {
+    public Page<Produto> list(Long id, Long categoria, int pagina, int tamanho) {
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("descricao"));
 
-        if (StringUtils.isBlank(descricao)) {
-            return produtoRepository.findByDescricaoContainingIgnoreCase(descricao, pageable);
-        } else {
-            return produtoRepository.findAll(pageable);
+        if (ObjectUtils.anyNotNull(id, categoria)) {
+            return produtoRepository.findByIdOrCategoriaId(id, categoria, pageable);
         }
+
+        return produtoRepository.findAll(pageable);
     }
     @Transactional
     public void delete(Long id) {
