@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -20,6 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -89,22 +93,44 @@ class ProdutoServiceTest {
     @DisplayName("Deve listar produtos com sucesso")
     @Test
     void shouldListProdutoSuccess() {
-        var listProdutos = setListProdutos();
+        var listProdutos = new PageImpl<>(setListProdutos());
 
-        when(produtoRepository.findAll()).thenReturn(listProdutos);
+        when(produtoRepository.findAll(any(Pageable.class))).thenReturn(listProdutos);
 
-        var produtos = produtoRepository.findAll();
+        var produtos = produtoService.list(null, null, anyInt(), 10);
 
-        for (int i = 0; i < listProdutos.size(); i++) {
-            assertEquals(listProdutos.get(i).getId(), produtos.get(i).getId());
-            assertEquals(listProdutos.get(i).getDescricao(), produtos.get(i).getDescricao());
-            assertEquals(listProdutos.get(i).getValorUnitario(), produtos.get(i).getValorUnitario());
-            assertEquals(listProdutos.get(i).getCategoria(), produtos.get(i).getCategoria());
-            assertEquals(listProdutos.get(i).getId().getClass(), produtos.get(i).getId().getClass());
-            assertEquals(listProdutos.get(i).getDescricao().getClass(), produtos.get(i).getDescricao().getClass());
-            assertEquals(listProdutos.get(i).getValorUnitario().getClass(), produtos.get(i).getValorUnitario().getClass());
-            assertEquals(listProdutos.get(i).getCategoria().getClass(), produtos.get(i).getCategoria().getClass());
+        var listProdutosContent = produtos.getContent();
+
+        for (int i = 0; i < listProdutosContent.size(); i++) {
+            assertEquals(listProdutosContent.get(i).getId(), produtos.getContent().get(i).getId());
+            assertEquals(listProdutosContent.get(i).getDescricao(), produtos.getContent().get(i).getDescricao());
+            assertEquals(listProdutosContent.get(i).getValorUnitario(), produtos.getContent().get(i).getValorUnitario());
+            assertEquals(listProdutosContent.get(i).getCategoria(), produtos.getContent().get(i).getCategoria());
+            assertEquals(listProdutosContent.get(i).getId().getClass(), produtos.getContent().get(i).getId().getClass());
+            assertEquals(listProdutosContent.get(i).getDescricao().getClass(), produtos.getContent().get(i).getDescricao().getClass());
+            assertEquals(listProdutosContent.get(i).getValorUnitario().getClass(), produtos.getContent().get(i).getValorUnitario().getClass());
+            assertEquals(listProdutosContent.get(i).getCategoria().getClass(), produtos.getContent().get(i).getCategoria().getClass());
         }
+    }
+
+    @DisplayName("Deve listar produto por id com sucesso")
+    @Test
+    void shouldListProdutoByIdSuccess() {
+        var pageProdutos = new PageImpl<>(setListProdutos());
+
+        when(produtoRepository.findByIdOrCategoriaId(anyLong(), anyLong(), any(Pageable.class))).thenReturn(pageProdutos);
+
+        var produtoFound = produtoService.list(anyLong(), anyLong(), anyInt(), 10);
+
+        int i = 0;
+        assertEquals(pageProdutos.getContent().get(i).getId(), produtoFound.getContent().get(i).getId());
+        assertEquals(pageProdutos.getContent().get(i).getDescricao(), produtoFound.getContent().get(i).getDescricao());
+        assertEquals(pageProdutos.getContent().get(i).getValorUnitario(), produtoFound.getContent().get(i).getValorUnitario());
+        assertEquals(pageProdutos.getContent().get(i).getCategoria(), produtoFound.getContent().get(i).getCategoria());
+        assertEquals(pageProdutos.getContent().get(i).getId().getClass(), produtoFound.getContent().get(i).getId().getClass());
+        assertEquals(pageProdutos.getContent().get(i).getDescricao().getClass(), produtoFound.getContent().get(i).getDescricao().getClass());
+        assertEquals(pageProdutos.getContent().get(i).getValorUnitario().getClass(), produtoFound.getContent().get(i).getValorUnitario().getClass());
+        assertEquals(pageProdutos.getContent().get(i).getCategoria().getClass(), produtoFound.getContent().get(i).getCategoria().getClass());
     }
 
     @DisplayName("Deve listar produtos vazios com sucesso")
