@@ -1,5 +1,5 @@
 # 3SOAT-tech-challenge
-Repositório do Tech Challenge da turma 3SOAT/2023 - Pós Tech FIAP
+Repositório do Tech Challenge do grupo G8 da turma 3SOAT/2023 - Pós Tech FIAP
 
 Projeto desenvolvido com as seguintes tecnologias:
 
