@@ -3,6 +3,7 @@ package br.com.tech.challenge.api;
 import br.com.tech.challenge.domain.dto.ClienteCheckInDTO;
 import br.com.tech.challenge.domain.dto.ClienteCpfDTO;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
+import br.com.tech.challenge.domain.dto.RequestClienteCpfDTO;
 import br.com.tech.challenge.servicos.ClienteService;
 import br.com.tech.challenge.utils.CpfUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,12 +49,10 @@ public class ClienteController {
             @ApiResponse(responseCode = "409", description = "Cliente já cadastrado."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     })
-    @PostMapping("/{cpf}")
-    public ResponseEntity<ClienteCpfDTO> saveCpf(@PathVariable String cpf) {
+    @PostMapping("/cpf")
+    public ResponseEntity<ClienteCpfDTO> saveCpf(@RequestBody RequestClienteCpfDTO clienteCpfDTO) {
 
-        String formattedCPF = CpfUtils.formatCpf(cpf);
-        CpfUtils.isCpfValid(formattedCPF);
-
+        String formattedCPF = CpfUtils.formatCpf(clienteCpfDTO.getCpf());
         return ResponseEntity.status(CREATED).body(mapper.map(clienteService.saveClientWithCpf(formattedCPF), ClienteCpfDTO.class));
     }
     @Operation(description = "Endpoint para identificar cliente via cpf")
@@ -62,12 +61,10 @@ public class ClienteController {
             @ApiResponse(responseCode = "404", description = "Cliente não encontrado."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     })
-    @GetMapping("/check-in/{cpf}")
-    public ResponseEntity<ClienteCheckInDTO> checkInCliente(@PathVariable String cpf) {
+    @PostMapping("/check-in")
+    public ResponseEntity<ClienteCheckInDTO> checkInCliente(@RequestBody @Valid RequestClienteCpfDTO clienteCpfDTO) {
 
-        String formattedCPF = CpfUtils.formatCpf(cpf);
-        CpfUtils.isCpfValid(formattedCPF);
-
+        String formattedCPF = CpfUtils.formatCpf(clienteCpfDTO.getCpf());
         return ResponseEntity.ok(clienteService.checkInCliente(CpfUtils.formatCpf(formattedCPF)));
     }
 

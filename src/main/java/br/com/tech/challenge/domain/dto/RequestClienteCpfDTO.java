@@ -5,16 +5,14 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClienteCpfDTO {
-
-
-    private Long id;
+public class RequestClienteCpfDTO {
 
     @CPF(message = "CPF deve ser válido e no formato ###.###.###-##")
     private String cpf;
