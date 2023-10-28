@@ -13,6 +13,7 @@ Projeto desenvolvido com as seguintes tecnologias:
 - Swagger
 - Spring Actuator
 - Docker
+- SonarQube
   
 Para executar o projeto, siga os seguintes passos:
 - Realize o clone do repositório e dentro da IDE desejada;
@@ -20,3 +21,21 @@ Para executar o projeto, siga os seguintes passos:
 - Executar o build do projeto
 - Pelo terminal, Navegue até a raiz da pasta onde foi clonado o projeto, e rodar os seguinte comando: `docker-compose up -d`
 - Após verificar que os containeres estão em execução, rode a aplicação na IDE, e assim que ela subir com sucesso, acesso a URI `http://localhost:8080/swagger-ui/index.html#/`
+
+## SonarQube
+O SonarQube é uma ferramenta autogerenciada e automática de revisão estática de código que ajuda sistematicamente a fornecer um código limpo
+
+O Sonar ja é executado automaticamente junto com os demais containeres do projeto.
+
+Para rodar a análise estática do código, basta seguir os passos a seguir:
+- Certifique-se que o container do microserviço esteja parado
+- Pelo terminal, execute o seguinte comando dentro da pasta raiz do projeto: `./gradlew clean build`
+- Certifique-se que o container do SonarQube, acessando o endereço: `http://localhost:9000/projects`
+- Na tela de login, use as credenciais: `login: admin, password: admin`
+- Na tela seguinte, será necessário fornecer novas credenciais
+- Após a etapa de autenticação, siga essas instruções para criação do projeto: https://docs.sonarsource.com/sonarqube/latest/try-out-sonarqube/#analyzing-a-project
+- Após criar o projeto, na tela principal, navegue até a opção de execução da análise local
+- Em seguida, crie um token para uso no próximo passo
+- No terminal, execute o seguinte comando: `./gradlew sonar "-Dsonar.token=[token_criado]"`
+- Após a conclusão do build, você poderá conferir os resultados da análise na página do projeto criado
+- O Quality Gate utilizado com base nas métricas é o padrão da própria ferramenta, mas é possível criar outros conforme necessidade

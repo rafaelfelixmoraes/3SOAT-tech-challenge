@@ -4,6 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.0'
 	id "org.flywaydb.flyway" version "9.8.1"
 	id 'jacoco'
+	id "org.sonarqube" version "4.2.1.3168"
 }
 
 group = 'br.com.tech.challenge'
@@ -79,6 +80,11 @@ test {
 
 jacocoTestReport {
 	dependsOn test // tests are required to run before generating the report
+	reports {
+		xml.required = true
+		csv.required = true
+		html.required = true
+	}
 }
 
 jacoco {
@@ -105,5 +111,14 @@ jacocoTestCoverageVerification {
 					'br.com.tech.challenge.TechChallengeApplication'
 			]
 		}
+	}
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "tech-challenge"
+		property "sonar.projectName", "tech-challenge"
+		property "sonar.host.url", "http://localhost:9000"
+		property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/test/jacocoTestReport.xml"
 	}
 }
