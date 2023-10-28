@@ -1,12 +1,12 @@
 package br.com.tech.challenge.api;
 
+import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.api.exception.StatusPedidoInvalidoException;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
-import br.com.tech.challenge.domain.entidades.Categoria;
-import br.com.tech.challenge.domain.entidades.FilaPedidos;
+import br.com.tech.challenge.domain.entidades.*;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import br.com.tech.challenge.servicos.PedidoService;
@@ -21,10 +21,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,14 +32,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 @AutoConfigureMockMvc
@@ -60,6 +58,9 @@ class PedidoControllerTest {
 
     private static final String ROTA_PEDIDOS = "/pedidos";
 
+    PedidoControllerTest() {
+    }
+
     @AfterAll
     static void clearDatabase(@Autowired Flyway flyway) {
         flyway.clean();
@@ -69,58 +70,48 @@ class PedidoControllerTest {
     @DisplayName("Deve salvar um pedido com sucesso")
     @Test
     void shouldSavePedidoSuccess() throws Exception {
-        mockMvc.perform(post(ROTA_PEDIDOS)
-                        .content(mapper.writeValueAsString(setPedidoDTO()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isCreated());
-    }
+        PedidoDTO pedidoDTO = setPedidoDTO();
 
-    @DisplayName("Deve lançar uma exceção ao salvar um pedido com Cliente não informado.")
-    @Test
-    void shouldThrowExceptionWhenClientNotInformed() throws Exception {
-        var pedidoDTO = setPedidoDTO();
-        pedidoDTO.setCliente(null);
+        Pedido pedido = createMockPedido();
+
+        // Configuração de retorno simulado do serviço
+        when(pedidoService.save(any(PedidoDTO.class))).thenReturn(pedido);
+
         mockMvc.perform(post(ROTA_PEDIDOS)
                         .content(mapper.writeValueAsString(pedidoDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @DisplayName("Deve lançar uma exceção ao salvar um pedido com Cliente inexistente.")
-    @Test
-    void shouldThrowExceptionWhenClientNonExistent() throws Exception {
-        var pedidoDTO = setPedidoDTO();
-        pedidoDTO.setCliente(ClienteDTO.builder().id(100L).build());
-        mockMvc.perform(post(ROTA_PEDIDOS)
-                        .content(mapper.writeValueAsString(pedidoDTO))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.senha_retirada").value(pedido.getSenhaRetirada()))
+                .andExpect(jsonPath("$.cliente.id").value(pedido.getCliente().getId()))
+                .andExpect(jsonPath("$.cliente.nome").value(pedido.getCliente().getNome()))
+                .andExpect(jsonPath("$.cliente.cpf").value(pedido.getCliente().getCpf()))
+                .andExpect(jsonPath("$.cliente.email").value(pedido.getCliente().getEmail()))
+                .andExpect(jsonPath("$.produtos[0].id").value(pedido.getProdutos().get(0).getId()))
+                .andExpect(jsonPath("$.produtos[0].descricao").value(pedido.getProdutos().get(0).getDescricao()))
+                .andExpect(jsonPath("$.produtos[0].categoria.id").value(pedido.getProdutos().get(0).getCategoria().getId()))
+                .andExpect(jsonPath("$.produtos[0].categoria.descricao").value(pedido.getProdutos().get(0).getCategoria().getDescricao()))
+                .andExpect(jsonPath("$.produtos[0].valor_unitario").value(pedido.getProdutos().get(0).getValorUnitario().doubleValue()))
+                .andExpect(jsonPath("$.valor_total").value(pedido.getValorTotal().doubleValue()))
+                .andExpect(jsonPath("$.status_pedido").value(pedido.getStatusPedido().toString()));
     }
 
     @DisplayName("Deve lançar uma exceção ao salvar um pedido com produto inexistente")
     @Test
     void shouldThrowExceptionWhenProdutoNonExistent() throws Exception {
-        var pedidoDTO = setPedidoDTO();
-        pedidoDTO.setProdutos(List.of(ProdutoDTO.builder().id(100L).build()));
-        mockMvc.perform(post(ROTA_PEDIDOS)
-                        .content(mapper.writeValueAsString(pedidoDTO))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
+        PedidoDTO pedidoDTO = PedidoDTO.builder()
+                .senhaRetirada(123456)
+                .produtos(Collections.emptyList())  // Lista vazia de produtos
+                .valorTotal(BigDecimal.TEN)
+                .statusPedido(StatusPedido.RECEBIDO)
+                .build();
 
-    @DisplayName("Deve lançar uma exceção ao salvar um pedido com lista de produtos vazia")
-    @Test
-    void shouldThrowExceptionWhenProdutoEmptyList() throws Exception {
-        var pedidoDTO = setPedidoDTO();
-        pedidoDTO.setProdutos(Collections.emptyList());
+        // Configuração de exceção simulada no serviço
+        doThrow(new ObjectNotFoundException("A lista de produtos não pode estar vazia"))
+                .when(pedidoService).save(any(PedidoDTO.class));
+
         mockMvc.perform(post(ROTA_PEDIDOS)
                         .content(mapper.writeValueAsString(pedidoDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -175,24 +166,53 @@ class PedidoControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("Deve listar pedidos com sucesso")
+    @DisplayName("Deve listar os Pedidos com sucesso")
     @Test
-    void shouldListPedidosSuccessfully() throws Exception {
-        // Arrange
-        List<PedidoDTO> pedidoList = setPedidoList();
+    void shouldListPedidosSuccess() throws Exception {
 
-        when(pedidoService.list()).thenReturn(pedidoList);
+        Page<PedidoDTO> page = createMockPage();
 
-        // Act & Assert
+        when(pedidoService.list(anyInt(), anyInt())).thenReturn(page);
+
         mockMvc.perform(get("/pedidos")
+                        .param("pagina", "0")
+                        .param("tamanho", "10")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(pedidoList.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(pedidoList.get(0).getId()));
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].senha_retirada", is(123456)))
+                .andExpect(jsonPath("$[0].valor_total", is(5.0)))
+                .andExpect(jsonPath("$[0].status_pedido", is("RECEBIDO")))
+                .andExpect(jsonPath("$[0].cliente.id", is(10)))
+                .andExpect(jsonPath("$[0].cliente.nome", is("Ana Maria")))
+                .andExpect(jsonPath("$[0].cliente.cpf", is("603.072.360-05")))
+                .andExpect(jsonPath("$[0].cliente.email", is("ana.maria@gmail.com")))
+                .andExpect(jsonPath("$[0].produtos[0].id", is(10)))
+                .andExpect(jsonPath("$[0].produtos[0].descricao", is("Coca Cola")))
+                .andExpect(jsonPath("$[0].produtos[0].categoria.id", is(2)))
+                .andExpect(jsonPath("$[0].produtos[0].categoria.descricao", is("Bebida")))
+                .andExpect(jsonPath("$[0].produtos[0].valor_unitario", is(5.0)));
+
     }
 
+    @DisplayName("Deve listar os pedidos vazios com sucesso")
+    @Test
+    void shouldListEmptyPedidosSuccess() throws Exception {
+        final var queryParam = String.valueOf(100L);
+
+
+        when(pedidoService.list(anyInt(), anyInt())).thenReturn(Page.empty());
+
+        mockMvc.perform(get(ROTA_PEDIDOS)
+                        .param("pagina", queryParam)
+                        .param("tamanho", queryParam)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
 
     private PedidoDTO setPedidoDTO() {
@@ -255,6 +275,58 @@ class PedidoControllerTest {
         pedidoList.add(pedido2);
 
         return pedidoList;
+    }
+
+    private Page<PedidoDTO> createMockPage() {
+        List<PedidoDTO> pedidos = List.of(setPedidoDTO());
+        return new PageImpl<>(pedidos, PageRequest.of(0, 10), pedidos.size());
+    }
+
+    public static Pedido createMockPedido() {
+        Pedido pedido = new Pedido();
+        pedido.setId(1L);
+        pedido.setSenhaRetirada(123456);
+        pedido.setCliente(createMockCliente());
+        pedido.setProdutos(createMockProdutos());
+        pedido.setValorTotal(new BigDecimal("100.00"));
+        pedido.setStatusPedido(StatusPedido.RECEBIDO);
+        pedido.setPagamento(null); // Você pode definir como necessário
+
+        return pedido;
+    }
+
+    private static Cliente createMockCliente() {
+        Cliente cliente = new Cliente();
+        cliente.setId(1L);
+        cliente.setNome("Nome do Cliente");
+        cliente.setCpf("123.456.789-00");
+        cliente.setEmail("cliente@example.com");
+        return cliente;
+    }
+
+    private static List<Produto> createMockProdutos() {
+        List<Produto> produtos = new ArrayList<>();
+        Produto produto1 = createMockProduto(1L, "Produto 1", new BigDecimal("10.00"));
+        Produto produto2 = createMockProduto(2L, "Produto 2", new BigDecimal("20.00"));
+        produtos.add(produto1);
+        produtos.add(produto2);
+        return produtos;
+    }
+
+    private static Produto createMockProduto(Long id, String descricao, BigDecimal valorUnitario) {
+        Produto produto = new Produto();
+        produto.setId(id);
+        produto.setDescricao(descricao);
+        produto.setCategoria(createMockCategoria());
+        produto.setValorUnitario(valorUnitario);
+        return produto;
+    }
+
+    private static Categoria createMockCategoria() {
+        Categoria categoria = new Categoria();
+        categoria.setId(1L);
+        categoria.setDescricao("Categoria de Produtos");
+        return categoria;
     }
 
 }

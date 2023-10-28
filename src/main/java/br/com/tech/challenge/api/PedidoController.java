@@ -3,7 +3,6 @@ package br.com.tech.challenge.api;
 import br.com.tech.challenge.domain.dto.FilaPedidosDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
-import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import br.com.tech.challenge.servicos.PedidoService;
 import br.com.tech.challenge.utils.Utils;
@@ -14,13 +13,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -80,9 +75,12 @@ public class PedidoController {
     }
     )
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PedidoDTO>> listarPedidos( @PageableDefault(page = 0, size = 10) Pageable pageable) {
+    public ResponseEntity<List<PedidoDTO>> listarPedidos(
+            @RequestParam(name = "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name = "tamanho", defaultValue = "10") int tamanho
+    ) {
 
-        return ResponseEntity.ok(pedidoService.list(pageable).stream()
+        return ResponseEntity.ok(pedidoService.list(pagina, tamanho).stream()
                 .map(pedido -> mapper.map(pedido, PedidoDTO.class))
                 .toList());
     }

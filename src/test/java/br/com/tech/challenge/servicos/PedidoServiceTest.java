@@ -14,6 +14,7 @@ import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -139,37 +140,43 @@ void shouldValidateEmptyListProductsOrder() {
         }
     }
 
+
+    @DisplayName("Nao deve atrualizar status do pedido quando for CANCELADO")
     @Test
     void shouldThrowStatusPedidoInvalidoExceptionWhenCancelPedido() {
-        // Arrange
         Long pedidoId = 1L;
         StatusPedidoDTO novoStatusDTO = new StatusPedidoDTO(StatusPedido.CANCELADO);
 
-        Pedido pedido = new Pedido(); // Crie um pedido fictício
+        Pedido pedido = new Pedido();
         Optional<Pedido> pedidoOptional = Optional.of(pedido);
 
         when(pedidoRepository.findById(pedidoId)).thenReturn(pedidoOptional);
 
-        // Act & Assert
         assertThrows(StatusPedidoInvalidoException.class, () -> pedidoService.updateStatus(pedidoId, novoStatusDTO));
     }
 
 
-//    @DisplayName("Deve listar pedidos com sucesso")
-//    @Test
-//    void shouldListPedidosSuccessfully() {
-//        List<Pedido> pedidosMock = setPedidoList();
-//        when(pedidoRepository.findAll()).thenReturn(pedidosMock);
-//
-//        List<PedidoDTO> result = pedidoService.list();
-//
-//        List<PedidoDTO> expected = pedidosMock.stream()
-//                .map(pedido -> mapper.map(pedido, PedidoDTO.class))
-//                .toList();
-//
-//        assertEquals(expected, result);
-//
-//    }
+    @DisplayName("Deve retornar uma lista paginada de pedidos quando existem pedidos")
+    @Test
+    void shouldReturnPaginatedListOfPedidosWhenPedidosExist() {
+        List<Pedido> pedidosSimulados = setPedidoList();
+
+        when(pedidoRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(pedidosSimulados));
+
+        Page<PedidoDTO> result = pedidoService.list(0, 3);
+
+        Assertions.assertThat(result.getContent()).hasSize(3);
+
+    }
+
+    @DisplayName("Deve retornar uma lista vazia de pedidos quando não houver pedidos")
+    @Test
+    void shouldReturnEmptyListOfPedidosWhenNoPedidosExist() {
+        when(pedidoRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
+
+        Page<PedidoDTO> result = pedidoService.list(0, 10);
+        Assertions.assertThat(result.getContent()).isEmpty();
+    }
 
 
         private Pedido setPedido() {
