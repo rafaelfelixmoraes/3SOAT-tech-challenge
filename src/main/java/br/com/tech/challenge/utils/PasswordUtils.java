@@ -4,18 +4,23 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Random;
 
+import static java.lang.Integer.*;
+
 @UtilityClass
 public class PasswordUtils {
 
     private static final Random RANDOM = new Random();
+    private static final int PASSWORD_LENGTH = 6;
+    private static final int MIN = 1;
+    private static final int MAX = 9;
 
     public static Integer generatePassword() {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
-        for (int i = 0; i < 6; i++)
-            sb.append(RANDOM.nextInt(10));
+        for (int i = 0; i < PASSWORD_LENGTH; i++)
+            sb.append(RANDOM.nextInt(MAX) + MIN);
 
-        return Integer.parseInt(sb.toString());
+        return parseInt(sb.toString());
     }
 
 }
