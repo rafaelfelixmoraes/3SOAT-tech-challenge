@@ -38,6 +38,7 @@ dependencies {
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.7.1'
 	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 	implementation 'org.apache.commons:commons-lang3'
+	implementation 'org.apache.commons:commons-imaging:1.0-alpha3'
 
 	//	Postgress
 	implementation 'org.postgresql:postgresql:42.2.27'
@@ -60,6 +61,10 @@ dependencies {
 
 	// H2
 	testImplementation 'com.h2database:h2:2.2.224'
+
+	//QR Code
+	implementation group: 'com.google.zxing', name: 'core', version: '3.4.1'
+	implementation group: 'com.google.zxing', name: 'javase', version: '3.4.1'
 
 }
 

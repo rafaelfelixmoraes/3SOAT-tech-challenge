@@ -4,6 +4,7 @@ import br.com.tech.challenge.domain.dto.FilaPedidosDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import br.com.tech.challenge.servicos.PedidoService;
+import br.com.tech.challenge.utils.QRCodeUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,6 +39,9 @@ public class PedidoController {
 
     private final ModelMapper mapper;
 
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 500;
+
     @Operation(description = "Endpoint para criar um Pedido")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso."),
@@ -63,6 +67,17 @@ public class PedidoController {
                 .body(filaPedidosService.listaFilaPedidos(pagina, tamanho)
                         .map(pedido -> mapper.map(pedido, FilaPedidosDTO.class))
                 );
+    }
+
+    @GetMapping("/generate-qr-code")
+    public ResponseEntity<byte[]> getQrCode() {
+        String contentToGenerateQrCode = "https://www.google.com.br/";
+
+        byte[] qrCode = QRCodeUtils.generateQrCode(contentToGenerateQrCode, WIDTH, HEIGHT);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(qrCode);
     }
 
 }
