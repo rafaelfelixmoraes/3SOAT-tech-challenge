@@ -3,6 +3,8 @@ package br.com.tech.challenge.api;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.servicos.ClienteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class ClienteControllerTest {
@@ -33,6 +35,12 @@ class ClienteControllerTest {
 
     private static final String ROTA_CLIENTES = "/clientes";
     private static final String ROTA_CLIENTES_CPF = "/clientes/{cpf}";
+
+    @AfterAll
+    static void clearDatabase(@Autowired Flyway flyway) {
+        flyway.clean();
+        flyway.migrate();
+    }
 
 
     @DisplayName("Deve salvar um cliente com sucesso")
@@ -49,7 +57,7 @@ class ClienteControllerTest {
 
     @DisplayName("Deve salvar um cliente com sucesso apenas com cpf")
     @Test
-    public void shouldSaveClienteWithValidCpf() throws Exception {
+    void shouldSaveClienteWithValidCpf() throws Exception {
         final String cpf = "66774316069";
 
         mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
@@ -57,15 +65,16 @@ class ClienteControllerTest {
                 .andExpect(status().isCreated());
     }
 
-//    @DisplayName("Não deve salvar um cliente com cpf inválido")
-//    @Test
-//    public void shouldNotSaveClienteWithInvalidCpf() throws Exception {
-//
-//        mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-//
-//    }
+    @DisplayName("Não deve salvar um cliente com cpf inválido")
+    @Test
+    void shouldNotSaveClienteWithInvalidCpf() throws Exception {
+        final String cpf = "123.456.789-0000";
+
+        mockMvc.perform(post(ROTA_CLIENTES_CPF, cpf)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+    }
 
     private Cliente setCliente() {
         return Cliente.builder()
