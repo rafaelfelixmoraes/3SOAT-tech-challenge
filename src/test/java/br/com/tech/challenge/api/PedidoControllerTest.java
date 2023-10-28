@@ -8,6 +8,8 @@ import br.com.tech.challenge.domain.entidades.FilaPedidos;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class PedidoControllerTest {
@@ -48,6 +50,12 @@ class PedidoControllerTest {
     private FilaPedidosService filaPedidosService;
 
     private static final String ROTA_PEDIDOS = "/pedidos";
+
+    @AfterAll
+    static void clearDatabase(@Autowired Flyway flyway) {
+        flyway.clean();
+        flyway.migrate();
+    }
 
     @DisplayName("Deve salvar um pedido com sucesso")
     @Test
