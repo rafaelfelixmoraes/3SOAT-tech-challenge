@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Random;
 
-import static java.lang.Integer.*;
+import static java.lang.Integer.parseInt;
 
 @UtilityClass
 public class PasswordUtils {
