@@ -61,7 +61,7 @@ public class PagamentoService {
     }
 
     @Transactional
-    public void checkout(Long idPedido) {
+    public Pagamento checkout(Long idPedido) {
         var pedido = getPedido(idPedido);
         var pagamento = findPagamentoByPedidoId(pedido.getId());
 
@@ -70,7 +70,7 @@ public class PagamentoService {
 
         pedido.setStatusPedido(StatusPedido.EM_PREPARACAO);
         pedidoRepository.save(pedido);
-        pagamentoRepository.save(pagamento);
+        return pagamentoRepository.save(pagamento);
     }
 
     private MercadoPagoRequestDTO buildMercadoPagoRequestDTO(Pedido pedido) {

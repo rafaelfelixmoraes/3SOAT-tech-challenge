@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
@@ -40,23 +39,6 @@ public class MercadoPagoClient implements QRClient {
             return responseEntity.getBody();
         } catch (RestClientException | JsonProcessingException exception) {
             throw new MercadoPagoAPIException("Ocorreu um erro ao gerar QR Code: " + exception.getMessage());
-        }
-    }
-
-    @Override
-    public void payQRCode(MercadoPagoRequestDTO dto) {
-        RetryTemplate retryTemplate = RetryTemplateFactory.retryTemplate();
-        RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.clientHttpRequestFactory());
-
-        try {
-            retryTemplate.execute(retryContext -> restTemplate.exchange(
-                    MercadoPagoAPI.MERCADO_PAGO_URL.text().concat(MercadoPagoAPI.getQRCodeUrl()),
-                    HttpMethod.PUT,
-                    httpEntity(dto),
-                    Void.class
-            ));
-        } catch (RestClientException | JsonProcessingException exception) {
-            throw new MercadoPagoAPIException("Ocorreu um erro ao realizar pagamento: " + exception.getMessage());
         }
     }
 
