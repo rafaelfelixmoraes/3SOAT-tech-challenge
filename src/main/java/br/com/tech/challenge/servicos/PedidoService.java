@@ -44,8 +44,7 @@ public class PedidoService {
         pedidoDTO.setSenhaRetirada(PasswordUtils.generatePassword());
         pedidoDTO.setDataHora(LocalDateTime.now());
         var pedido = pedidoRepository.save(mapper.map(pedidoDTO, Pedido.class));
-        var totalValue = calculateTotalValueProducts(produtoList);
-        pagamentoService.save(pedido, totalValue);
+        pagamentoService.save(pedido);
         return pedido;
     }
 

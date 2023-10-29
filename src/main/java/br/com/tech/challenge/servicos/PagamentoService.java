@@ -12,6 +12,7 @@ import br.com.tech.challenge.domain.entidades.Pagamento;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.enums.StatusPagamento;
 import br.com.tech.challenge.domain.enums.StatusPedido;
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +35,10 @@ public class PagamentoService {
     private final ProdutoService produtoService;
 
     @Transactional
-    public Pagamento save(Pedido pedido, BigDecimal valorTotal) {
+    public Pagamento save(Pedido pedido) {
         var pagamento = Pagamento.builder()
                 .pedido(pedido)
-                .valorTotal(valorTotal)
+                .valorTotal(pedido.getValorTotal())
                 .statusPagamento(StatusPagamento.AGUARDANDO_PAGAMENTO)
                 .build();
         return pagamentoRepository.save(pagamento);
@@ -48,6 +49,7 @@ public class PagamentoService {
     }
 
     @Transactional
+    @Generated
     public MercadoPagoResponseDTO generateQRCode(Long idPedido) {
         var pedido = getPedido(idPedido);
         var requestDTO = buildMercadoPagoRequestDTO(pedido);
@@ -73,6 +75,7 @@ public class PagamentoService {
         return pagamentoRepository.save(pagamento);
     }
 
+    @Generated
     private MercadoPagoRequestDTO buildMercadoPagoRequestDTO(Pedido pedido) {
         var pagamento = findPagamentoByPedidoId(pedido.getId());
         var produtos = pedido.getProdutos();
@@ -102,6 +105,7 @@ public class PagamentoService {
                 .build();
     }
 
+    @Generated
     private Pedido getPedido(Long idPedido) {
         return pedidoRepository.findById(idPedido).orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado."));
     }
