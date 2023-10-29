@@ -3,12 +3,15 @@ package br.com.tech.challenge.api;
 import br.com.tech.challenge.domain.dto.ProdutoUpdateDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Produto;
+import br.com.tech.challenge.servicos.ProdutoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,6 +22,9 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,6 +43,9 @@ class ProdutoControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @Mock
+    private ProdutoService produtoService;
 
     private static final String ROTA_PRODUTOS = "/produtos";
 
@@ -87,6 +96,24 @@ class ProdutoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @DisplayName("Deve listar os produtos vazios com sucesso")
+    @Test
+    void shouldListEmptyProdutoSuccess() throws Exception {
+        final var queryParam = String.valueOf(100L);
+
+        when(produtoService.list(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(Page.empty());
+
+        mockMvc.perform(get(ROTA_PRODUTOS)
+                        .param("id", queryParam)
+                        .param("categoria", queryParam)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     @DisplayName("Deve deletar um produto com sucesso")
