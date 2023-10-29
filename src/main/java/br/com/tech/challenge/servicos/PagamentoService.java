@@ -37,7 +37,6 @@ public class PagamentoService {
     public Pagamento save(Pedido pedido, BigDecimal valorTotal) {
         var pagamento = Pagamento.builder()
                 .pedido(pedido)
-                .dataHoraPagamento(LocalDateTime.now())
                 .valorTotal(valorTotal)
                 .statusPagamento(StatusPagamento.AGUARDANDO_PAGAMENTO)
                 .build();
@@ -62,13 +61,16 @@ public class PagamentoService {
     }
 
     @Transactional
-    public void payQRCode(Long idPedido) {
+    public void checkout(Long idPedido) {
         var pedido = getPedido(idPedido);
-        var requestDTO = buildMercadoPagoRequestDTO(pedido);
-        mercadoPagoClient.payQRCode(requestDTO);
+        var pagamento = findPagamentoByPedidoId(pedido.getId());
+
+        pagamento.setStatusPagamento(StatusPagamento.PAGO);
+        pagamento.setDataHoraPagamento(LocalDateTime.now());
 
         pedido.setStatusPedido(StatusPedido.EM_PREPARACAO);
         pedidoRepository.save(pedido);
+        pagamentoRepository.save(pagamento);
     }
 
     private MercadoPagoRequestDTO buildMercadoPagoRequestDTO(Pedido pedido) {

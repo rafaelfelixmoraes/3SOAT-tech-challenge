@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +21,7 @@ public class PagamentoController {
 
     private final PagamentoService pagamentoService;
 
-    @Operation(description = "Endpoint para gerar um código QR")
+    @Operation(description = "Endpoint para gerar um código QR (futuramente)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Código QR criado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Informações de pagamento inválidas."),
@@ -34,17 +33,16 @@ public class PagamentoController {
         return ResponseEntity.ok().body(pagamentoService.generateQRCode(id));
     }
 
-    @Operation(description = "Endpoint para realizar um pagamento")
+    @Operation(description = "Endpoint para realizar o checkout")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Pagamento realizado com sucesso."),
-            @ApiResponse(responseCode = "400", description = "Informações de pagamento inválidas."),
+            @ApiResponse(responseCode = "200", description = "Pagamento realizado com sucesso."),
             @ApiResponse(responseCode = "404", description = "Pedido não encontrado."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     })
-    @PutMapping("/pedido/{idPedido}/checkout")
-    public ResponseEntity<Void> payQRCode(@PathVariable("idPedido") Long id) {
-        pagamentoService.payQRCode(id);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/pedido/{idPedido}/checkout")
+    public ResponseEntity<Void> checkout(@PathVariable("idPedido") Long id) {
+        pagamentoService.checkout(id);
+        return ResponseEntity.ok().build();
     }
 
 }
