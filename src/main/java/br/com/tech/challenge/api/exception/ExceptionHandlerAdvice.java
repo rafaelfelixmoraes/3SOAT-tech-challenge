@@ -41,13 +41,13 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(MercadoPagoAPIException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<ResponseExceptionDTO> handleMercadoPagoAPIException(ObjectNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseExceptionDTO.builder()
                         .exceptionMessage(exception.getMessage())
                         .messages(null)
-                        .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
                         .build()
         );
     }

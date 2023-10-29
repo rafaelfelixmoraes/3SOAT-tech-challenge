@@ -23,11 +23,13 @@ public class MercadoPagoRequestDTO {
 
     private String title;
 
+    private String description;
+
     private BigDecimal totalAmount;
 
     private List<ItemDTO> items;
 
-    private SponsorDTO sponsor;
+    //private SponsorDTO sponsor;
 
     private CashOutDTO cashOut;
 

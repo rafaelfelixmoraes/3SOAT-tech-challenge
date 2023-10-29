@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum MercadoPagoAPI {
 
-    ACCESS_TOKEN("Bearer TEST-6621802098599609-102118-84e7d61f11ef646bbaf89a78e1bb2631-700064145"),
+    ACCESS_TOKEN("Bearer APP_USR-6155129762548657-102711-6c6e3574529dbc4e6d5944056bb132db-700064145"),
+
     MERCADO_PAGO_URL("https://api.mercadopago.com"),
-    USER_ID("700064145"),
-    CAIXA_PAGAMENTO_ID("87956324"),
-    SPONSOR_ID("6621802098599609");
+
+    CAIXA_PAGAMENTO_ID("CAIXA001"),
+
+    USER_ID("700064145");
 
     final String text;
 

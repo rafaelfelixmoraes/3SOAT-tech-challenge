@@ -8,10 +8,8 @@ import br.com.tech.challenge.domain.dto.external.CashOutDTO;
 import br.com.tech.challenge.domain.dto.external.ItemDTO;
 import br.com.tech.challenge.domain.dto.external.MercadoPagoRequestDTO;
 import br.com.tech.challenge.domain.dto.external.MercadoPagoResponseDTO;
-import br.com.tech.challenge.domain.dto.external.SponsorDTO;
 import br.com.tech.challenge.domain.entidades.Pagamento;
 import br.com.tech.challenge.domain.entidades.Pedido;
-import br.com.tech.challenge.domain.enums.MercadoPagoAPI;
 import br.com.tech.challenge.domain.enums.StatusPagamento;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +54,7 @@ public class PagamentoService {
         var requestDTO = buildMercadoPagoRequestDTO(pedido);
         var responseDTO = mercadoPagoClient.generateQRCode(requestDTO);
 
-        var pagamento = pedido.getPagamento();
+        var pagamento = findPagamentoByPedidoId(pedido.getId());
         pagamento.setQrData(responseDTO.getQrData());
 
         pagamentoRepository.save(pagamento);
@@ -79,26 +77,26 @@ public class PagamentoService {
 
         List<ItemDTO> items = new ArrayList<>();
         produtos.forEach((produto) -> {
+            var count = produtoService.count(produto.getId(), produtos);
             items.add(ItemDTO.builder()
                     .category(produto.getCategoria().getDescricao())
+                    .title(produto.getDescricao() + " do pedido " + pedido.getSenhaRetirada())
                     .description(produto.getDescricao())
                     .unitPrice(produto.getValorUnitario())
-                    .quantity(produtoService.count(produto.getId(), produtos))
+                    .quantity(count)
+                    .unitMeasure("unit")
+                    .totalAmount(produto.getValorUnitario().multiply(BigDecimal.valueOf(count)))
                     .build()
             );
         });
 
         return MercadoPagoRequestDTO.builder()
                 .externalReference(pedido.getSenhaRetirada().toString())
-                .title(String.format("Pagamento %d do Pedido %d", pagamento.getId(), pedido.getId()))
-                .totalAmount(pagamento.getValorTotal())
+                .title("Ordem de pedido")
+                .description(String.format("Pagamento %d do Pedido %d", pagamento.getId(), pedido.getId()))
+                .totalAmount(pagamento.getValorTotal().multiply(BigDecimal.valueOf(2L)))
                 .items(items)
-                .sponsor(SponsorDTO.builder()
-                        .id(Long.valueOf(MercadoPagoAPI.SPONSOR_ID.text()))
-                        .build())
-                .cashOut(CashOutDTO.builder()
-                        .amount(pagamento.getValorTotal())
-                        .build())
+                .cashOut(CashOutDTO.builder().amount(pagamento.getValorTotal()).build())
                 .build();
     }
 
