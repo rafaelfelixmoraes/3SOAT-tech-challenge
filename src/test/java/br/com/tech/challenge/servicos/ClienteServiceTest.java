@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 class ClienteServiceTest {
 
-    private ClienteService clienteService;
+    private final ClienteService clienteService;
 
     @Mock
     private ClienteRepository clienteRepository;
@@ -95,6 +95,28 @@ class ClienteServiceTest {
         assertThrows(ClienteAlreadyExistsException.class, () -> {
             clienteService.saveClientWithCpf(cpf);
         });
+    }
+
+    @DisplayName("Deve existir um cliente com o id informado")
+    @Test
+    void shouldFindClienteById() {
+        final Long id = 10L;
+
+        when(clienteService.existsById(id)).thenReturn(true);
+        var exists = clienteService.existsById(id);
+
+        assertTrue(exists);
+    }
+
+    @DisplayName("Não deve existir um cliente com o id informado")
+    @Test
+    void shouldNotFindClienteById() {
+        final Long id = 11L;
+
+        when(clienteService.existsById(id)).thenReturn(false);
+        var exists = clienteService.existsById(id);
+
+        assertFalse(exists);
     }
 
     private Cliente setCliente() {

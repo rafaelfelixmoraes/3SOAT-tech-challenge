@@ -13,10 +13,10 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -113,6 +113,26 @@ class ProdutoServiceTest {
                 produtoService.delete(produto.getId()), "Nenhum registro encontrado para o id informado");
     }
 
+    @DisplayName("Deve contar a quantidade de produtos por id na lista corretamente")
+    @Test
+    void shouldCountProdutosByIdCorrectly() {
+        var produtos = setListProduto();
+
+        assertEquals(2L, produtoService.count(1L, produtos));
+        assertEquals(1L, produtoService.count(2L, produtos));
+        assertEquals(1L, produtoService.count(3L, produtos));
+    }
+
+    @DisplayName("Deve encontrar o produto pelo id")
+    @Test
+    void shouldFindProdutoById() {
+        final Long id = 1L;
+
+        when(produtoService.findById(id)).thenReturn(Optional.of(setProduto()));
+
+        assertTrue(produtoService.findById(id).isPresent());
+    }
+
     private Produto setProduto() {
         return Produto.builder()
                 .id(1L)
@@ -145,6 +165,15 @@ class ProdutoServiceTest {
                 .categoria(setCategoria())
                 .valorUnitario(new BigDecimal("10.50"))
                 .build();
+    }
+
+    private List<Produto> setListProduto() {
+        return List.of(
+          Produto.builder().id(1L).build(),
+          Produto.builder().id(1L).build(),
+          Produto.builder().id(2L).build(),
+          Produto.builder().id(3L).build()
+        );
     }
 
 }

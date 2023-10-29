@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +32,6 @@ public class PedidoService {
     private final PagamentoService pagamentoService;
 
     private final ModelMapper mapper;
-
-    public Optional<Pedido> findById(Long id) {
-        return pedidoRepository.findById(id);
-    }
 
     @Transactional
     public Pedido save(PedidoDTO pedidoDTO) {
