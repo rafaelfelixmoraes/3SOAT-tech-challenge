@@ -1,7 +1,5 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.api.exception.ClienteAlreadyExistsException;
-import br.com.tech.challenge.domain.dto.ClienteCpfDTO;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.RequestClienteCpfDTO;
 import br.com.tech.challenge.domain.entidades.Cliente;
@@ -13,16 +11,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,7 +35,7 @@ class ClienteControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @MockBean
+    @Mock
     private ClienteService clienteService;
 
     private static final String ROTA_CLIENTES = "/clientes";
@@ -56,7 +51,6 @@ class ClienteControllerTest {
     @Test
     void shouldSaveClienteSuccess() throws Exception {
         ClienteDTO clienteDTO = setClienteDto();
-        when(clienteService.save(any(ClienteDTO.class))).thenReturn(setCliente());
 
         mockMvc.perform(post(ROTA_CLIENTES)
                         .content(mapper.writeValueAsString(clienteDTO))
@@ -96,7 +90,6 @@ class ClienteControllerTest {
 
 
         RequestClienteCpfDTO clienteCpfDTO = new RequestClienteCpfDTO("751.792.300-55");
-        when(clienteService.saveClientWithCpf(clienteCpfDTO.getCpf())).thenReturn(setCliente());
 
         mockMvc.perform(post(ROTA_CLIENTES + "/cpf")
                         .content(mapper.writeValueAsString(clienteCpfDTO))
@@ -109,10 +102,8 @@ class ClienteControllerTest {
     @DisplayName("Deve lançar uma exceção ao salvar um cliente com CPF inválido")
     @Test
     void shouldThrowExceptionWhenSavingClientWithInvalidCPF() throws Exception {
-        // Arrange
         RequestClienteCpfDTO clienteCpfDTO = new RequestClienteCpfDTO("cpf_invalido");
 
-        // Act and Assert
         mockMvc.perform(post(ROTA_CLIENTES + "/cpf")
                         .content(mapper.writeValueAsString(clienteCpfDTO))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -127,8 +118,7 @@ class ClienteControllerTest {
     @Test
     void shouldThrowExceptionWhenSavingClientWithExistingCPF() throws Exception {
         RequestClienteCpfDTO clienteCpfDTO = new RequestClienteCpfDTO(setCliente().getCpf());
-        doThrow(new ClienteAlreadyExistsException("CPF já existente")).when(clienteService).saveClientWithCpf(anyString());
-
+        clienteCpfDTO.setCpf("667.743.160-69");
         mockMvc.perform(post(ROTA_CLIENTES + "/cpf")
                         .content(mapper.writeValueAsString(clienteCpfDTO))
                         .contentType(MediaType.APPLICATION_JSON)

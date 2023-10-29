@@ -44,15 +44,10 @@ public class ClienteService {
 
     @Transactional
     public ClienteCheckInDTO checkInCliente(String cpf) {
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
+        Optional<Cliente> clienteOptional = Optional.ofNullable(clienteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado")));
 
-        if (clienteOptional.isPresent()) {
-            Cliente cliente = clienteOptional.get();
-
-            return mapper.map(cliente, ClienteCheckInDTO.class);
-        } else {
-            throw new ObjectNotFoundException("Cliente não encontrado");
-        }
+            return mapper.map(clienteOptional.get(), ClienteCheckInDTO.class);
     }
 
     private void isClienteAlreadyExists(String cpf) {

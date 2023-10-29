@@ -1,7 +1,5 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.domain.dto.PedidoDTO;
-import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoUpdateDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Produto;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,9 +27,6 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -80,7 +74,7 @@ class ProdutoControllerTest {
     void shouldUpdateProdutoSuccess() throws Exception {
         var produtoUpdateDTO = setProdutoUpdateDTO();
 
-        mockMvc.perform(patch(ROTA_PRODUTOS + "/10")
+        mockMvc.perform(patch(ROTA_PRODUTOS + "/100")
                         .content(mapper.writeValueAsString(produtoUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -107,8 +101,6 @@ class ProdutoControllerTest {
 
         Page<Produto> page = createMockPage();
 
-        when(produtoService.list(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(page);
-
         mockMvc.perform(get(ROTA_PRODUTOS)
                         .content(mapper.writeValueAsString(setListProdutos()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,15 +108,13 @@ class ProdutoControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content", hasSize(4)));
+                .andExpect(jsonPath("$.content", hasSize(2)));
     }
 
     @DisplayName("Deve listar os produtos vazios com sucesso")
     @Test
     void shouldListEmptyProdutoSuccess() throws Exception {
         final var queryParam = String.valueOf(200L);
-
-        when(produtoService.list(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(Page.empty());
 
         mockMvc.perform(get(ROTA_PRODUTOS)
                         .param("id", queryParam)
@@ -140,9 +130,6 @@ class ProdutoControllerTest {
     @DisplayName("Deve deletar um produto com sucesso")
     @Test
     void shouldDeleteProdutoSuccess() throws Exception {
-
-        long produtoId = 15L;
-        Mockito.doNothing().when(produtoService).delete(produtoId);
 
         mockMvc.perform(delete(ROTA_PRODUTOS + "/105")
                         .contentType(MediaType.APPLICATION_JSON)

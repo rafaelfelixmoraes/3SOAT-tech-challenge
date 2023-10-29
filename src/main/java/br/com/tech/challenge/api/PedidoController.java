@@ -5,7 +5,6 @@ import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import br.com.tech.challenge.servicos.PedidoService;
-import br.com.tech.challenge.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,10 +17,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -70,33 +75,35 @@ public class PedidoController {
 
     @Operation(description = "Endpoint para listar Pedidos")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pedidos retornados sucesso."),
+            @ApiResponse(responseCode = "200", description = "Pedidos retornados sucesso.", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PedidoDTO.class)))
+            }),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
-    }
-    )
+    })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PedidoDTO>> listarPedidos(
+    public ResponseEntity<Page<PedidoDTO>> listarPedidos(
             @RequestParam(name = "pagina", defaultValue = "0") int pagina,
             @RequestParam(name = "tamanho", defaultValue = "10") int tamanho
     ) {
 
-        return ResponseEntity.ok(pedidoService.list(pagina, tamanho).stream()
-                .map(pedido -> mapper.map(pedido, PedidoDTO.class))
-                .toList());
+        return ResponseEntity.ok(pedidoService.list(pagina, tamanho));
     }
 
     @Operation(description = "Endpoint para atualizar status de um pedido")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Pedido atualizado com sucesso."),
+            @ApiResponse(responseCode = "204", description = "Pedido atualizado com sucesso.", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PedidoDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Status inválido"),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro no servidor.")
     }
     )
     @PutMapping("/{pedidoId}/status")
     public ResponseEntity<PedidoDTO> updateStatus(@PathVariable Long pedidoId, @RequestBody StatusPedidoDTO statusPedidoDTO) {
 
-        Utils.validarStatusPedido(statusPedidoDTO.getStatusPedido()); // Validação
-
-        return ResponseEntity.ok(mapper.map(pedidoService.updateStatus(pedidoId, statusPedidoDTO), PedidoDTO.class));
+        return ResponseEntity.ok(pedidoService.updateStatus(pedidoId, statusPedidoDTO));
     }
 
 }

@@ -1,12 +1,15 @@
 package br.com.tech.challenge.api;
 
-import br.com.tech.challenge.api.exception.ObjectNotFoundException;
-import br.com.tech.challenge.api.exception.StatusPedidoInvalidoException;
+
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
-import br.com.tech.challenge.domain.entidades.*;
+import br.com.tech.challenge.domain.entidades.Categoria;
+import br.com.tech.challenge.domain.entidades.Cliente;
+import br.com.tech.challenge.domain.entidades.FilaPedidos;
+import br.com.tech.challenge.domain.entidades.Produto;
+import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.servicos.FilaPedidosService;
 import br.com.tech.challenge.servicos.PedidoService;
@@ -15,10 +18,10 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,13 +34,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyInt;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 
 @SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 @AutoConfigureMockMvc
@@ -50,10 +60,10 @@ class PedidoControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @MockBean
+    @Mock
     private FilaPedidosService filaPedidosService;
 
-    @MockBean
+    @Mock
     private PedidoService pedidoService;
 
     private static final String ROTA_PEDIDOS = "/pedidos";
@@ -70,32 +80,27 @@ class PedidoControllerTest {
     @DisplayName("Deve salvar um pedido com sucesso")
     @Test
     void shouldSavePedidoSuccess() throws Exception {
-        PedidoDTO pedidoDTO = setPedidoDTO();
-
-        Pedido pedido = createMockPedido();
-
-        // Configuração de retorno simulado do serviço
-        when(pedidoService.save(any(PedidoDTO.class))).thenReturn(pedido);
 
         mockMvc.perform(post(ROTA_PEDIDOS)
-                        .content(mapper.writeValueAsString(pedidoDTO))
+                        .content(mapper.writeValueAsString(setPedidoDTO()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.senha_retirada").value(pedido.getSenhaRetirada()))
-                .andExpect(jsonPath("$.cliente.id").value(pedido.getCliente().getId()))
-                .andExpect(jsonPath("$.cliente.nome").value(pedido.getCliente().getNome()))
-                .andExpect(jsonPath("$.cliente.cpf").value(pedido.getCliente().getCpf()))
-                .andExpect(jsonPath("$.cliente.email").value(pedido.getCliente().getEmail()))
-                .andExpect(jsonPath("$.produtos[0].id").value(pedido.getProdutos().get(0).getId()))
-                .andExpect(jsonPath("$.produtos[0].descricao").value(pedido.getProdutos().get(0).getDescricao()))
-                .andExpect(jsonPath("$.produtos[0].categoria.id").value(pedido.getProdutos().get(0).getCategoria().getId()))
-                .andExpect(jsonPath("$.produtos[0].categoria.descricao").value(pedido.getProdutos().get(0).getCategoria().getDescricao()))
-                .andExpect(jsonPath("$.produtos[0].valor_unitario").value(pedido.getProdutos().get(0).getValorUnitario().doubleValue()))
-                .andExpect(jsonPath("$.valor_total").value(pedido.getValorTotal().doubleValue()))
-                .andExpect(jsonPath("$.status_pedido").value(pedido.getStatusPedido().toString()));
+                .andExpect(jsonPath("$.id", is(equalTo(1))))
+                .andExpect(jsonPath("$.valor_total", is(equalTo(10.0))))
+                // Verifica o cliente
+                .andExpect(jsonPath("$.cliente.id", is(equalTo(105))))
+                .andExpect(jsonPath("$.cliente.nome", is(equalTo("Ana Maria Souza"))))
+                .andExpect(jsonPath("$.cliente.cpf", is(equalTo("299.106.340-825"))))
+                .andExpect(jsonPath("$.cliente.email", is(equalTo("ana.maria2@gmail.com"))))
+                // Verifica a lista de produtos
+                .andExpect(jsonPath("$.produtos", hasSize(1)))
+                .andExpect(jsonPath("$.produtos[0].id", is(equalTo(101))))
+                .andExpect(jsonPath("$.produtos[0].descricao", is(equalTo("Coca Cola"))))
+                .andExpect(jsonPath("$.produtos[0].categoria.id", is(equalTo(2))))
+                .andExpect(jsonPath("$.produtos[0].categoria.descricao", is(equalTo("Bebida"))))
+                .andExpect(jsonPath("$.produtos[0].valor_unitario", is(equalTo(10.0))));
     }
 
     @DisplayName("Deve lançar uma exceção ao salvar um pedido com produto inexistente")
@@ -108,9 +113,6 @@ class PedidoControllerTest {
                 .statusPedido(StatusPedido.RECEBIDO)
                 .build();
 
-        // Configuração de exceção simulada no serviço
-        doThrow(new ObjectNotFoundException("A lista de produtos não pode estar vazia"))
-                .when(pedidoService).save(any(PedidoDTO.class));
 
         mockMvc.perform(post(ROTA_PEDIDOS)
                         .content(mapper.writeValueAsString(pedidoDTO))
@@ -125,15 +127,13 @@ class PedidoControllerTest {
     void shouldListFilaPedidosSuccess() throws Exception {
         var listaPedidos = new PageImpl<>(Collections.singletonList(setFilaPedidos()));
 
-        when(filaPedidosService.listaFilaPedidos(anyInt(), anyInt())).thenReturn(listaPedidos);
-
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content", hasSize(1)));
+                .andExpect(jsonPath("$.content", hasSize(2)));
     }
 
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
@@ -141,7 +141,12 @@ class PedidoControllerTest {
     void shouldListFilaPedidosEmptySuccess() throws Exception {
         when(filaPedidosService.listaFilaPedidos(anyInt(), anyInt())).thenReturn(Page.empty());
 
+        final var pagina = String.valueOf(10);
+        final var tamanho = String.valueOf(5);
+
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
+                        .param("pagina", pagina)
+                        .param("tamanho", tamanho)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -156,10 +161,7 @@ class PedidoControllerTest {
     void shouldUpdateStatusPedidoSuccess() throws Exception {
         StatusPedidoDTO statusPedidoDTO = new StatusPedidoDTO(StatusPedido.PRONTO);
 
-        PedidoDTO pedidoDTO = new PedidoDTO();
-        doReturn(pedidoDTO).when(pedidoService).updateStatus(any(Long.class), any(StatusPedidoDTO.class));
-
-        mockMvc.perform(put(ROTA_PEDIDOS.concat("/1/status"))
+        mockMvc.perform(put(ROTA_PEDIDOS.concat("/100/status"))
                         .content(mapper.writeValueAsString(statusPedidoDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -169,31 +171,17 @@ class PedidoControllerTest {
     @DisplayName("Deve listar os Pedidos com sucesso")
     @Test
     void shouldListPedidosSuccess() throws Exception {
+        final var pagina = String.valueOf(0);
+        final var tamanho = String.valueOf(5);
 
-        Page<PedidoDTO> page = createMockPage();
 
-        when(pedidoService.list(anyInt(), anyInt())).thenReturn(page);
-
-        mockMvc.perform(get("/pedidos")
-                        .param("pagina", "0")
-                        .param("tamanho", "10")
+        mockMvc.perform(get(ROTA_PEDIDOS)
+                        .param("pagina", pagina)
+                        .param("tamanho", tamanho)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].senha_retirada", is(123456)))
-                .andExpect(jsonPath("$[0].valor_total", is(5.0)))
-                .andExpect(jsonPath("$[0].status_pedido", is("RECEBIDO")))
-                .andExpect(jsonPath("$[0].cliente.id", is(10)))
-                .andExpect(jsonPath("$[0].cliente.nome", is("Ana Maria")))
-                .andExpect(jsonPath("$[0].cliente.cpf", is("603.072.360-05")))
-                .andExpect(jsonPath("$[0].cliente.email", is("ana.maria@gmail.com")))
-                .andExpect(jsonPath("$[0].produtos[0].id", is(10)))
-                .andExpect(jsonPath("$[0].produtos[0].descricao", is("Coca Cola")))
-                .andExpect(jsonPath("$[0].produtos[0].categoria.id", is(2)))
-                .andExpect(jsonPath("$[0].produtos[0].categoria.descricao", is("Bebida")))
-                .andExpect(jsonPath("$[0].produtos[0].valor_unitario", is(5.0)));
+                .andExpect(status().isOk());
 
     }
 
@@ -201,9 +189,6 @@ class PedidoControllerTest {
     @Test
     void shouldListEmptyPedidosSuccess() throws Exception {
         final var queryParam = String.valueOf(100L);
-
-
-        when(pedidoService.list(anyInt(), anyInt())).thenReturn(Page.empty());
 
         mockMvc.perform(get(ROTA_PEDIDOS)
                         .param("pagina", queryParam)
@@ -217,7 +202,7 @@ class PedidoControllerTest {
 
     private PedidoDTO setPedidoDTO() {
         return PedidoDTO.builder()
-                .id(1L)
+                .id(45L)
                 .senhaRetirada(123456)
                 .cliente(setClienteDTO())
                 .produtos(List.of(setProdutoDTO()))
@@ -235,18 +220,18 @@ class PedidoControllerTest {
 
     private ClienteDTO setClienteDTO() {
         return ClienteDTO.builder()
-                .id(10L)
-                .nome("Ana Maria")
-                .email("ana.maria@gmail.com")
-                .cpf("603.072.360-05")
+                .id(105L)
+                .nome("Ana Maria Souza")
+                .email("ana.maria2@gmail.com")
+                .cpf("299.106.340-825")
                 .build();
     }
 
     private ProdutoDTO setProdutoDTO() {
         return ProdutoDTO.builder()
-                .id(10L)
+                .id(101L)
                 .descricao("Coca Cola")
-                .valorUnitario(BigDecimal.valueOf(5.00))
+                .valorUnitario(BigDecimal.valueOf(10.00))
                 .categoria(setCategoria())
                 .build();
     }

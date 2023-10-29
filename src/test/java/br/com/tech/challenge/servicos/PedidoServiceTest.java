@@ -20,7 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -28,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.when;
 
 class PedidoServiceTest {
 
+    @Mock
     private final PedidoService pedidoService;
 
     @Mock
@@ -84,17 +86,32 @@ class PedidoServiceTest {
         assertEquals(returnedPedido.getSenhaRetirada().getClass(), pedido.getSenhaRetirada().getClass());
     }
 
-    @DisplayName("Deve lançar exceção ao criar um pedido com cliente não informado")
+    @DisplayName("Deve criar pedido sem informar cliente")
     @Test
     void shouldValidateNullClient() {
-        try {
-            var returnedPedidoDTO = setPedidoDTO();
-            returnedPedidoDTO.setCliente(null);
-            pedidoService.save(returnedPedidoDTO);
-        } catch (Exception e) {
-            assertEquals(ObjectNotFoundException.class, e.getClass());
-            assertEquals("Cliente não informado.", e.getMessage());
-        }
+
+        var returnedPedido = setPedidoSemCliente();
+        var returnedPedidoDTO = setPedidoSemClienteDTO();
+
+        when(pedidoRepository.save(any())).thenReturn(returnedPedido);
+        when(clienteRepository.existsById(any())).thenReturn(Boolean.TRUE);
+        when(produtoRepository.findById(any())).thenReturn(Optional.of(setProduto()));
+        when(mapper.map(any(), any(Type.class))).thenReturn(Collections.singletonList(setProduto()));
+
+        var pedido = pedidoService.save(returnedPedidoDTO);
+
+        assertEquals(returnedPedido.getId(), pedido.getId());
+        assertEquals(returnedPedido.getProdutos(), pedido.getProdutos());
+        assertEquals(returnedPedido.getValorTotal(), pedido.getValorTotal());
+        assertEquals(returnedPedido.getStatusPedido(), pedido.getStatusPedido());
+        assertEquals(returnedPedido.getSenhaRetirada(), pedido.getSenhaRetirada());
+        assertEquals(returnedPedido.getId().getClass(), pedido.getId().getClass());
+        assertEquals(returnedPedido.getCliente().getClass(), pedido.getCliente().getClass());
+        assertEquals(returnedPedido.getProdutos().getClass(), pedido.getProdutos().getClass());
+        assertEquals(returnedPedido.getValorTotal().getClass(), pedido.getValorTotal().getClass());
+        assertEquals(returnedPedido.getStatusPedido().getClass(), pedido.getStatusPedido().getClass());
+        assertEquals(returnedPedido.getSenhaRetirada().getClass(), pedido.getSenhaRetirada().getClass());
+
     }
 
     @DisplayName("Deve lançar exceção ao criar um pedido com cliente não encontrado")
@@ -141,7 +158,7 @@ void shouldValidateEmptyListProductsOrder() {
     }
 
 
-    @DisplayName("Nao deve atrualizar status do pedido quando for CANCELADO")
+    @DisplayName("Nao deve atualizar status do pedido quando for CANCELADO")
     @Test
     void shouldThrowStatusPedidoInvalidoExceptionWhenCancelPedido() {
         Long pedidoId = 1L;
@@ -185,6 +202,28 @@ void shouldValidateEmptyListProductsOrder() {
                 .senhaRetirada(123456)
                 .cliente(setCliente())
                 .produtos(List.of(setProduto()))
+                .valorTotal(BigDecimal.valueOf(5.00))
+                .statusPedido(StatusPedido.RECEBIDO)
+                .build();
+    }
+
+    private Pedido setPedidoSemCliente() {
+        return Pedido.builder()
+                .id(1L)
+                .senhaRetirada(123456)
+                .cliente(new Cliente())
+                .produtos(List.of(setProduto()))
+                .valorTotal(BigDecimal.valueOf(5.00))
+                .statusPedido(StatusPedido.RECEBIDO)
+                .build();
+    }
+
+    private PedidoDTO setPedidoSemClienteDTO() {
+        return PedidoDTO.builder()
+                .id(1L)
+                .senhaRetirada(123456)
+                .cliente(new ClienteDTO())
+                .produtos(List.of(setProdutoDTO()))
                 .valorTotal(BigDecimal.valueOf(5.00))
                 .statusPedido(StatusPedido.RECEBIDO)
                 .build();
