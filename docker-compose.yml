@@ -4,11 +4,19 @@ version: '3.5'
 services:
 
   redis:
+    container_name: redis_container
+    hostname: redis
     image: redis:latest
+    command: [ "redis-server", "--protected-mode", "no", "--bind", "0.0.0.0" ]
     volumes:
       - redis:/redis
     ports:
-      - 6379:6379
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgres:
     container_name: postgres_container
@@ -22,6 +30,11 @@ services:
       - ./src/main/resources/db/migration/init:/docker-entrypoint-initdb.d  # Mapeie o diretório de migrações para dentro do contêiner
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - postgres
 
@@ -34,12 +47,43 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
       - pgadmin:/var/lib/pgadmin
-
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
       - postgres
     restart: unless-stopped
+
+  tech-challenge:
+    image: stylefelix/tech-challenge
+    container_name: tech-challenge_container
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - redis
+    ports:
+      - "8080:8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - postgres
+
+  sonarqube:
+    image: sonarqube
+    hostname: sonarqube
+    container_name: sonarqube
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    ports:
+      - "9000:9000"
+    networks:
+      - postgres
 
 networks:
   postgres:
@@ -49,3 +93,7 @@ volumes:
   redis:
   postgres:
   pgadmin:
+  tech-challenge:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
