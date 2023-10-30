@@ -10,10 +10,21 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 class ClienteServiceTest {
@@ -47,6 +58,51 @@ class ClienteServiceTest {
 
         assertNotNull(clienteRetornado);
         assertEquals(10L, clienteRetornado.getId());
+    }
+
+    @DisplayName("Deve listar clientes com sucesso")
+    @Test
+    void shouldListClientSuccess() {
+        var listClientes = new PageImpl<>(setListCliente());
+
+        when(clienteRepository.findAll(any(Pageable.class))).thenReturn(listClientes);
+
+        var clientes = clienteService.list(null, anyInt(), 10);
+
+        var listClientesContent = clientes.getContent();
+
+        for (int i = 0; i < listClientesContent.size(); i++) {
+            assertEquals(listClientesContent.get(i).getId(), clientes.getContent().get(i).getId());
+            assertEquals(listClientesContent.get(i).getNome(), clientes.getContent().get(i).getNome());
+            assertEquals(listClientesContent.get(i).getEmail(), clientes.getContent().get(i).getEmail());
+            assertEquals(listClientesContent.get(i).getCpf(), clientes.getContent().get(i).getCpf());
+        }
+    }
+
+    @DisplayName("Deve listar cliente por id com sucesso")
+    @Test
+    void shouldListClientByIdSuccess() {
+        var pageClientes = new PageImpl<>(setListCliente());
+
+        when(clienteRepository.findById(anyLong(), any(Pageable.class))).thenReturn(pageClientes);
+
+        var clienteFound = clienteService.list(anyLong(), anyInt(), 10);
+
+        int i = 0;
+        assertEquals(pageClientes.getContent().get(i).getId(), clienteFound.getContent().get(i).getId());
+        assertEquals(pageClientes.getContent().get(i).getNome(), clienteFound.getContent().get(i).getNome());
+        assertEquals(pageClientes.getContent().get(i).getEmail(), clienteFound.getContent().get(i).getEmail());
+        assertEquals(pageClientes.getContent().get(i).getCpf(), clienteFound.getContent().get(i).getCpf());
+    }
+
+    @DisplayName("Deve listar clientes vazios com sucesso")
+    @Test
+    void shouldListEmptyClientSuccess() {
+        when(clienteRepository.findAll()).thenReturn(Collections.emptyList());
+
+        var clientes = clienteRepository.findAll();
+
+        assertTrue(clientes.isEmpty());
     }
 
     @DisplayName("Deve retornar exceção ao tentar criar um cliente que já possui cadastro")
@@ -126,6 +182,16 @@ class ClienteServiceTest {
                 .email("ana.maria@gmail.com")
                 .cpf("603.072.360-05")
                 .build();
+    }
+
+    private List<Cliente> setListCliente() {
+        var cliente = Cliente.builder()
+                .id(10L)
+                .nome("Ana Maria")
+                .email("ana.maria@gmail.com")
+                .cpf("603.072.360-05")
+                .build();
+        return Collections.singletonList(cliente);
     }
 
 }
