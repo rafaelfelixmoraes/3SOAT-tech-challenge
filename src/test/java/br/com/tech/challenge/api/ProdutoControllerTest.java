@@ -5,6 +5,8 @@ import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.servicos.ProdutoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -12,19 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.hamcrest.Matchers.hasSize;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class ProdutoControllerTest {
@@ -48,6 +50,13 @@ class ProdutoControllerTest {
     private ProdutoService produtoService;
 
     private static final String ROTA_PRODUTOS = "/produtos";
+
+    @AfterAll
+    static void clearDatabase(@Autowired Flyway flyway) {
+        flyway.clean();
+        flyway.migrate();
+    }
+
 
     @DisplayName("Deve salvar um produto com sucesso")
     @Test
@@ -65,7 +74,7 @@ class ProdutoControllerTest {
     void shouldUpdateProdutoSuccess() throws Exception {
         var produtoUpdateDTO = setProdutoUpdateDTO();
 
-        mockMvc.perform(patch(ROTA_PRODUTOS + "/10")
+        mockMvc.perform(patch(ROTA_PRODUTOS + "/100")
                         .content(mapper.writeValueAsString(produtoUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -76,7 +85,8 @@ class ProdutoControllerTest {
     @DisplayName("Deve retornar exceção ao tentar alterar um produto inexistente")
     @Test
     void shouldThrowExceptionWhenProdutoDoesntExist() throws Exception {
-        mockMvc.perform(patch(ROTA_PRODUTOS + "/100")
+
+        mockMvc.perform(patch(ROTA_PRODUTOS + "/566")
                         .content(mapper.writeValueAsString(setProdutoUpdateDTO()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -88,6 +98,9 @@ class ProdutoControllerTest {
     @DisplayName("Deve listar os produtos com sucesso")
     @Test
     void shouldListProdutoSuccess() throws Exception {
+
+        Page<Produto> page = createMockPage();
+
         mockMvc.perform(get(ROTA_PRODUTOS)
                         .content(mapper.writeValueAsString(setListProdutos()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -95,15 +108,13 @@ class ProdutoControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content", hasSize(1)));
+                .andExpect(jsonPath("$.content", hasSize(2)));
     }
 
     @DisplayName("Deve listar os produtos vazios com sucesso")
     @Test
     void shouldListEmptyProdutoSuccess() throws Exception {
-        final var queryParam = String.valueOf(100L);
-
-        when(produtoService.list(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(Page.empty());
+        final var queryParam = String.valueOf(200L);
 
         mockMvc.perform(get(ROTA_PRODUTOS)
                         .param("id", queryParam)
@@ -119,7 +130,8 @@ class ProdutoControllerTest {
     @DisplayName("Deve deletar um produto com sucesso")
     @Test
     void shouldDeleteProdutoSuccess() throws Exception {
-        mockMvc.perform(delete(ROTA_PRODUTOS + "/15")
+
+        mockMvc.perform(delete(ROTA_PRODUTOS + "/105")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -150,6 +162,7 @@ class ProdutoControllerTest {
                 .valorUnitario(new BigDecimal("10.50"))
                 .build();
     }
+
     private List<Produto> setListProdutos() {
         var produto = Produto.builder()
                 .id(1L)
@@ -158,6 +171,11 @@ class ProdutoControllerTest {
                 .categoria(setCategoria())
                 .build();
         return Collections.singletonList(produto);
+    }
+
+    private Page<Produto> createMockPage() {
+        List<Produto> produto = List.of(setProduto());
+        return new PageImpl<>(produto, PageRequest.of(0, 10), produto.size());
     }
 
 }

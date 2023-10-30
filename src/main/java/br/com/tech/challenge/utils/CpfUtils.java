@@ -40,11 +40,15 @@ public class CpfUtils {
             int digito2 = (resto2 < 2) ? 0 : (11 - resto2);
 
             // Verifique se os dígitos verificadores calculados coincidem com os dígitos reais
-            return (digitos[9] == digito1) && (digitos[10] == digito2);
+           boolean validCpf =  (digitos[9] == digito1) && (digitos[10] == digito2);
+
+           if(!validCpf){
+               throw new InvalidCpfException("CPF inválido: " + cpf);
+           }
+           return true;
 
         } catch (Exception ex) {
             throw new InvalidCpfException("CPF inválido: " + cpf);
-
         }
 
     }
