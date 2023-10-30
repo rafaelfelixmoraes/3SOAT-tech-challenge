@@ -41,7 +41,7 @@ class FilaPedidosServiceTest {
 
         when(filaPedidosRepository.findAll(any(PageRequest.class))).thenReturn(listaPedidos);
 
-        var listaPedidosReturned = filaPedidosService.listaFilaPedidos(0, 10);
+        var listaPedidosReturned = filaPedidosService.listFilaPedidos(0, 10);
 
         assertNotNull(listaPedidosReturned);
         assertFalse(listaPedidosReturned.isEmpty());
@@ -53,7 +53,7 @@ class FilaPedidosServiceTest {
     void shouldListEmptyFilaPedidos() {
         when(filaPedidosRepository.findAll(any(PageRequest.class))).thenReturn(Page.empty());
 
-        var listaPedidosReturned = filaPedidosService.listaFilaPedidos(0, 10);
+        var listaPedidosReturned = filaPedidosService.listFilaPedidos(0, 10);
 
         assertNotNull(listaPedidosReturned);
         assertTrue(listaPedidosReturned.isEmpty());
@@ -63,7 +63,7 @@ class FilaPedidosServiceTest {
     private List<FilaPedidos> setFilaPedidos() {
         var filaPedidos = FilaPedidos.builder()
                 .senhaRetirada(RandomUtils.nextInt())
-                .nomeCliente("Teste Fila Pedidos")
+                .idCliente(1)
                 .statusPedido(StatusPedido.FINALIZADO.getDescricao())
                 .build();
 

@@ -27,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,38 +38,45 @@ public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
 
-    private final ProdutoRepository produtoRepository;
+    private final ProdutoService produtoService;
 
-    private final ClienteRepository clienteRepository;
+    private final ClienteService clienteService;
+
+    private final PagamentoService pagamentoService;
 
     private final ModelMapper mapper;
 
     @Transactional
     public Pedido save(PedidoDTO pedidoDTO) {
-        final var produtoList = mapProductListDtoToEnityList(pedidoDTO.getProdutos());
+        final var produtoList = mapProductListDtoToEntityList(pedidoDTO.getProdutos());
         validateExistingClient(pedidoDTO);
-        validListProductsOrder(pedidoDTO);
-        validProductExisting(produtoList);
+        validateListProductsOrder(pedidoDTO);
+        validateProductExisting(produtoList);
         pedidoDTO.setStatusPedido(StatusPedido.RECEBIDO);
         pedidoDTO.setValorTotal(calculateTotalValueProducts(produtoList));
         pedidoDTO.setSenhaRetirada(PasswordUtils.generatePassword());
-        return pedidoRepository.save(mapper.map(pedidoDTO, Pedido.class));
+        pedidoDTO.setDataHora(LocalDateTime.now());
+        var pedido = pedidoRepository.save(mapper.map(pedidoDTO, Pedido.class));
+        pagamentoService.save(pedido);
+        return pedido;
     }
 
     private void validateExistingClient(PedidoDTO pedidoDTO) {
-        if (pedidoDTO.getCliente() == null)
-           pedidoDTO.setCliente(setClienteAnonimoDTO());
-        else if (!clienteRepository.existsById(pedidoDTO.getCliente().getId()))
-            throw new ObjectNotFoundException("Cliente não encontrado " + pedidoDTO.getCliente().getId());
+        if (Objects.isNull(pedidoDTO.getCliente())) {
+            throw new ObjectNotFoundException("Cliente não informado.");
+        } else if (!clienteService.existsById(pedidoDTO.getCliente().getId())) {
+            throw new ObjectNotFoundException("Cliente não encontrado: " + pedidoDTO.getCliente().getId());
+        }
     }
 
-    private void validListProductsOrder(PedidoDTO pedidoDTO) {
-        if (pedidoDTO.getProdutos() == null || pedidoDTO.getProdutos().isEmpty())
+    private void validateListProductsOrder(PedidoDTO pedidoDTO) {
+        if (Objects.isNull(pedidoDTO.getProdutos()) || pedidoDTO.getProdutos().isEmpty()) {
             throw new ObjectNotFoundException("Lista de produtos vazia");
+        }
     }
 
-    private void validProductExisting(List<Produto> produtos) {
-        produtos.forEach(produto -> produtoRepository.findById(produto.getId())
+    private void validateProductExisting(List<Produto> produtos) {
+        produtos.forEach(produto -> produtoService.findById(produto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado " + produto.getId())));
     }
 
@@ -75,7 +84,7 @@ public class PedidoService {
         return produtos.stream().map(Produto::getValorUnitario).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private List<Produto> mapProductListDtoToEnityList(final List<ProdutoDTO> produtoDTOList) {
+    private List<Produto> mapProductListDtoToEntityList(final List<ProdutoDTO> produtoDTOList){
         return mapper.map(
                 produtoDTOList,
                 new TypeToken<List<Produto>>() {}.getType()
@@ -131,4 +140,5 @@ public class PedidoService {
                 .cpf("999.999.999-99")
                 .build();
     }
+    
 }

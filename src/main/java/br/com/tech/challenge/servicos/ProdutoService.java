@@ -15,6 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProdutoService {
@@ -54,6 +57,14 @@ public class ProdutoService {
         }
 
         produtoRepository.deleteById(id);
+    }
+
+    public long count(Long id, List<Produto> produtos) {
+        return produtos.stream().filter(produto -> produto.getId().equals(id)).count();
+    }
+
+    public Optional<Produto> findById(Long id) {
+        return produtoRepository.findById(id);
     }
 
 }

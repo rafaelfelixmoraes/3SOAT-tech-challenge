@@ -40,6 +40,17 @@ public class ExceptionHandlerAdvice {
         );
     }
 
+    @ExceptionHandler(MercadoPagoAPIException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ResponseExceptionDTO> handleMercadoPagoAPIException(MercadoPagoAPIException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ResponseExceptionDTO.builder()
+                        .exceptionMessage(exception.getMessage())
+                        .messages(null)
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .build()
+        );
+    }
 
     @ExceptionHandler(ClienteAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

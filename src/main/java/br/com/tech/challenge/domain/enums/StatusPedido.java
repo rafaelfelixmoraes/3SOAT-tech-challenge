@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum StatusPedido {
+
     RECEBIDO("Recebido"),
 
     EM_PREPARACAO("Em preparação"),
@@ -17,4 +18,5 @@ public enum StatusPedido {
     CANCELADO("Cancelado");
 
     final String descricao;
+
 }

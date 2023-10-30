@@ -1,5 +1,6 @@
 package br.com.tech.challenge.api;
 
+import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoUpdateDTO;
 import br.com.tech.challenge.domain.entidades.Categoria;
 import br.com.tech.challenge.domain.entidades.Produto;
@@ -57,12 +58,11 @@ class ProdutoControllerTest {
         flyway.migrate();
     }
 
-
     @DisplayName("Deve salvar um produto com sucesso")
     @Test
     void shouldSaveProdutoSuccess() throws Exception {
         mockMvc.perform(post(ROTA_PRODUTOS)
-                        .content(mapper.writeValueAsString(setProduto()))
+                        .content(mapper.writeValueAsString(setProdutoDTO()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -136,6 +136,15 @@ class ProdutoControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    private ProdutoDTO setProdutoDTO() {
+        return ProdutoDTO.builder()
+                .id(2L)
+                .descricao("Coca Cola")
+                .valorUnitario(BigDecimal.valueOf(5.00))
+                .categoria(setCategoria())
+                .build();
     }
 
     private Produto setProduto() {
