@@ -13,6 +13,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -43,5 +44,9 @@ public class PedidoDTO {
     @Schema(description = "Pagamento do pedido")
     @JsonIgnore
     private Pagamento pagamento;
+
+    @Schema(description = "Data e hora do pedido")
+    @JsonIgnore
+    private LocalDateTime dataHora;
 
 }

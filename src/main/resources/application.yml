@@ -29,3 +29,14 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQL9Dialect
       use_jdbc_metadata_defaults: false
 
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+      apache:
+        http: DEBUG
+    httpclient:
+      wire: DEBUG

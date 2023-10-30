@@ -46,7 +46,6 @@ class ClienteControllerTest {
         flyway.migrate();
     }
 
-
     @DisplayName("Deve salvar um cliente com sucesso")
     @Test
     void shouldSaveClienteSuccess() throws Exception {

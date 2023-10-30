@@ -24,13 +24,13 @@ public class ClienteService {
     @Transactional
     public Cliente save(ClienteDTO clienteDTO) {
 
-        isClienteAlreadyExists(clienteDTO.getCpf());
+        validateIfClientExistsByCpf(clienteDTO.getCpf());
         return clienteRepository.save(mapper.map(clienteDTO, Cliente.class));
     }
 
     public Cliente saveClientWithCpf(String cpf) {
 
-        isClienteAlreadyExists(cpf);
+        validateIfClientExistsByCpf(cpf);
         Cliente cliente = new Cliente();
         cliente.setCpf(cpf);
 
@@ -41,6 +41,16 @@ public class ClienteService {
         return clienteRepository.findByCpf(cpf);
     }
 
+    public boolean existsById(Long id) {
+        return clienteRepository.existsById(id);
+    }
+
+    private void validateIfClientExistsByCpf(String cpf) {
+        Optional<Cliente> clienteAlreadyExists = this.findByCpf(cpf);
+        if (clienteAlreadyExists.isPresent()) {
+            throw new ClienteAlreadyExistsException("Cliente já cadastrado");
+        }
+    }
 
     @Transactional
     public ClienteCheckInDTO checkInCliente(String cpf) {
@@ -48,12 +58,6 @@ public class ClienteService {
                 .orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado")));
 
             return mapper.map(clienteOptional.get(), ClienteCheckInDTO.class);
-    }
-
-    private void isClienteAlreadyExists(String cpf) {
-        if (this.findByCpf(cpf).isPresent()) {
-            throw new ClienteAlreadyExistsException("Cliente já cadastrado");
-        }
     }
 
 }

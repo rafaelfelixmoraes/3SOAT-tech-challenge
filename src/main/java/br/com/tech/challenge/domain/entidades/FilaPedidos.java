@@ -12,6 +12,8 @@ import lombok.Generated;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Subselect;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Immutable
@@ -20,17 +22,23 @@ import org.hibernate.annotations.Subselect;
 @Table(name = "View_FilaPedidos")
 @AllArgsConstructor
 @NoArgsConstructor
-@Subselect("SELECT * FROM View_FilaPedidos ORDER BY senha ASC")
+@Subselect("SELECT * FROM View_FilaPedidos ORDER BY data_hora DESC")
 public class FilaPedidos {
 
     @Id
     @Column(name = "senha")
     private Integer senhaRetirada;
 
-    @Column(name = "nomecliente")
+    @Column(name = "id_cliente")
+    private Integer idCliente;
+
+    @Column(name = "nome_cliente")
     private String nomeCliente;
 
-    @Column(name = "statuspedido")
+    @Column(name = "status_pedido")
     private String statusPedido;
+
+    @Column(name = "data_hora")
+    private LocalDateTime dataHora;
 
 }

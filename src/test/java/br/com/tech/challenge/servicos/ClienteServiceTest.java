@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 class ClienteServiceTest {
 
-    private ClienteService clienteService;
+    private final ClienteService clienteService;
 
     @Mock
     private ClienteRepository clienteRepository;
@@ -51,7 +51,7 @@ class ClienteServiceTest {
 
     @DisplayName("Deve retornar exceção ao tentar criar um cliente que já possui cadastro")
     @Test
-    public void shouldThrowExceptionWhenUsingSaveMethod() {
+    void shouldThrowExceptionWhenUsingSaveMethod() {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setCpf("927.965.620-18");
 
@@ -68,7 +68,7 @@ class ClienteServiceTest {
 
     @DisplayName("Deve criar um cliente com sucesso somente com cpf")
     @Test
-    public void shouldSaveClientWithCpfOnly() {
+    void shouldSaveClientWithCpfOnly() {
         String cpf = "037.952.160-10";
 
         Cliente clienteSalvo = new Cliente();
@@ -84,7 +84,7 @@ class ClienteServiceTest {
 
     @DisplayName("Deve retornar exceção ao tentar criar um cliente que já possui cadastro")
     @Test
-    public void shouldThrowExceptionWhenUsingSaveClientWithCpfMethod() {
+    void shouldThrowExceptionWhenUsingSaveClientWithCpfMethod() {
         final String cpf = "634.964.890-06";
 
         Cliente clienteExistente = new Cliente();
@@ -95,6 +95,28 @@ class ClienteServiceTest {
         assertThrows(ClienteAlreadyExistsException.class, () -> {
             clienteService.saveClientWithCpf(cpf);
         });
+    }
+
+    @DisplayName("Deve existir um cliente com o id informado")
+    @Test
+    void shouldFindClienteById() {
+        final Long id = 10L;
+
+        when(clienteService.existsById(id)).thenReturn(true);
+        var exists = clienteService.existsById(id);
+
+        assertTrue(exists);
+    }
+
+    @DisplayName("Não deve existir um cliente com o id informado")
+    @Test
+    void shouldNotFindClienteById() {
+        final Long id = 11L;
+
+        when(clienteService.existsById(id)).thenReturn(false);
+        var exists = clienteService.existsById(id);
+
+        assertFalse(exists);
     }
 
     private Cliente setCliente() {
