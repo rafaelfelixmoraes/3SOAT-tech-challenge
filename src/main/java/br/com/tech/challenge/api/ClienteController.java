@@ -13,11 +13,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -69,6 +72,18 @@ public class ClienteController {
 
         String formattedCPF = CpfUtils.formatCpf(clienteCpfDTO.getCpf());
         return ResponseEntity.ok(clienteService.checkInCliente(CpfUtils.formatCpf(formattedCPF)));
+    }
+
+    @Operation(summary = "Lista os Clientes", description = "Endpoint para listar os clientes")
+    @GetMapping
+    public ResponseEntity<Page<ClienteDTO>> list(
+            @RequestParam(name = "id", required = false) Long id,
+            @RequestParam(name = "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name = "tamanho", defaultValue = "10") int tamanho
+    ) {
+        Page<ClienteDTO> clientes = clienteService.list(id, pagina, tamanho)
+                .map(cliente -> mapper.map(cliente, ClienteDTO.class));
+        return ResponseEntity.ok().body(clientes);
     }
 
 }
