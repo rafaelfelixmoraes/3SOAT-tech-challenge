@@ -1,9 +1,15 @@
 package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
+import br.com.tech.challenge.api.exception.StatusPedidoInvalidoException;
+import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
+import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
+import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
+import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
+import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
@@ -11,6 +17,12 @@ import br.com.tech.challenge.utils.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +30,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,4 +91,54 @@ public class PedidoService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public Page<PedidoDTO> list(int pagina, int tamanho) {
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id"));
+
+        Page<Pedido> pedidos = pedidoRepository.findAll(pageable);
+
+        List<PedidoDTO> pedidoDTOs = pedidos.getContent().stream()
+                .map(pedido -> mapper.map(pedido, PedidoDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(pedidoDTOs, pageable, pedidos.getTotalElements());
+    }
+
+
+    @Transactional
+    public PedidoDTO updateStatus(Long pedidoId, StatusPedidoDTO novoStatus) {
+
+        validarStatusPedido(novoStatus.getStatusPedido());
+
+        if (novoStatus.getStatusPedido().equals(StatusPedido.CANCELADO)) {
+            throw new StatusPedidoInvalidoException();
+        }
+
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado: " + pedidoId));
+
+        pedido.setStatusPedido(novoStatus.getStatusPedido());
+
+        return mapper.map(pedidoRepository.save(pedido), PedidoDTO.class);
+    }
+
+
+    private void validarStatusPedido(StatusPedido statusPedido) {
+        for (StatusPedido enumValue : StatusPedido.values()) {
+            if (enumValue == statusPedido) {
+                return;
+            }
+        }
+        throw new StatusPedidoInvalidoException();
+    }
+
+    private ClienteDTO setClienteAnonimoDTO() {
+        return ClienteDTO.builder()
+                .id(99L)
+                .nome("Usuario Anonimo")
+                .email("")
+                .cpf("999.999.999-99")
+                .build();
+    }
+    
 }

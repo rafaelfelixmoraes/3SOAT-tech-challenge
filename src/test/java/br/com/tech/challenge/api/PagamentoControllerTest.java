@@ -34,7 +34,7 @@ class PagamentoControllerTest {
     @DisplayName("Deve fazer o checkout com sucesso")
     @Test
     void shouldDoCheckoutSuccess() throws Exception {
-        final Long idPedido = 10L;
+        final Long idPedido = 100L;
         mockMvc.perform(post(ROTA_PAGAMENTOS, idPedido)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
