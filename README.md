@@ -20,7 +20,8 @@ Para executar o projeto, siga os seguintes passos:
 - Instalar o Docker CLI na máquina, ou Docker Desktop caso utilize Windows
 - Executar o build do projeto
 - Pelo terminal, Navegue até a raiz da pasta onde foi clonado o projeto, e rodar os seguinte comando: `docker-compose up -d`
-- Após verificar que os containeres estão em execução, rode a aplicação na IDE, e assim que ela subir com sucesso, acesso a URI `http://localhost:8080/swagger-ui/index.html#/`
+- Após verificar que os containeres estão em execução, acesse a URI `http://localhost:8080/swagger-ui/index.html#/`
+- Caso deseje rodar pela IDE, é preciso parar a execução do container da aplicação. Após isso rode a aplicação na IDE, e assim que ela subir com sucesso, acesse a mesma URI acima.
 
 ## Integração MP - Mercado Pago
 Documentação base: https://www.mercadopago.com.br/developers/pt/docs/qr-code/pre-requisites
