@@ -32,6 +32,9 @@ public class FilaPedidos {
     @Column(name = "id_cliente")
     private Integer idCliente;
 
+    @Column(name = "nome_cliente")
+    private String nomeCliente;
+
     @Column(name = "status_pedido")
     private String statusPedido;
 

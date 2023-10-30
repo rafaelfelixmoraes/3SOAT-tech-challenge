@@ -190,6 +190,7 @@ class PedidoControllerTest {
         return FilaPedidos.builder()
                 .senhaRetirada(123)
                 .idCliente(1)
+                .nomeCliente("Aline Oliveira")
                 .statusPedido(StatusPedido.RECEBIDO.getDescricao())
                 .build();
     }

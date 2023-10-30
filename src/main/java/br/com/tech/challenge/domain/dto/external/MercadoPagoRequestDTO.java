@@ -29,8 +29,6 @@ public class MercadoPagoRequestDTO {
 
     private List<ItemDTO> items;
 
-    //private SponsorDTO sponsor;
-
     private CashOutDTO cashOut;
 
 }

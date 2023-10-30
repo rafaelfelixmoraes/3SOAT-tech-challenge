@@ -1,13 +1,26 @@
 package br.com.tech.challenge.domain.entidades;
 
 import br.com.tech.challenge.domain.enums.StatusPedido;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,7 +38,7 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pedido_sequence")
-    @SequenceGenerator(name = "pedido_sequence", sequenceName = "pedido_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "pedido_sequence", sequenceName = "pedido_seq", allocationSize = 1)
     private Long id;
 
     @Column
