@@ -22,6 +22,10 @@ Para executar o projeto, siga os seguintes passos:
 - Pelo terminal, Navegue até a raiz da pasta onde foi clonado o projeto, e rodar os seguinte comando: `docker-compose up -d`
 - Após verificar que os containeres estão em execução, rode a aplicação na IDE, e assim que ela subir com sucesso, acesso a URI `http://localhost:8080/swagger-ui/index.html#/`
 
+## Integração MP - Mercado Pago
+Documentação base: https://www.mercadopago.com.br/developers/pt/docs/qr-code/pre-requisites
+O sistema possui uma integração prévia com as apis do Mercado Pago, para autenticação e geração do qr com o link de pagamento a partir do pedido. Porém, a integração ainda não está finalizada, pois será construida na fase 2, uma API para receber o retorno da confirmação de pagamento, enviada pelo MP. No momento a atualização do status do pagamento / pedido é estática no momento do checkout.
+
 ## SonarQube
 O SonarQube é uma ferramenta autogerenciada e automática de revisão estática de código que ajuda sistematicamente a fornecer um código limpo
 
