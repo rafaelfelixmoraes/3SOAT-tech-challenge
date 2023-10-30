@@ -51,8 +51,7 @@ public class ClienteService {
     }
 
     private void isClienteAlreadyExists(String cpf) {
-        Optional<Cliente> clienteAlreadyExists = this.findByCpf(cpf);
-        if (clienteAlreadyExists.isPresent()) {
+        if (this.findByCpf(cpf).isPresent()) {
             throw new ClienteAlreadyExistsException("Cliente já cadastrado");
         }
     }

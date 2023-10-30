@@ -89,7 +89,7 @@ class ClienteControllerTest {
     void shouldSaveClienteWithValidCpf() throws Exception {
 
 
-        RequestClienteCpfDTO clienteCpfDTO = new RequestClienteCpfDTO("751.792.300-55");
+        RequestClienteCpfDTO clienteCpfDTO = new RequestClienteCpfDTO("136.171.130-28");
 
         mockMvc.perform(post(ROTA_CLIENTES + "/cpf")
                         .content(mapper.writeValueAsString(clienteCpfDTO))

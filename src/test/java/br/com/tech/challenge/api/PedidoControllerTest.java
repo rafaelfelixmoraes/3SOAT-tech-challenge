@@ -37,8 +37,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.anyInt;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -125,7 +124,6 @@ class PedidoControllerTest {
     @DisplayName("Deve listar a fila de pedidos com sucesso")
     @Test
     void shouldListFilaPedidosSuccess() throws Exception {
-        var listaPedidos = new PageImpl<>(Collections.singletonList(setFilaPedidos()));
 
         mockMvc.perform(get(ROTA_PEDIDOS.concat("/fila"))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,7 +137,6 @@ class PedidoControllerTest {
     @DisplayName("Deve listar a fila de pedidos vazia com sucesso")
     @Test
     void shouldListFilaPedidosEmptySuccess() throws Exception {
-        when(filaPedidosService.listaFilaPedidos(anyInt(), anyInt())).thenReturn(Page.empty());
 
         final var pagina = String.valueOf(10);
         final var tamanho = String.valueOf(5);
