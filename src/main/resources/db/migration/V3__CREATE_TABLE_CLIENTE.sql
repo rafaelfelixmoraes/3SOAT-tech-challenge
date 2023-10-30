@@ -1,0 +1,9 @@
+CREATE TABLE cliente (
+    id BIGINT NOT NULL,
+    nome VARCHAR(200),
+    cpf VARCHAR(255),
+    email VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+CREATE SEQUENCE cliente_seq START WITH 1 INCREMENT BY 1;

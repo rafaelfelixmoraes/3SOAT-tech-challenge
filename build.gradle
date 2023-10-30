@@ -1,0 +1,129 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.1'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id "org.flywaydb.flyway" version "9.8.1"
+	id 'jacoco'
+	id "org.sonarqube" version "4.2.1.3168"
+}
+
+group = 'br.com.tech.challenge'
+version = '1.0.0'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.1.1'
+	implementation 'org.modelmapper:modelmapper:2.4.4'
+
+	// Spring Validation
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.8'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.7.1'
+	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+	implementation 'org.apache.commons:commons-lang3'
+
+	//	Postgress
+	implementation 'org.postgresql:postgresql:42.2.27'
+	implementation 'org.flywaydb:flyway-core:9.8.1'
+
+	//	Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+
+	// Spring Retry
+	implementation 'org.springframework.retry:spring-retry:2.0.3'
+
+	// Spring Doc - Open API
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.0.0'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+	implementation 'org.springframework.data:spring-data-redis'
+
+	// H2
+	testImplementation 'com.h2database:h2:2.2.224'
+
+	// HttpClient
+	implementation 'org.apache.httpcomponents.client5:httpclient5'
+
+}
+
+flyway {
+	url = 'jdbc:postgresql://localhost:5432/tech_challenge'
+	user = 'tech'
+	password = 'tech_passwd'
+	cleanDisabled = false
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+test {
+	finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+	reports {
+		xml.required = true
+		csv.required = true
+		html.required = true
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.9"
+	reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'CLASS'
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.7
+			}
+			excludes = [
+					'br.com.tech.challenge.domain.dto.*',
+					'br.com.tech.challenge.domain.entidades.*',
+					'br.com.tech.challenge.domain.enums.*',
+					'br.com.tech.challenge.config.*',
+					'br.com.tech.challenge.api.exception.*',
+					'br.com.tech.challenge.bd.repositorios.*',
+					'br.com.tech.challenge.TechChallengeApplication'
+			]
+		}
+	}
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "tech-challenge"
+		property "sonar.projectName", "tech-challenge"
+		property "sonar.host.url", "http://localhost:9000"
+		property 'sonar.coverage.jacoco.xmlReportPaths', "build/reports/jacoco/test/jacocoTestReport.xml"
+	}
+}

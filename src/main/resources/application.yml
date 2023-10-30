@@ -1,0 +1,44 @@
+application:
+  title: 3soat-tech_challenge
+  version: 1.0.0
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    disable-swagger-default-url: true
+    path: /swagger-ui.html
+  packagesToScan: br.com.tech.challenge.api
+
+spring:
+  cache:
+    type: redis
+  data:
+    redis:
+      port: 6379
+      host: localhost
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/tech_challenge
+    hikari:
+      username: tech
+      password: tech_passwd
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQL9Dialect
+      use_jdbc_metadata_defaults: false
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+      apache:
+        http: DEBUG
+    httpclient:
+      wire: DEBUG
