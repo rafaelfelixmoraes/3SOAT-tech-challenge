@@ -28,6 +28,16 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "500m"
+        readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 60
+            periodSeconds: 10
+        livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 60
+            periodSeconds: 10
         env:
             - name: POSTGRES_DB
               value: tech_challenge

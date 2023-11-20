@@ -28,6 +28,24 @@ spec:
           limits:
             memory: "2Gi"
             cpu: "500m"
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 600
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 600
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 600
+          failureThreshold: 30
+          periodSeconds: 10
+          restartPolicy: OnFailure
 
 ---
 
@@ -44,6 +62,27 @@ spec:
       targetPort: 8080 # The port exposed by the service
       nodePort: 31808
   type: NodePort # type of the service. LoadBalancer indicates that our service will be external.
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: tech-challenge-java-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tech-challenge-java
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
 
 
   

@@ -28,6 +28,16 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "500m"
+        readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 60
+            periodSeconds: 10
+        livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 60
+            periodSeconds: 10
 
 ---
 
