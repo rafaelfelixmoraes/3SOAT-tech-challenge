@@ -46,7 +46,7 @@ public class ProdutoService {
     }
 
     public Page<Produto> list(Long id, Long categoria, int pagina, int tamanho) {
-        log.info("Listando os produtos com os seguintes parametros: id={id}, categoria={}, pagina={}, tamanho={}",
+        log.info("Listando os produtos com os seguintes parametros id={}, categoria={}, pagina={}, tamanho={}",
                 id, categoria, pagina, tamanho);
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("descricao"));
 
