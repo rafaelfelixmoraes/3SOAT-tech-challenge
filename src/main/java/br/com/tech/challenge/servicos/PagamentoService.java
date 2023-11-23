@@ -38,16 +38,20 @@ public class PagamentoService {
 
     @Transactional
     public Pagamento save(Pedido pedido) {
+        log.info("Montando pagamento antes de salvar");
         var pagamento = Pagamento.builder()
                 .pedido(pedido)
                 .valorTotal(pedido.getValorTotal())
                 .statusPagamento(StatusPagamento.AGUARDANDO_PAGAMENTO)
                 .build();
+        log.info("Salvando pagamento do pedido {}", pedido.getId());
         return pagamentoRepository.save(pagamento);
     }
 
     public Pagamento findPagamentoByPedidoId(Long idPedido) {
-        return pagamentoRepository.findPagamentoByPedidoId(idPedido).orElseThrow(() -> new ObjectNotFoundException("Pagamento não encontrado."));
+        log.info("Buscando pagamento por id do pedido {}", idPedido);
+        return pagamentoRepository.findPagamentoByPedidoId(idPedido)
+                .orElseThrow(() -> new ObjectNotFoundException("Pagamento não encontrado."));
     }
 
     @Transactional
@@ -55,23 +59,28 @@ public class PagamentoService {
     public MercadoPagoResponseDTO generateQRCode(Long idPedido) {
         var pedido = getPedido(idPedido);
         var requestDTO = buildMercadoPagoRequestDTO(pedido);
+        log.info("Chamando client para gerar QR Code");
         var responseDTO = mercadoPagoClient.generateQRCode(requestDTO);
 
         var pagamento = findPagamentoByPedidoId(pedido.getId());
         pagamento.setQrData(responseDTO.getQrData());
 
+        log.info("Salvando pagamento");
         pagamentoRepository.save(pagamento);
         return responseDTO;
     }
 
     @Transactional
     public Pagamento checkout(Long idPedido) {
+        log.info("Checkout de pedido {}", idPedido);
         var pedido = getPedido(idPedido);
         var pagamento = findPagamentoByPedidoId(pedido.getId());
 
+        log.info("Alterando status do pagamento para PAGO");
         pagamento.setStatusPagamento(StatusPagamento.PAGO);
         pagamento.setDataHoraPagamento(LocalDateTime.now());
 
+        log.info("Alterando status do pedido para EM_PREPARACAO");
         pedido.setStatusPedido(StatusPedido.EM_PREPARACAO);
         pedidoRepository.save(pedido);
         return pagamentoRepository.save(pagamento);
@@ -79,10 +88,12 @@ public class PagamentoService {
 
     @Generated
     private MercadoPagoRequestDTO buildMercadoPagoRequestDTO(Pedido pedido) {
+        log.info("Montando requisicao para enviar ao Mercado Pago");
         var pagamento = findPagamentoByPedidoId(pedido.getId());
         var produtos = pedido.getProdutos();
 
         List<ItemDTO> items = new ArrayList<>();
+        log.info("Iterando pela lista de produtos para montar os itens");
         produtos.forEach((produto) -> {
             var count = produtoService.count(produto.getId(), produtos);
             items.add(ItemDTO.builder()
@@ -97,6 +108,7 @@ public class PagamentoService {
             );
         });
 
+        log.info("Retornando MercadoPagoRequestDTO");
         return MercadoPagoRequestDTO.builder()
                 .externalReference(pedido.getSenhaRetirada().toString())
                 .title("Ordem de pedido")
@@ -109,6 +121,7 @@ public class PagamentoService {
 
     @Generated
     private Pedido getPedido(Long idPedido) {
+        log.info("Buscando pedido por id {}", idPedido);
         return pedidoRepository.findById(idPedido).orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado."));
     }
 
