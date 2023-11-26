@@ -29,15 +29,6 @@ public class Usuario {
     @SequenceGenerator(name = "usuario_sequence", sequenceName = "usuario_seq", allocationSize = 1)
     private Long id;
 
-    @Column(length = 200)
-    private String nome;
-
-    @Column
-    private String cpf;
-
-    @Column
-    private String email;
-
     @Column
     private String usuario;
 
