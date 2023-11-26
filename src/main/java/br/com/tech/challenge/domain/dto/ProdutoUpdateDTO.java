@@ -26,14 +26,15 @@ public class ProdutoUpdateDTO {
     @JsonIgnore
     private Long id;
 
-    @Size(min = 3, max = 100, message = "Descrição deve ter entre 3 e 100 caracteres")
+    @Size(min = 3, max = 100, message = "{produto.descricao.tamanho.invalido}")
     @Schema(description = "Descrição do Produto")
     private String descricao;
 
     @Schema(description = "Categoria do Produto")
     private Categoria categoria;
 
-    @PositiveOrZero(message = "Valor unitário deve ser zero ou positivo")
+    @PositiveOrZero(message = "{produto.valor.unitario.positivo}")
     @Schema(description = "Valor unitário do produto")
     private BigDecimal valorUnitario;
+
 }
