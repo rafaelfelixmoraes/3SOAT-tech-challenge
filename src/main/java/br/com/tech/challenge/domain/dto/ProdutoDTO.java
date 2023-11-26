@@ -24,14 +24,14 @@ public class ProdutoDTO {
 
     private Long id;
 
-    @Size(min = 3, max = 100, message = "Descrição deve ter entre 3 e 100 caracteres")
+    @Size(min = 3, max = 100, message = "{produto.descricao.tamanho.invalido}")
     @NotNull(message = "Descrição deve ser diferente de nulo")
     private String descricao;
 
     private Categoria categoria;
 
-    @PositiveOrZero(message = "Valor unitário deve ser zero ou positivo")
-    @NotNull(message = "Valor unitário deve ser diferente de nulo")
+    @PositiveOrZero(message = "{produto.valor.unitario.positivo}")
+    @NotNull(message = "{produto.valor.unitario.nao.nulo}")
     private BigDecimal valorUnitario;
 
 }

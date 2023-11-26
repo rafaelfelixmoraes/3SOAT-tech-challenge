@@ -21,6 +21,6 @@ public class ClienteCpfDTO {
 
     private Long id;
 
-    @CPF(message = "CPF deve ser válido e no formato ###.###.###-##")
+    @CPF(message = "{cliente.cpf.invalido}")
     private String cpf;
 }
