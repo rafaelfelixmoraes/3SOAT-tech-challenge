@@ -43,13 +43,13 @@ public class JwtService {
                 .compact();
     }
 
-    private Claims obterClaims(String token) throws ExpiredJwtException {
+    private Claims getClaims(String token) throws ExpiredJwtException {
         return Jwts.parserBuilder().setSigningKey(getSignatureKey()).build().parseClaimsJws(token).getBody();
     }
 
     public boolean isTokenValid(String token) {
         try {
-            Claims claims = obterClaims(token);
+            Claims claims = getClaims(token);
             Date expirationDate = claims.getExpiration();
             LocalDateTime expirationLocalDateTime = expirationDate.toInstant()
                     .atZone(ZoneId.systemDefault())
@@ -60,8 +60,8 @@ public class JwtService {
         }
     }
 
-    public String obterLoginUsuario(String token) {
-        return obterClaims(token).getSubject();
+    public String getLoginUsuario(String token) {
+        return getClaims(token).getSubject();
     }
 
 }
