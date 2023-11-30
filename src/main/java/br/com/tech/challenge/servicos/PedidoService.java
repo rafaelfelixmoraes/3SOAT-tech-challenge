@@ -2,26 +2,23 @@ package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.api.exception.StatusPedidoInvalidoException;
-import br.com.tech.challenge.bd.repositorios.ClienteRepository;
 import br.com.tech.challenge.bd.repositorios.PedidoRepository;
-import br.com.tech.challenge.bd.repositorios.ProdutoRepository;
 import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.dto.PedidoDTO;
 import br.com.tech.challenge.domain.dto.ProdutoDTO;
 import br.com.tech.challenge.domain.dto.StatusPedidoDTO;
-import br.com.tech.challenge.domain.entidades.Cliente;
 import br.com.tech.challenge.domain.entidades.Pedido;
 import br.com.tech.challenge.domain.entidades.Produto;
 import br.com.tech.challenge.domain.enums.StatusPedido;
 import br.com.tech.challenge.utils.PasswordUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
@@ -48,6 +46,7 @@ public class PedidoService {
 
     @Transactional
     public Pedido save(PedidoDTO pedidoDTO) {
+        log.info("Salvando pedido {}", pedidoDTO);
         final var produtoList = mapProductListDtoToEntityList(pedidoDTO.getProdutos());
         validateExistingClient(pedidoDTO);
         validateListProductsOrder(pedidoDTO);
@@ -62,6 +61,7 @@ public class PedidoService {
     }
 
     private void validateExistingClient(PedidoDTO pedidoDTO) {
+        log.info("Validando se cliente foi informado e se pode ser encontrado");
         if (Objects.isNull(pedidoDTO.getCliente())) {
             throw new ObjectNotFoundException("Cliente não informado.");
         } else if (!clienteService.existsById(pedidoDTO.getCliente().getId())) {
@@ -70,21 +70,25 @@ public class PedidoService {
     }
 
     private void validateListProductsOrder(PedidoDTO pedidoDTO) {
+        log.info("Validando se lista de produtos nao e nula nem esta vazia");
         if (Objects.isNull(pedidoDTO.getProdutos()) || pedidoDTO.getProdutos().isEmpty()) {
             throw new ObjectNotFoundException("Lista de produtos vazia");
         }
     }
 
     private void validateProductExisting(List<Produto> produtos) {
+        log.info("Validando se a lista de produtos existe {}", produtos);
         produtos.forEach(produto -> produtoService.findById(produto.getId())
                 .orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado " + produto.getId())));
     }
 
     private BigDecimal calculateTotalValueProducts(List<Produto> produtos) {
+        log.info("Calcular valor total dos produtos {}", produtos);
         return produtos.stream().map(Produto::getValorUnitario).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private List<Produto> mapProductListDtoToEntityList(final List<ProdutoDTO> produtoDTOList){
+        log.info("Mapeando lista de ProdutoDTO {} para lista de Produto", produtoDTOList);
         return mapper.map(
                 produtoDTOList,
                 new TypeToken<List<Produto>>() {}.getType()
@@ -93,6 +97,7 @@ public class PedidoService {
 
     @Transactional(readOnly = true)
     public Page<PedidoDTO> list(int pagina, int tamanho) {
+        log.info("Listando os pedidos com pagina {} e tamanho {}", pagina, tamanho);
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id"));
 
         Page<Pedido> pedidos = pedidoRepository.findAll(pageable);
@@ -107,7 +112,7 @@ public class PedidoService {
 
     @Transactional
     public PedidoDTO updateStatus(Long pedidoId, StatusPedidoDTO novoStatus) {
-
+        log.info("Atualizando status do pedido {} com novo status {}", pedidoId, novoStatus);
         validarStatusPedido(novoStatus.getStatusPedido());
 
         if (novoStatus.getStatusPedido().equals(StatusPedido.CANCELADO)) {
@@ -124,6 +129,7 @@ public class PedidoService {
 
 
     private void validarStatusPedido(StatusPedido statusPedido) {
+        log.info("Validando se o status do pedido e valido");
         for (StatusPedido enumValue : StatusPedido.values()) {
             if (enumValue == statusPedido) {
                 return;
