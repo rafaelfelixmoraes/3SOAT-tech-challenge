@@ -83,4 +83,15 @@ public class ExceptionHandlerAdvice {
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .build());
     }
+
+    @ExceptionHandler(PasswordInvalidException.class)
+    public ResponseEntity<ResponseExceptionDTO> handlePasswordInvalidException(PasswordInvalidException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ResponseExceptionDTO.builder()
+                        .exceptionMessage(exception.getMessage())
+                        .messages(null)
+                        .statusCode(HttpStatus.FORBIDDEN.value())
+                        .build());
+    }
+
 }
