@@ -21,9 +21,10 @@ public class UsuarioDTO {
 
     private Long id;
 
-    @Size(min = 3, max = 255, message = "{cliente.nome.tamanho.invalido}")
+    @Size(min = 2, max = 255, message = "{usuario.nomeusario.tamanho.invalido}")
     private String nomeUsuario;
 
+    @Size(min = 8, max = 255, message = "{usuario.senha.tamanho.invalido}")
     private String senha;
 
     private String role;
