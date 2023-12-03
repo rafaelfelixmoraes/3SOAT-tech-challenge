@@ -1,11 +1,11 @@
 package br.com.tech.challenge.servicos.jwt;
 
-import br.com.tech.challenge.domain.entidades.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -30,14 +30,14 @@ public class JwtService {
         return new SecretKeySpec(decodedKey, SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public String generateToken(Usuario usuario) {
+    public String generateToken(UserDetails userDetails) {
         long expirationInMinutes = Long.parseLong(expiration);
         LocalDateTime dateTimeExpiration = LocalDateTime.now().plusMinutes(expirationInMinutes);
         Instant instant = dateTimeExpiration.atZone(ZoneId.systemDefault()).toInstant();
         Date expirationDate = Date.from(instant);
 
         return Jwts.builder()
-                .setSubject(usuario.getUsuario())
+                .setSubject(userDetails.getUsername())
                 .setExpiration(expirationDate)
                 .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
                 .compact();
@@ -60,7 +60,7 @@ public class JwtService {
         }
     }
 
-    public String getLoginUsuario(String token) {
+    public String getUsername(String token) {
         return getClaims(token).getSubject();
     }
 
