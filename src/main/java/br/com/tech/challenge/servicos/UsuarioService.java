@@ -7,7 +7,6 @@ import br.com.tech.challenge.domain.dto.CredencialDTO;
 import br.com.tech.challenge.domain.dto.TokenDTO;
 import br.com.tech.challenge.domain.dto.UsuarioDTO;
 import br.com.tech.challenge.domain.entidades.Usuario;
-import br.com.tech.challenge.servicos.jwt.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.User;
@@ -39,6 +38,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public Usuario save(UsuarioDTO usuarioDTO) {
+        log.info("Salvando usuario {}", usuarioDTO);
         usuarioDTO.setSenha(bCryptPasswordEncoder.encode(usuarioDTO.getSenha()));
         Usuario usuario = usuarioRepository.save(mapper.map(usuarioDTO, Usuario.class));
         usuario.setSenha(null);
@@ -46,16 +46,20 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public TokenDTO authenticate(CredencialDTO credencialDTO) {
+        log.info("Autenticando o usuario com as seguintes credenciais {}", credencialDTO);
         UserDetails userDetails = loadUserByUsername(credencialDTO.getNomeUsuario());
         boolean doMatchPasswords = bCryptPasswordEncoder.matches(credencialDTO.getSenha(), userDetails.getPassword());
 
+        log.info("Verificando se as senhas correspondem");
         if (doMatchPasswords) {
+            log.info("Senhas correspondem, retornando");
             return TokenDTO.builder()
                     .nomeUsuario(userDetails.getUsername())
                     .token(jwtService.generateToken(userDetails))
                     .build();
         }
 
+        log.info("Senha informada inválida");
         throw new PasswordInvalidException();
     }
 

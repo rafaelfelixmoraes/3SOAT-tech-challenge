@@ -1,4 +1,4 @@
-package br.com.tech.challenge.servicos.jwt;
+package br.com.tech.challenge.servicos;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
