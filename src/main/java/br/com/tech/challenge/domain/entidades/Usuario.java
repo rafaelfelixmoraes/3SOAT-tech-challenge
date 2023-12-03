@@ -29,14 +29,13 @@ public class Usuario {
     @SequenceGenerator(name = "usuario_sequence", sequenceName = "usuario_seq", allocationSize = 1)
     private Long id;
 
-    // TODO: alterar para login, para não ficar redundante
-    @Column
-    private String usuario;
+    @Column(name = "usuario")
+    private String nomeUsuario;
 
-    @Column
+    @Column(name = "senha")
     private String senha;
 
-    @Column
+    @Column(name = "role")
     private String role;
 
 }

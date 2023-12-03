@@ -20,7 +20,7 @@ public class UsuarioDTO {
 
     private Long id;
 
-    private String usuario;
+    private String nomeUsuario;
 
     private String senha;
 
