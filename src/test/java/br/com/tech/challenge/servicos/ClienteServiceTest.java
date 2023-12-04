@@ -10,10 +10,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 class ClienteServiceTest {
@@ -97,6 +103,25 @@ class ClienteServiceTest {
         });
     }
 
+    @DisplayName("Deve listar clientes com sucesso")
+    @Test
+    void shouldListClientSuccess() {
+        var listClientes = new PageImpl<>(setListCliente());
+
+        when(clienteRepository.findAll(any(Pageable.class))).thenReturn(listClientes);
+
+        var clientes = clienteService.list(null, anyInt(), 10);
+
+        var listClientesContent = clientes.getContent();
+
+        for (int i = 0; i < listClientesContent.size(); i++) {
+            assertEquals(listClientesContent.get(i).getId(), clientes.getContent().get(i).getId());
+            assertEquals(listClientesContent.get(i).getNome(), clientes.getContent().get(i).getNome());
+            assertEquals(listClientesContent.get(i).getEmail(), clientes.getContent().get(i).getEmail());
+            assertEquals(listClientesContent.get(i).getCpf(), clientes.getContent().get(i).getCpf());
+        }
+    }
+
     @DisplayName("Deve existir um cliente com o id informado")
     @Test
     void shouldFindClienteById() {
@@ -126,6 +151,16 @@ class ClienteServiceTest {
                 .email("ana.maria@gmail.com")
                 .cpf("603.072.360-05")
                 .build();
+    }
+
+    private List<Cliente> setListCliente() {
+        var cliente = Cliente.builder()
+                .id(10L)
+                .nome("Ana Maria")
+                .email("ana.maria@gmail.com")
+                .cpf("603.072.360-05")
+                .build();
+        return Collections.singletonList(cliente);
     }
 
 }
