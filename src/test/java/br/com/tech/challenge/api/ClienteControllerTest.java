@@ -147,6 +147,21 @@ class ClienteControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(5)));
     }
 
+    @DisplayName("Deve listar os clientes vazios com sucesso")
+    @Test
+    void shouldListEmptyClientSuccess() throws Exception {
+        final var queryParam = String.valueOf(200L);
+
+        mockMvc.perform(get(ROTA_CLIENTES)
+                        .param("id", queryParam)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", hasSize(0)));
+    }
+
     private Cliente setCliente() {
         return Cliente.builder()
                 .id(1L)

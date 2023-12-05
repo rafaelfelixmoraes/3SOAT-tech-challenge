@@ -74,7 +74,7 @@ public class ClienteService {
     public Page<Cliente> list(Long id, int pagina, int tamanho) {
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("nome"));
 
-        if (ObjectUtils.anyNotNull(id)) {
+        if (ObjectUtils.isNotEmpty(id)) {
             return clienteRepository.findById(id, pageable);
         }
 

@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class ClienteServiceTest {
@@ -111,6 +110,26 @@ class ClienteServiceTest {
         when(clienteRepository.findAll(any(Pageable.class))).thenReturn(listClientes);
 
         var clientes = clienteService.list(null, anyInt(), 10);
+
+        var listClientesContent = clientes.getContent();
+
+        for (int i = 0; i < listClientesContent.size(); i++) {
+            assertEquals(listClientesContent.get(i).getId(), clientes.getContent().get(i).getId());
+            assertEquals(listClientesContent.get(i).getNome(), clientes.getContent().get(i).getNome());
+            assertEquals(listClientesContent.get(i).getEmail(), clientes.getContent().get(i).getEmail());
+            assertEquals(listClientesContent.get(i).getCpf(), clientes.getContent().get(i).getCpf());
+        }
+    }
+
+
+    @DisplayName("Deve listar o cliente por id com sucesso")
+    @Test
+    void shouldListClientByIdSuccess() {
+        var listClientes = new PageImpl<>(setListCliente());
+
+        when(clienteRepository.findById(eq(10L),any(Pageable.class))).thenReturn(listClientes);
+
+        var clientes = clienteService.list(10L, 0, 10);
 
         var listClientesContent = clientes.getContent();
 
