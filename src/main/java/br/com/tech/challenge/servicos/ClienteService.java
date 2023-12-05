@@ -8,7 +8,12 @@ import br.com.tech.challenge.domain.dto.ClienteDTO;
 import br.com.tech.challenge.domain.entidades.Cliente;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +69,16 @@ public class ClienteService {
                 .orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado")));
         log.info("Mapeando entidade Cliente para ClienteCheckInDTO");
         return mapper.map(clienteOptional.get(), ClienteCheckInDTO.class);
+    }
+
+    public Page<Cliente> list(Long id, int pagina, int tamanho) {
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("nome"));
+
+        if (ObjectUtils.isNotEmpty(id)) {
+            return clienteRepository.findById(id, pageable);
+        }
+
+        return clienteRepository.findAll(pageable);
     }
 
 }
