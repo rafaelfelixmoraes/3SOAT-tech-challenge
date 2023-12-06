@@ -1,4 +1,4 @@
-package br.com.tech.challenge.servicos;
+spackage br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.api.exception.PasswordInvalidException;
@@ -27,22 +27,23 @@ public class UsuarioService implements UserDetailsService {
 
     private final ModelMapper mapper;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     public UsuarioService(UsuarioRepository usuarioRepository, JwtService jwtService, ModelMapper mapper) {
         this.usuarioRepository = usuarioRepository;
         this.jwtService = jwtService;
         this.mapper = mapper;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Transactional
     public Usuario save(UsuarioDTO usuarioDTO) {
-        log.info("Salvando usuario {}", usuarioDTO);
-        usuarioDTO.setSenha(bCryptPasswordEncoder.encode(usuarioDTO.getSenha()));
-        Usuario usuario = usuarioRepository.save(mapper.map(usuarioDTO, Usuario.class));
-        usuario.setSenha(null);
-        return usuario;
+        validaUsuario(usuarioDTO.getUsuario());
+        usuarioDTO.setSenha(encodePassword(usuarioDTO.getSenha()));
+        return usuarioRepository.save(mapper.map(usuarioDTO, Usuario.class));
+    }
+
+    private void validaUsuario(String usuario) {
+        if (usuarioRepository.existsByUsuario(usuario)) {
+            throw new UsuarioAlreadyExistsException("Usuário já cadastrado.");
+        }
     }
 
     public TokenDTO authenticate(CredencialDTO credencialDTO) {

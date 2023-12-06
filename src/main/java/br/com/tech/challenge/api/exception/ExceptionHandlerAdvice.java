@@ -63,6 +63,17 @@ public class ExceptionHandlerAdvice {
                         .build());
     }
 
+    @ExceptionHandler(UsuarioAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ResponseExceptionDTO> handleUsuarioAlreadyExistsException(UsuarioAlreadyExistsException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ResponseExceptionDTO.builder()
+                        .exceptionMessage(exception.getMessage())
+                        .messages(null)
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .build());
+    }
+
     @ExceptionHandler(InvalidCpfException.class)
     public ResponseEntity<ResponseExceptionDTO> handleInvalidCpfException(InvalidCpfException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
