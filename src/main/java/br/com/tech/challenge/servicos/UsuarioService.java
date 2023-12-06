@@ -8,7 +8,6 @@ import br.com.tech.challenge.domain.dto.CredencialDTO;
 import br.com.tech.challenge.domain.dto.TokenDTO;
 import br.com.tech.challenge.domain.dto.UsuarioDTO;
 import br.com.tech.challenge.domain.entidades.Usuario;
-import br.com.tech.challenge.servicos.JwtService;
 import br.com.tech.challenge.utils.PasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -68,11 +67,11 @@ public class UsuarioService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByNomeUsuario(username)
+        Usuario usuario = usuarioRepository.findByUsuario(username)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado."));
 
         return User.builder()
-                .username(usuario.getNomeUsuario())
+                .username(usuario.getUsuario())
                 .password(usuario.getSenha())
                 .roles(usuario.getRole().name())
                 .build();

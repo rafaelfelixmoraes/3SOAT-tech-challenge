@@ -29,7 +29,7 @@ public class UsuarioDTO {
     @NotEmpty(message = "O campo senha é obrigatório.")
     private String senha;
 
-    @NotEmpty(message = "O campo role é obrigatório.")
+    @NotNull(message = "O campo role é obrigatório.")
     private Role role;
 
 }

@@ -1,1 +1,1 @@
-INSERT INTO usuario (usuario, senha) VALUES ('root', 'devrise@2023', 'ADMIN');
+INSERT INTO usuario (id, usuario, senha, role) VALUES (nextval('usuario_seq'), 'root', 'devrise@2023', 'ADMIN');
