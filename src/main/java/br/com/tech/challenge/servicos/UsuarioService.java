@@ -36,12 +36,12 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public Usuario save(UsuarioDTO usuarioDTO) {
-        validaUsuario(usuarioDTO.getUsuario());
+        validateUsuario(usuarioDTO.getUsuario());
         usuarioDTO.setSenha(PasswordUtils.encodePassword(usuarioDTO.getSenha()));
         return usuarioRepository.save(mapper.map(usuarioDTO, Usuario.class));
     }
 
-    private void validaUsuario(String usuario) {
+    private void validateUsuario(String usuario) {
         if (usuarioRepository.existsByUsuario(usuario)) {
             throw new UsuarioAlreadyExistsException("Usuário já cadastrado.");
         }

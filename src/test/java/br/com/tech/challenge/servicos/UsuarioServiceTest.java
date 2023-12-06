@@ -68,6 +68,12 @@ class UsuarioServiceTest {
         }
     }
 
+    @DisplayName("Deve gerar um novo token")
+    @Test
+    void shouldAuthenticate() {
+
+    }
+
     private Usuario setUsuario() {
         return Usuario.builder()
                 .id(10L)
