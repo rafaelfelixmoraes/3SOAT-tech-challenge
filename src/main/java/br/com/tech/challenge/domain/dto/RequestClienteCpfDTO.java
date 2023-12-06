@@ -18,6 +18,6 @@ import lombok.Builder;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RequestClienteCpfDTO {
 
-    @CPF(message = "CPF deve ser válido e no formato ###.###.###-##")
+    @CPF(message = "{cliente.cpf.invalido}")
     private String cpf;
 }
