@@ -28,4 +28,8 @@ public class PasswordUtils {
         return new BCryptPasswordEncoder().encode(password);
     }
 
+    public boolean passwordsMatch(String userInputPassword, String retrievedPassword) {
+        return new BCryptPasswordEncoder().matches(userInputPassword, retrievedPassword);
+    }
+
 }

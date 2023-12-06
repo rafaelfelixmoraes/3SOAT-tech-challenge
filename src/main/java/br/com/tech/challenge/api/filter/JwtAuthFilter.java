@@ -1,7 +1,7 @@
 package br.com.tech.challenge.api.filter;
 
-import br.com.tech.challenge.servicos.UsuarioService;
 import br.com.tech.challenge.servicos.JwtService;
+import br.com.tech.challenge.servicos.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

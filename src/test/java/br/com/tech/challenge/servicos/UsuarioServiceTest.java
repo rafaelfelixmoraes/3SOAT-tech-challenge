@@ -4,6 +4,7 @@ import br.com.tech.challenge.api.exception.UsuarioAlreadyExistsException;
 import br.com.tech.challenge.bd.repositorios.UsuarioRepository;
 import br.com.tech.challenge.domain.dto.UsuarioDTO;
 import br.com.tech.challenge.domain.entidades.Usuario;
+import br.com.tech.challenge.domain.enums.Role;
 import br.com.tech.challenge.utils.PasswordUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,14 +25,18 @@ class UsuarioServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
+    private JwtService jwtService;
+
+    @Mock
     private ModelMapper mapper;
 
-    private static final String SENHA = "123456";
-    private static final String ROLE_TESTE = "ROLE_TESTE";
+    private final String SENHA = "123456";
+
+    private final Role ROLE_TESTE = Role.ADMIN;
 
     UsuarioServiceTest() {
         MockitoAnnotations.openMocks(this);
-        usuarioService = new UsuarioService(usuarioRepository, mapper);
+        usuarioService = new UsuarioService(usuarioRepository, jwtService, mapper);
     }
 
     @DisplayName("Deve criar um usuario com sucesso")
@@ -80,4 +85,5 @@ class UsuarioServiceTest {
                 .role(ROLE_TESTE)
                 .build();
     }
+
 }

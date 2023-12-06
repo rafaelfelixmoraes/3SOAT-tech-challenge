@@ -1,5 +1,6 @@
 package br.com.tech.challenge.domain.dto;
 
+import br.com.tech.challenge.domain.enums.Role;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,6 +30,6 @@ public class UsuarioDTO {
     private String senha;
 
     @NotEmpty(message = "O campo role é obrigatório.")
-    private String role;
+    private Role role;
 
 }

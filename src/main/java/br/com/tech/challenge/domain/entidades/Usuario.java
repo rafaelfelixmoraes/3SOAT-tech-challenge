@@ -33,7 +33,7 @@ public class Usuario {
     private Long id;
 
     @Column(name = "usuario")
-    private String nomeUsuario;
+    private String usuario;
 
     @Column(name = "senha")
     private String senha;

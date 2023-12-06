@@ -1,19 +1,21 @@
-spackage br.com.tech.challenge.servicos;
+package br.com.tech.challenge.servicos;
 
 import br.com.tech.challenge.api.exception.ObjectNotFoundException;
 import br.com.tech.challenge.api.exception.PasswordInvalidException;
+import br.com.tech.challenge.api.exception.UsuarioAlreadyExistsException;
 import br.com.tech.challenge.bd.repositorios.UsuarioRepository;
 import br.com.tech.challenge.domain.dto.CredencialDTO;
 import br.com.tech.challenge.domain.dto.TokenDTO;
 import br.com.tech.challenge.domain.dto.UsuarioDTO;
 import br.com.tech.challenge.domain.entidades.Usuario;
+import br.com.tech.challenge.servicos.JwtService;
+import br.com.tech.challenge.utils.PasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +38,7 @@ public class UsuarioService implements UserDetailsService {
     @Transactional
     public Usuario save(UsuarioDTO usuarioDTO) {
         validaUsuario(usuarioDTO.getUsuario());
-        usuarioDTO.setSenha(encodePassword(usuarioDTO.getSenha()));
+        usuarioDTO.setSenha(PasswordUtils.encodePassword(usuarioDTO.getSenha()));
         return usuarioRepository.save(mapper.map(usuarioDTO, Usuario.class));
     }
 
@@ -49,7 +51,7 @@ public class UsuarioService implements UserDetailsService {
     public TokenDTO authenticate(CredencialDTO credencialDTO) {
         log.info("Autenticando o usuario com as seguintes credenciais {}", credencialDTO);
         UserDetails userDetails = loadUserByUsername(credencialDTO.getNomeUsuario());
-        boolean doMatchPasswords = bCryptPasswordEncoder.matches(credencialDTO.getSenha(), userDetails.getPassword());
+        boolean doMatchPasswords = PasswordUtils.passwordsMatch(credencialDTO.getSenha(), userDetails.getPassword());
 
         log.info("Verificando se as senhas correspondem");
         if (doMatchPasswords) {
