@@ -14,16 +14,16 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import java.util.Collections;
 import java.util.List;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -85,8 +85,9 @@ class ClienteControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.messages", Matchers.containsInAnyOrder(
-                        "CPF deve ser válido e no formato ###.###.###-##",
-                        "Nome deve ter entre 3 e 200 caracteres"
+                        "CPF deve ser válido e no formato ###.###.###-##.",
+                        "O campo nome é obrigatório.",
+                        "Nome deve ter entre 3 e 200 caracteres."
                 )));
     }
 
@@ -136,7 +137,6 @@ class ClienteControllerTest {
     @DisplayName("Deve listar os clientes com sucesso")
     @Test
     void shouldListClientSuccess() throws Exception {
-        Page<Cliente> page = createMockPage();
         mockMvc.perform(get(ROTA_CLIENTES)
                         .content(mapper.writeValueAsString(setListClientes()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -144,7 +144,7 @@ class ClienteControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content", hasSize(5)));
+                .andExpect(jsonPath("$.content", hasSize(3)));
     }
 
     @DisplayName("Deve listar os clientes vazios com sucesso")

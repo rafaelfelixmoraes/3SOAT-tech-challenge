@@ -4,6 +4,7 @@ import br.com.tech.challenge.domain.enums.Role;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Generated;
@@ -32,7 +33,7 @@ public class UsuarioDTO {
     @Size(min = 3, max = 255, message = "{usuario.usuario.tamanho.invalido}")
     private String senha;
 
-    @NotBlank(message = "{usuario.role.campo.obrigatorio}")
+    @NotNull(message = "{usuario.role.campo.obrigatorio}")
     private Role role;
 
 }

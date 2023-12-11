@@ -75,8 +75,8 @@ class UsuarioControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.messages", Matchers.containsInAnyOrder(
-                        "O campo usuario é obrigatório.",
                         "O campo senha é obrigatório.",
+                        "O campo usuario é obrigatório.",
                         "O campo role é obrigatório."
                 )));
     }
