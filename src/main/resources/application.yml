@@ -46,4 +46,4 @@ logging:
 security:
   jwt:
     expiracao: 1440
-    chave-assinatura: dGVjaCBjaGFsbGVuZ2UgMjAyMyBmaWFw
+    chave-assinatura: dHLDqnMgcHJhdG9zIGRlIHRyaWdvIHBhcmEgdHLDqnMgdGlncmVzIGZhbWludG9z
