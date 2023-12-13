@@ -95,13 +95,13 @@ public class ExceptionHandlerAdvice {
                         .build());
     }
 
-    @ExceptionHandler(PasswordInvalidException.class)
-    public ResponseEntity<ResponseExceptionDTO> handlePasswordInvalidException(PasswordInvalidException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserOrPasswordInvalidException.class)
+    public ResponseEntity<ResponseExceptionDTO> handlePasswordInvalidException(UserOrPasswordInvalidException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ResponseExceptionDTO.builder()
                         .exceptionMessage(exception.getMessage())
                         .messages(null)
-                        .statusCode(HttpStatus.FORBIDDEN.value())
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
                         .build());
     }
 

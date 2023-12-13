@@ -1,7 +1,6 @@
 package br.com.tech.challenge.servicos;
 
-import br.com.tech.challenge.api.exception.ObjectNotFoundException;
-import br.com.tech.challenge.api.exception.PasswordInvalidException;
+import br.com.tech.challenge.api.exception.UserOrPasswordInvalidException;
 import br.com.tech.challenge.api.exception.UsuarioAlreadyExistsException;
 import br.com.tech.challenge.bd.repositorios.UsuarioRepository;
 import br.com.tech.challenge.domain.dto.CredencialDTO;
@@ -9,6 +8,7 @@ import br.com.tech.challenge.domain.dto.TokenDTO;
 import br.com.tech.challenge.domain.dto.UsuarioDTO;
 import br.com.tech.challenge.domain.entidades.Usuario;
 import br.com.tech.challenge.utils.PasswordUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
@@ -27,12 +28,6 @@ public class UsuarioService implements UserDetailsService {
     private final JwtService jwtService;
 
     private final ModelMapper mapper;
-
-    public UsuarioService(UsuarioRepository usuarioRepository, JwtService jwtService, ModelMapper mapper) {
-        this.usuarioRepository = usuarioRepository;
-        this.jwtService = jwtService;
-        this.mapper = mapper;
-    }
 
     @Transactional
     public Usuario save(UsuarioDTO usuarioDTO) {
@@ -62,13 +57,13 @@ public class UsuarioService implements UserDetailsService {
         }
 
         log.info("Senha informada inválida");
-        throw new PasswordInvalidException();
+        throw new UserOrPasswordInvalidException();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByUsuario(username)
-                .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado."));
+                .orElseThrow(UserOrPasswordInvalidException::new);
 
         return User.builder()
                 .username(usuario.getUsuario())
