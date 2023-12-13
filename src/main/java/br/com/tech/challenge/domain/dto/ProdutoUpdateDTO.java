@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class ProdutoUpdateDTO {
     private Long id;
 
     @Size(min = 3, max = 100, message = "{produto.descricao.tamanho.invalido}")
+    @NotBlank(message = "{produto.descricao.campo.obrigatorio}")
     @Schema(description = "Descrição do Produto")
     private String descricao;
 

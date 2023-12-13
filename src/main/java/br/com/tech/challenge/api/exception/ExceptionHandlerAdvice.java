@@ -94,4 +94,15 @@ public class ExceptionHandlerAdvice {
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .build());
     }
+
+    @ExceptionHandler(UserOrPasswordInvalidException.class)
+    public ResponseEntity<ResponseExceptionDTO> handlePasswordInvalidException(UserOrPasswordInvalidException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ResponseExceptionDTO.builder()
+                        .exceptionMessage(exception.getMessage())
+                        .messages(null)
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .build());
+    }
+
 }
