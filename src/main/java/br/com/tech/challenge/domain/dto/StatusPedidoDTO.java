@@ -14,7 +14,7 @@ import lombok.Builder;
 @Builder
 public class StatusPedidoDTO {
 
-    @NotBlank
+    @NotBlank(message = "{pedido.status.campo.obrigatorio}")
     StatusPedido statusPedido;
 
 }

@@ -42,3 +42,8 @@ logging:
         http: DEBUG
     httpclient:
       wire: DEBUG
+
+security:
+  jwt:
+    expiracao: 1440
+    chave-assinatura: dHLDqnMgcHJhdG9zIGRlIHRyaWdvIHBhcmEgdHLDqnMgdGlncmVzIGZhbWludG9z

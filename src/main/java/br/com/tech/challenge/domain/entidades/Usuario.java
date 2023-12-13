@@ -1,7 +1,10 @@
 package br.com.tech.challenge.domain.entidades;
 
+import br.com.tech.challenge.domain.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,13 +32,14 @@ public class Usuario {
     @SequenceGenerator(name = "usuario_sequence", sequenceName = "usuario_seq", allocationSize = 1)
     private Long id;
 
-    @Column
+    @Column(name = "usuario")
     private String usuario;
 
-    @Column
+    @Column(name = "senha")
     private String senha;
 
-    @Column
-    private String role;
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 }
