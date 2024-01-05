@@ -144,7 +144,7 @@ class ClienteControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content", hasSize(3)));
+                .andExpect(jsonPath("$.content", hasSize(4)));
     }
 
     @DisplayName("Deve listar os clientes vazios com sucesso")
