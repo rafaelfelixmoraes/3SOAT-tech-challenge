@@ -1,0 +1,407 @@
+{
+	"info": {
+		"_postman_id": "8e414f39-4b95-4cc7-a60a-438e49603bca",
+		"name": "G8/3SOAT - FIAP - Tech Challenge",
+		"description": "# ⛓️ Get started here\n\nPostman allows you to test your APIs using simple [Javascript code](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/). You can evaluate your response body, headers, cookies, and more using the [ChaiJS BDD](https://www.chaijs.com/api/bdd/) syntax.\n\nThis template guides you through the process of setting up an integration test to ensure that all individual components of an API function together seamlessly.\n\nThe API under test in this collection includes three endpoints for registering and receiving a token, accessing your unique generated name, and unregistering a token:\n\n- POST `/register`\n- POST `/unregister`\n- GET `/my-name`\n    \n\nBy setting up requests in the order of the operation, we can test the flow of data to and from the endpoints and ensure they work together as expected. We also verify that the data persists between requests on the back end.\n\n## 🔖 **How to use this template**\n\n**Step 1:** Check out the requests' documentation to learn more about -\n\n- what each request is meant to do.\n- the tests we've added against each one.\n    \n\n**Step 2:** Run this collection by clicking on \"Run\" or the by using the [Collection Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/).\n\n<img src=\"https://content.pstmn.io/84019b0f-69c8-4c5f-98b9-2c90a6f9a0b1/Y29sbGVjdGlvbi1ydW5uZXItYnV0dG9uLmpwZWc=\" width=\"266\" height=\"103\">\n\n**Step 3:** To customize this template, replace the request URLs with your API endpoints and add or edit the tests if needed.\n\n## 💡Related templates\n\n[Regression testing](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=7ab0f80e-a964-46ee-b948-4a4e3a85809c&sourceTemplateId=fe506090-ca91-4340-bea9-82d2c3d2bb9a)  \n[Performance testing](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=3302192d-87dd-4612-b381-61894de21203&sourceTemplateId=fe506090-ca91-4340-bea9-82d2c3d2bb9a)  \n[Contract testing](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=42247877-8529-429d-acba-4de20c3b5b3b&sourceTemplateId=fe506090-ca91-4340-bea9-82d2c3d2bb9a)  \n[Conditional workflow](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=78475d97-9a36-4731-ab24-9adf6a94d0fb&sourceTemplateId=fe506090-ca91-4340-bea9-82d2c3d2bb9a)  \n[Mock data generation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=da8ceebc-d4da-478c-ab8a-37634faefc74&sourceTemplateId=fe506090-ca91-4340-bea9-82d2c3d2bb9a)  \n[Common API vulnerabilities check](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e1edbae8-6429-453d-890e-00385eea1811&sourceTemplateId=fe506090-ca91-4340-bea9-82d2c3d2bb9a)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "8014645"
+	},
+	"item": [
+		{
+			"name": "Produtos",
+			"item": [
+				{
+					"name": "Criar produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returns 200 OK status\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"descricao\": \"Big Mac\",\n    \"valor_unitario\": 15.00,\n    \"categoria\": {\n        \"id\": 1,\n        \"descricao\": \"Lanche\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/produtos",
+						"description": "This request un-registers a token by using the token collection variable in the POST body.\n\nWe also added a test to ensure the response has a 200 OK status code."
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returns 202 Accpeted status\", () => {",
+									"    pm.response.to.have.status(202)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"descricao\": \"Coca Cola Teste\",\n    \"valor_unitario\": 100.55,\n    \"categoria\": {\n        \"id\": 2,\n        \"descricao\": \"Bebida\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/produtos/1",
+						"description": "This request un-registers a token by using the token collection variable in the POST body.\n\nWe also added a test to ensure the response has a 200 OK status code."
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returns 204 Accpeted status\", () => {",
+									"    pm.response.to.have.status(204)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/produtos/1",
+						"description": "This request un-registers a token by using the token collection variable in the POST body.\n\nWe also added a test to ensure the response has a 200 OK status code."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Produtos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrlK8s}}/produtos",
+							"host": [
+								"{{baseUrlK8s}}"
+							],
+							"path": [
+								"produtos"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "categoria",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Criar cliente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    // Set the collection-scope \"token\" variable to the token received from the API",
+									"    // This lets us use it in other requests",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Anthony Samuel Joaquim Teixeira\",\n    \"email\": \"anthony.samuel.teixeira@said.adv.br\",\n    \"cpf\": \"143.025.400-95\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/clientes",
+						"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Cliente CPF",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cpf\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/clientes/cpf"
+					},
+					"response": []
+				},
+				{
+					"name": "Checkin Cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cpf\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/clientes/check-in"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pedidos",
+			"item": [
+				{
+					"name": "Lista Fila Pedidos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returns 200 OK status\", () => {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrlK8s}}/pedidos/fila",
+							"host": [
+								"{{baseUrlK8s}}"
+							],
+							"path": [
+								"pedidos",
+								"fila"
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "tamanho",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Realizar um Pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cliente\": {\r\n        \"id\": 1,\r\n        \"nome\": \"Anthony Samuel Joaquim Teixeira\",\r\n        \"email\": \"anthony.samuel.teixeira@said.adv.br\",\r\n        \"cpf\": \"143.025.400-95\"\r\n    },\r\n    \"produtos\": [\r\n        {\r\n            \"id\": 1,\r\n            \"descricao\": \"Refrigerante Laranja\",\r\n            \"categoria\": {\r\n                \"id\": 2,\r\n                \"nome\": \"Bebida\"\r\n            },\r\n            \"valor_unitario\": 4.00\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"descricao\": \"Coca Cola\",\r\n            \"categoria\": {\r\n                \"id\": 2,\r\n                \"nome\": \"Bebida\"\r\n            },\r\n            \"valor_unitario\": 5.00\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"descricao\": \"Coca Cola\",\r\n            \"categoria\": {\r\n                \"id\": 2,\r\n                \"nome\": \"Bebida\"\r\n            },\r\n            \"valor_unitario\": 5.00\r\n        }\r\n    ]\r\n}"
+						},
+						"url": "{{baseUrl}}/pedidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Pedidos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": "{{baseUrlK8s}}/pedidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza Status Pedido",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"statusPedido\": \"RECEBIDO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/pedidos/1/status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagamentos",
+			"item": [
+				{
+					"name": "Gerar um código QR",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{baseUrlK8s}}/pagamentos/pedido/100/qr"
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{baseUrl}}/pagamentos/pedido/3/checkout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuários",
+			"item": [
+				{
+					"name": "Cadastrar Usuário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"usuario\": \"teste\",\r\n  \"senha\": \"teste\",\r\n  \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrlK8s}}/usuarios"
+					},
+					"response": []
+				},
+				{
+					"name": "Realizar login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome_usuario\": \"string\",\r\n  \"senha\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/usuarios/auth"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "baseUrl",
+			"value": "https://postman-integration-testing.glitch.me/"
+		}
+	]
+}
