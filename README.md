@@ -26,7 +26,7 @@ Para executar o projeto, siga os seguintes passos:
 ## Documentação do Projeto
 O projeto possui um diretório que concentra a documentação, bem como desenhos da arquitetura e outros arquivos pertinentes. Basta acessar o diretório `./docs`
 
-Nesse link `https://www.notion.so/Documenta-o-do-Sistema-de-Autoatendimento-de-Fast-Food-DDD-e523aebb91d44a0a85d511d2fd459763`, é possível visualizar a documentação completa do projeto, contendo o descritivo do DDD, bem como os diagramas e desenhos da arquitetura na Azure e AWS
+Nesse link https://www.notion.so/Documenta-o-do-Sistema-de-Autoatendimento-de-Fast-Food-DDD-e523aebb91d44a0a85d511d2fd459763, é possível visualizar a documentação completa do projeto, contendo o descritivo do DDD, bem como os diagramas e desenhos da arquitetura na Azure e AWS
 
 O vídeo com a apresentação da arquitetura do projeto no ambiente da Azure está disponível nesse link: https://vimeo.com/905022966?share=copy
 
