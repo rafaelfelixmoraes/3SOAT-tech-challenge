@@ -28,6 +28,8 @@ O projeto possui um diretório que concentra a documentação, bem como desenhos
 
 Nesse link `https://www.notion.so/Documenta-o-do-Sistema-de-Autoatendimento-de-Fast-Food-DDD-e523aebb91d44a0a85d511d2fd459763`, é possível visualizar a documentação completa do projeto, contendo o descritivo do DDD, bem como os diagramas e desenhos da arquitetura na Azure e AWS
 
+O vídeo com a apresentação da arquitetura do projeto no ambiente da Azure está disponível nesse link: https://vimeo.com/905022966?share=copy
+
 ## Fluxo das APIs e Collections
 O projeto possui diversas APIs para realização e gerenciamento de pedidos, produtos e clientes. O sistema também possui APIs para cadastro e autenticação de usuários.
 
