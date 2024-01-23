@@ -23,12 +23,17 @@ Para executar o projeto, siga os seguintes passos:
 - Após verificar que os containeres estão em execução, acesse a URI `http://localhost:8080/swagger-ui/index.html#/`
 - Caso deseje rodar pela IDE, é preciso parar a execução do container da aplicação. Após isso rode a aplicação na IDE, e assim que ela subir com sucesso, acesse a mesma URI acima.
 
+## Documentação do Projeto
+O projeto possui um diretório que concentra a documentação, bem como desenhos da arquitetura e outros arquivos pertinentes. Basta acessar o diretório `./docs`
+
+Nesse link `https://www.notion.so/Documenta-o-do-Sistema-de-Autoatendimento-de-Fast-Food-DDD-e523aebb91d44a0a85d511d2fd459763`, é possível visualizar a documentação completa do projeto, contendo o descritivo do DDD, bem como os diagramas e desenhos da arquitetura na Azure e AWS
+
 ## Fluxo das APIs e Collections
 O projeto possui diversas APIs para realização e gerenciamento de pedidos, produtos e clientes. O sistema também possui APIs para cadastro e autenticação de usuários.
 
 Nesse momento, todas as APIs estão abertas e não possuem autenticação, para agilizar alguma validação se necessário. Nas próximas fases, iremos evoluir essa parte.
 
-As collections do Postman com todas as APIs do projeto estão disponíveis na pasta `./postman` na raiz do projeto. Basta importar os arquivos no seu postman conforme desejado
+As collections do Postman com todas as APIs do projeto estão disponíveis na pasta `./docs/postman` na raiz do projeto. Basta importar os arquivos no seu postman conforme desejado
 
 Obs.: As collections possuem 2 variáveis de ambiente com a url base local do serviço. Algumas APIs ainda estão com a variável `baseUrl` apontadando para `http://localhost:8080`, outras possuem a variável `baseUrlK8s` apontando para `http://localhost:31808`. Para validações usando o ambiente do Kubernetes, deve-se usar a variável `baseUrlK8s`
 

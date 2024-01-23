@@ -1,0 +1,173 @@
+<mxfile host="app.diagrams.net" modified="2024-01-22T19:13:32.177Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" etag="LqMaBbiDAQaUyicubQeu" version="22.1.18" type="device" pages="2">
+  <diagram name="AWS EKS" id="KEdu4G-hxF99rx0xCdQY">
+    <mxGraphModel dx="1372" dy="786" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="5y50md_JyLmdPQK6AH-0-1" value="AWS Cloud" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud;strokeColor=#AAB7B8;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#AAB7B8;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="150" width="750" height="477" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-2" value="Region" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="200" width="720" height="408" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-3" value="VPC" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="80" y="230" width="690" height="357" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-13" value="EKS Control Plane - Cluster" style="outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;strokeColor=#879196;fillColor=none;verticalAlign=top;align=center;fontColor=#879196;dashed=1;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="90" y="260" width="660" height="305" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="430" as="targetPoint" />
+            <mxPoint x="460" y="430" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-5" value="Public Subnet" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_subnet;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="470" y="335" width="250" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-21" value="Auto Scaling Group" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.groupCenter;grIcon=mxgraph.aws4.group_auto_scaling_group;grStroke=0;strokeColor=#879196;fillColor=#ECEFEF;verticalAlign=top;align=center;fontColor=#879196;dashed=0;spacingTop=25;" vertex="1" parent="1">
+          <mxGeometry x="500" y="355" width="190" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5y50md_JyLmdPQK6AH-0-4" target="5y50md_JyLmdPQK6AH-0-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="430" />
+              <mxPoint x="370" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-4" value="Private Subnet" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_subnet;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="120" y="350" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5y50md_JyLmdPQK6AH-0-6" target="5y50md_JyLmdPQK6AH-0-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-6" value="Worker - Redis" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.ec2;" vertex="1" parent="1">
+          <mxGeometry x="130" y="390" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-7" value="Amazon EKS" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.eks;" vertex="1" parent="1">
+          <mxGeometry x="90" y="270" width="60" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5y50md_JyLmdPQK6AH-0-12" target="5y50md_JyLmdPQK6AH-0-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-12" value="Internet&#xa;gateway" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.internet_gateway;" vertex="1" parent="1">
+          <mxGeometry x="350" y="120" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5y50md_JyLmdPQK6AH-0-14" target="5y50md_JyLmdPQK6AH-0-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-14" value="Worker - Postgres" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.ec2;" vertex="1" parent="1">
+          <mxGeometry x="270" y="390" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-15" value="Worker - Application" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.ec2;" vertex="1" parent="1">
+          <mxGeometry x="560" y="405" width="70" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-25" value="Elastic&#xa;network&#xa;interface" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elastic_network_interface;" vertex="1" parent="1">
+          <mxGeometry x="380" y="320" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-26" value="ENI" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elastic_network_interface;" vertex="1" parent="1">
+          <mxGeometry x="220" y="390" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5y50md_JyLmdPQK6AH-0-27" target="5y50md_JyLmdPQK6AH-0-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-27" value="ALB" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.application_load_balancer;" vertex="1" parent="1">
+          <mxGeometry x="500" y="200" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5y50md_JyLmdPQK6AH-0-33" target="5y50md_JyLmdPQK6AH-0-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-33" value="Client" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.client;" vertex="1" parent="1">
+          <mxGeometry x="172" y="40" width="78" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="5y50md_JyLmdPQK6AH-0-41" value="&lt;h1 style=&quot;text-align: justify;&quot;&gt;AWS EKS - Overview Arquitetura&lt;/h1&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify; font-size: 16px;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O desenho apresentado demonstra um esboço de como seria a arquitetura da aplicação do projeto com o EKS - Elastic Kubernetes Service&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify; font-size: 16px;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;ul style=&quot;&quot;&gt;&lt;li style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Na AWS, é criado um cluster no EKS, que deve estar dentro de uma VPC (Virtual Private Network)&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Esse cluster estará vinculado a Subnets Privadas e Públicas, onde nas privadas ficarão os recursos que não devem ser expostos (como banco de dados) e nas públicas ficará aquilo que será exposto para a internet (como a aplicação)&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Dentro das Subnets, são criados os nós / workers / pods dos serviços que se comunicam e se conectam entre si dentro da interface do cluster&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O ambiente atribui um IP externo para o pod que está exposto, e com isso é possível configurar o roteamento e dominio via Route 53 e Cloudfront respectivamente&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O nó / pod da aplicação está atrelado ao grupo de auto-scalling, controlando a escalabilidade dos recursos conforme necessidade&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O acesso a aplicação é controlado por um internet gateway, e as requisições são direcionadas para um Application Load Balancer, para distribuição do tráfego entre as instâncias da aplicação. É o ALB também que irá indicar se será necessário escalar ou não recursos conforme tráfego recebido&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="650" width="750" height="500" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="AWS AKS" id="XHyNU-PlVLIFeYW-v3rY">
+    <mxGraphModel dx="1372" dy="786" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-0" />
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-1" parent="6oMBWtBEXktqsDLfFubZ-0" />
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-2" value="Azure Cloud" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud;strokeColor=#AAB7B8;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#AAB7B8;dashed=0;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="60" y="150" width="750" height="477" as="geometry" />
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-4" value="Virtual Network" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=0;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="80" y="180" width="690" height="407" as="geometry" />
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-5" value="AKS Control Plane - Cluster" style="outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;strokeColor=#879196;fillColor=none;verticalAlign=top;align=center;fontColor=#879196;dashed=1;spacingTop=3;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="90" y="220" width="660" height="345" as="geometry" />
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="430" as="targetPoint" />
+            <mxPoint x="460" y="430" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-7" value="Public Subnet" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_subnet;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=0;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="470" y="335" width="250" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-8" value="AutoScale Service" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.groupCenter;grIcon=mxgraph.aws4.group_auto_scaling_group;grStroke=0;strokeColor=#879196;fillColor=#ECEFEF;verticalAlign=top;align=center;fontColor=#879196;dashed=0;spacingTop=25;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="500" y="355" width="190" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="353" y="430" as="sourcePoint" />
+            <mxPoint x="470" y="430" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="370" y="430" />
+              <mxPoint x="370" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-10" value="Private Subnet" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_subnet;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#879196;dashed=0;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="100" y="350" width="249" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="6oMBWtBEXktqsDLfFubZ-1" source="6oMBWtBEXktqsDLfFubZ-24">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="380" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-24" value="Client" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.client;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="172" y="40" width="78" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="6oMBWtBEXktqsDLfFubZ-25" value="&lt;h1 style=&quot;text-align: justify;&quot;&gt;Azure AKS - Overview Arquitetura&lt;/h1&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify; font-size: 16px;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O desenho apresentado demonstra um esboço de como seria a arquitetura da aplicação do projeto com o AKS - Azure Kubernetes Service&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify; font-size: 16px;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;ul style=&quot;&quot;&gt;&lt;li style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Na Azure, é criado um cluster no AKS, que deve estar dentro de uma Virtual Network&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Esse cluster estará vinculado a Subnets Privadas e Públicas, onde nas privadas ficarão os recursos que não devem ser expostos (como banco de dados) e nas públicas ficará aquilo que será exposto para a internet (como a aplicação)&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Dentro das Subnets, são criados os nós / workers / pods dos serviços que se comunicam e se conectam entre si dentro da interface do cluster&lt;/font&gt;&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O ambiente atribui um IP externo para o pod que está exposto, e com isso é possível configurar o roteamento e dominio via Azure DNS e Azure CDN respectivamente&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O nó / pod da aplicação está atrelado a um Auto Scale Service, controlando a escalabilidade dos recursos conforme necessidade&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;O acesso a aplicação é controlado por um internet gateway, que pode ser o Azure Front Door, e as requisições são direcionadas para um Internal Load Balancer, para distribuição do tráfego entre as instâncias da aplicação. É o ILB também que irá indicar se será necessário escalar ou não recursos conforme tráfego recebido&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="60" y="650" width="750" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="6oMBWtBEXktqsDLfFubZ-1" source="ZogPNP42ttHaZV5_14Ao-0" target="6oMBWtBEXktqsDLfFubZ-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-0" value="Internal LB" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/Load_Balancers.svg;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="520" y="198" width="72" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="6oMBWtBEXktqsDLfFubZ-1" source="ZogPNP42ttHaZV5_14Ao-2" target="ZogPNP42ttHaZV5_14Ao-0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-2" value="Azure Front Door" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/Front_Doors.svg;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="346" y="120" width="68" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-4" value="AKS" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/containers/Kubernetes_Services.svg;" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="90" y="220" width="68" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="6oMBWtBEXktqsDLfFubZ-1" source="ZogPNP42ttHaZV5_14Ao-5" target="ZogPNP42ttHaZV5_14Ao-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-5" value="Worker - Redis" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/compute/Container_Instances.svg;fontStyle=1" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="120" y="401" width="60" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="6oMBWtBEXktqsDLfFubZ-1" source="ZogPNP42ttHaZV5_14Ao-6" target="ZogPNP42ttHaZV5_14Ao-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-6" value="Worker - Postgres" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/compute/Container_Instances.svg;fontStyle=1" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="260" y="401" width="60" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="ZogPNP42ttHaZV5_14Ao-11" value="Worker - Application" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/compute/Container_Instances.svg;fontStyle=1" vertex="1" parent="6oMBWtBEXktqsDLfFubZ-1">
+          <mxGeometry x="565" y="411" width="69.7" height="79" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
