@@ -18,7 +18,7 @@ spring:
       host: redis
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgres_container:5432/tech_challenge
+    url: jdbc:postgresql://postgres:5432/tech_challenge
     hikari:
       username: tech
       password: tech_passwd

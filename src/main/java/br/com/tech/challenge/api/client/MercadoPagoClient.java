@@ -9,6 +9,7 @@ import br.com.tech.challenge.domain.enums.MercadoPagoAPI;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,14 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MercadoPagoClient implements QRClient {
 
     private final ObjectMapper objectMapper;
 
     @Override
     public MercadoPagoResponseDTO generateQRCode(MercadoPagoRequestDTO dto) {
+        log.info("Fazendo requisicao para API do Mercado Pago");
         RetryTemplate retryTemplate = RetryTemplateFactory.retryTemplate();
         RestTemplate restTemplate = new RestTemplate(ClientHttpFactory.clientHttpRequestFactory());
 
@@ -43,6 +46,7 @@ public class MercadoPagoClient implements QRClient {
     }
 
     private HttpEntity<String> httpEntity(MercadoPagoRequestDTO dto) throws JsonProcessingException {
+        log.info("Adicionando header Authorization a chamada do Mercado Pago");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", MercadoPagoAPI.ACCESS_TOKEN.text());
 

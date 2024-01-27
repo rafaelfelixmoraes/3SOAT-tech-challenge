@@ -3,12 +3,10 @@ package br.com.tech.challenge.domain.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Builder;
-
-import org.hibernate.validator.constraints.br.CPF;
 
 @Getter
 @Setter
@@ -16,11 +14,10 @@ import org.hibernate.validator.constraints.br.CPF;
 @NoArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ClienteCpfDTO {
+public class TokenDTO {
 
+    private String nomeUsuario;
 
-    private Long id;
+    private String token;
 
-    @CPF(message = "{cliente.cpf.invalido}")
-    private String cpf;
 }

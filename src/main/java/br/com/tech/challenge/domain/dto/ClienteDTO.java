@@ -3,6 +3,7 @@ package br.com.tech.challenge.domain.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +21,12 @@ import org.hibernate.validator.constraints.br.CPF;
 public class ClienteDTO {
 
     private Long id;
-    @Size(min = 3, max = 200, message = "Nome deve ter entre 3 e 200 caracteres")
+    @NotBlank(message = "{cliente.nome.campo.obrigatorio}")
+    @Size(min = 3, max = 200, message = "{cliente.nome.tamanho.invalido}")
     private String nome;
-    @CPF(message = "CPF deve ser válido e no formato ###.###.###-##")
+    @CPF(message = "{cliente.cpf.invalido}")
     private String cpf;
-    @Email(message = "E-mail deve ser válido e no formato username@email.com")
+    @Email(message = "{cliente.email.invalido}")
     private String email;
 
 }

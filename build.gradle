@@ -31,6 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.1.1'
 	implementation 'org.modelmapper:modelmapper:2.4.4'
+	implementation group: 'org.springframework.security', name: 'spring-security-crypto'
 
 	// Spring Validation
 	implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -66,6 +67,13 @@ dependencies {
 	// HttpClient
 	implementation 'org.apache.httpcomponents.client5:httpclient5'
 
+	// JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 flyway {

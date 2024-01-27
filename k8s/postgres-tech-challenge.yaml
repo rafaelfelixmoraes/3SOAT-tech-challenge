@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+  annotations:
+    author: G8 - 3SOAT/2023
+    name: tech-challenge-db-service
+    description: "This is the postgres database service for Tech Challenge"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        ports:
+          - containerPort: 5432
+            protocol: TCP
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 60
+            periodSeconds: 10
+        livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 60
+            periodSeconds: 10
+        env:
+            - name: POSTGRES_DB
+              value: tech_challenge
+            - name: POSTGRES_USER
+              value: tech
+            - name: POSTGRES_PASSWORD
+              value: tech_passwd
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: "TCP"
+      port: 5432 # The port that the service is running on in the cluster
+      targetPort: 5432 # The port exposed by the service
+  # type: ClusterIP # type of the service. LoadBalancer indicates that our service will be external.
