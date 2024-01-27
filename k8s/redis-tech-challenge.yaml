@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+  annotations:
+    author: G8 - 3SOAT/2023
+    name: tech-challenge-cache-db-service
+    description: "This is the redis cache service for Tech Challenge"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis
+        ports:
+          - containerPort: 6379
+            protocol: TCP
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 60
+            periodSeconds: 10
+        livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 60
+            periodSeconds: 10
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: "TCP"
+      port: 6379 # The port that the service is running on in the cluster
+      targetPort: 6379 # The port exposed by the service
+  # type: ClusterIP # type of the service. LoadBalancer indicates that our service will be external.

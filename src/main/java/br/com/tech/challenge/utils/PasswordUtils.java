@@ -1,6 +1,7 @@
 package br.com.tech.challenge.utils;
 
 import lombok.experimental.UtilityClass;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Random;
 
@@ -21,6 +22,14 @@ public class PasswordUtils {
             sb.append(RANDOM.nextInt(MAX) + MIN);
 
         return parseInt(sb.toString());
+    }
+
+    public String encodePassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
+    }
+
+    public boolean passwordsMatch(String userInputPassword, String retrievedPassword) {
+        return new BCryptPasswordEncoder().matches(userInputPassword, retrievedPassword);
     }
 
 }
