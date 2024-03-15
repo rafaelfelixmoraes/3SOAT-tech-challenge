@@ -39,7 +39,7 @@ jobs:
         with:
           resource-group: ${{ env.RESOURCE_GROUP }}
           cluster-name: ${{ env.CLUSTER_NAME }}
-          admin: 'false'
+          admin: 'true'
           use-kubelogin: 'true'
 
       - name: Testing on a k8s Kind Cluster
