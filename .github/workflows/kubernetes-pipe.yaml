@@ -1,0 +1,60 @@
+name: Build and deploy an app to AKS
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+env:
+  AZURE_CONTAINER_REGISTRY: "acrrepository"
+  RESOURCE_GROUP: "tc-g8-resources"
+  CLUSTER_NAME: "tech-challenge-k8s"
+
+jobs:
+  deploy:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      # Checks out the repository this file is in
+      - uses: actions/checkout@v3
+
+      # Logs in with your Azure credentials
+      - name: Azure login
+        uses: azure/login@v1.6.1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+      - name: Set up kubelogin for non-interactive login
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.25'
+
+      # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
+      - name: Get K8s context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ env.RESOURCE_GROUP }}
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          admin: 'true'
+          use-kubelogin: 'true'
+
+      - name: Testing on a k8s Kind Cluster
+        uses: helm/kind-action@v1.4.0
+      ## makes sure cluster is up and running
+      - run: |
+          kubectl cluster-info
+          kubectl get nodes
+      - name: Preparing cluster
+        ## Commands that setup the cluster as per my project needs
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/rafaelfelixmoraes/3SOAT-tech-challenge/main/k8s/application-tech-challenge.yaml
+          sleep 5
+          kubectl apply -f https://raw.githubusercontent.com/rafaelfelixmoraes/3SOAT-tech-challenge/main/k8s/postgres-tech-challenge.yaml
+          sleep 5
+          kubectl apply -f https://raw.githubusercontent.com/rafaelfelixmoraes/3SOAT-tech-challenge/main/k8s/redis-tech-challenge.yaml
+          sleep 5
