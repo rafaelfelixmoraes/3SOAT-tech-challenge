@@ -96,3 +96,11 @@ Para rodar a análise estática do código, basta seguir os passos a seguir:
 - No terminal, execute o seguinte comando: `./gradlew sonar "-Dsonar.token=[token_criado]"`
 - Após a conclusão do build, você poderá conferir os resultados da análise na página do projeto criado
 - O Quality Gate utilizado com base nas métricas é o padrão da própria ferramenta, mas é possível criar outros conforme necessidade
+
+## Pipeline
+O pipeline desse projeto utiliza Github Actions, com integração com Azure, onde a pipeline realiza o deploy dos manifestos .yamls diretamente no cluster Kubernetes na Azure através da intregração com Azure CLI e Azure EntraID (AD)
+
+A pipeline do Actions está configurada da seguinte forma:
+- Para PRs: Executa a validação e build do script terraform, até a etapa "terraform plan"
+- Commits na Main: A etapa da implantação via "terraform apply" ocorre somente quando há um evento de Push na branch "Main"
+- A cada execução da pipeline, ele gera automaticamente um comentário no PR com o status da execução de cada passo
